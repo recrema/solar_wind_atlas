@@ -1,3 +1,1 @@
-var x={
-		kjgkjvagds
-};
+var x={};
