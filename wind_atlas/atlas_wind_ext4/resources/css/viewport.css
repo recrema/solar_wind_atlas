@@ -1,0 +1,29 @@
+.header {
+    background-color: #FFFFFF;
+    background-image: url(/atlas_wind_ext4/resources/images/banner_top.jpg);
+    color: grey;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 10px;
+    text-align: right;
+    vertical-align: middle;
+}
+
+/* .header SPAN { */
+/* 	vertical-align: middle; */
+/*     text-align: right; */
+/*     display: table-cell; */
+/* } */
+
+.helpwindow {
+    background-color: #FFFFFF;
+    padding: 5px;
+}
+
+.helpwindow div.cascade {
+    padding: 0 0 0 5px;
+}
+
+.helpwindow h2 {
+    margin: 2px 0 0 0;
+}
