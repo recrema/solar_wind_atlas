@@ -21,7 +21,8 @@ Ext.define('AM.view.Viewport', {
         'GeoExt.data.LayerTreeModel',
         'GeoExt.tree.View',
         'GeoExt.tree.Column',
-        'GeoExt.tree.LayerLoader'
+        'GeoExt.tree.LayerLoader',
+        'AM.view.Windinfo'
 //        'AM.controller.Layertreepanel'
     ],
 
@@ -62,6 +63,9 @@ Ext.define('AM.view.Viewport', {
                 },{
                     xtype: 'mappanel',
                     region: 'center'
+                },{
+                	xtype: 'windinfo',
+                	region: 'south'
                 }]
             }]
 //        });
