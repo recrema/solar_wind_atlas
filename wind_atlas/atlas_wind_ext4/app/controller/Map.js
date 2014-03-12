@@ -128,8 +128,8 @@ Ext.define('AM.controller.Map', {
     },
     
     onClickDeactivate: function() {
-//	    windowInfo=Ext.ComponentQuery.query('windinfo')[0];
-//	    windowInfo.hide();
+	    windowInfo=Ext.ComponentQuery.query('windinfo')[0];
+	    windowInfo.hide();
 	    markers.clearMarkers(); // warning this variable should not be global see line 43
 	    map.events.unregister('click', map, mapController.handleMapClick);
     },

@@ -112,9 +112,9 @@ Ext.define('AM.view.Map', {
         })));
         tbarItems.push(Ext.create('Ext.button.Button', {
             text: "Wind Info",
-            toggleGroup: "draw",
+            toggleGroup: "info",
             enableToggle: true,
-            group: "draw",
+            group: "info",
             toggleHandler: function(button, state) {
             	if (state) {
             		me.fireEvent('onClickActive');
