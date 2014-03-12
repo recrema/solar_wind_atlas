@@ -30,7 +30,7 @@ Ext.define('AM.controller.Layertreepanel',{
     
 	loadLayersTree: function(mappanel) {
 		
-		console.log('Loading layers Tree');
+//		console.log('Loading layers Tree');
 //		console.log(mappanel.map.getLayersByName);
 		map2 = mappanel.map;
 //		console.log(map2.getLayersByName('Wind Speed 2003 at 10m  - Masdar Institute'));
@@ -110,8 +110,8 @@ Ext.define('AM.controller.Layertreepanel',{
         		layer_title = layer_text_prefix + " " + year + " at " + heights[i] + "m - Masdar Institute";
     			a = {plugins: [{ptype: 'gx_layer'}], layer: map2.getLayersByName(layer_title)[0]};
     			maps_year_height.push(a);
-    			console.log(layer_title);
-    			console.log(map2.getLayersByName(layer_title));
+//    			console.log(layer_title);
+//    			console.log(map2.getLayersByName(layer_title));
     		};
         	year_maps_tree_by_year.push({text: year.toString(), leaf: false, children: maps_year_height});
         };
@@ -151,7 +151,7 @@ Ext.define('AM.controller.Layertreepanel',{
     	 }];
         
         Ext.ComponentQuery.query('layertreepanel')[0].add(layerTree);
-        Ext.ComponentQuery.query('layertreepanel')[0].doLayout();
+      //  Ext.ComponentQuery.query('layertreepanel')[0].doLayout();
 //        console.log(this.getInitialConfig('layertreepanel'));
 //        Ext.ComponentQuery.query('layertreepanel > tabpanel0').doLayout;
 	}

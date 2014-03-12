@@ -8,16 +8,20 @@ Ext.define('AM.controller.Map', {
 //    requires: ['AM.view.Layertreepanel'],
 
     init: function() {
-    	
+    	mapController = this;
         this.control({
             'mappanel': {
-                'beforerender': this.onMapPanelBeforeRender
+                'beforerender': this.onMapPanelBeforeRender,
+                'onClickActive': this.onClickActive,
+                'onClickDeactivate': this.onClickDeactivate,
+               
             },
             'layertreepanel': {
             	'beforerender': this.onLayerTreePanelBeforeRender
             }
         }, this);
     },
+    
 
     onMapPanelBeforeRender: function(mapPanel, options) {
     	
@@ -26,6 +30,108 @@ Ext.define('AM.controller.Map', {
         // for dev purpose
         map = mapPanel.map;
         mapPanel = mapPanel;
+    },
+ 
+    handleMapClick: function(e) {
+
+        var lonlat = map.getLonLatFromViewPortPx(e.xy);
+        var position = map.getLonLatFromPixel(e.xy);
+        // use lonlat
+
+        // If you are using OpenStreetMap (etc) tiles and want to convert back 
+        // to gps coords add the following line :-
+         lonlat.transform('EPSG:3857', 'EPSG:4326');
+         
+         // get the latitude and longitude after a click
+         clickLon=Math.round(lonlat.lon*100000)/100000;
+         clickLat=Math.round(lonlat.lat*100000)/100000;
+         
+         
+         var size = new OpenLayers.Size(21,25);
+         var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+         var icon = new OpenLayers.Icon('../lib/openlayers/img/marker.png', size, offset);
+//         var markerslayer = map.getLayer('markers');
+         var marker = new OpenLayers.Marker(position, icon);
+         
+         // Remove all the markers if there is already any.
+         // At the end this will only allow one marker each time.
+         if(markers){
+         	markers.clearMarkers(); // Clear all the existing markers
+         	markers.addMarker(marker); // Add the new marker
+         } else {
+         	markers.addMarker(marker); // Add a new marker
+         };
+         
+         // Changing the latitude and logitude on the form so the data location will change for 
+         // all the portlet's available
+         
+         mapController.openWinInfo(clickLat,clickLon);
+
+//         var changeLat = Ext.ComponentQuery.query('[name=latitude]')[0].setValue(Latitude);
+//         var changeLon = Ext.ComponentQuery.query('[name=longitude]')[0].setValue(Longitude);
+    },
+    
+    openWinInfo: function(clickLat,clickLon) {
+//     	console.log('Lat: ' + clickLat + '; Long: ' + clickLon);
+         windowInfo=Ext.ComponentQuery.query('windinfo')[0];
+         
+         if (!Ext.ComponentQuery.query('windinfo textfield[itemId=f1]')[0]) {
+         	
+	            var field1 = Ext.create('Ext.form.field.Text',{
+	            	itemId: 'f1',
+	                fieldLabel: 'Latitude',
+	                value: clickLat,
+	                name: 'lat',
+	                allowBlank: false
+	            });
+	            var field2 = Ext.create('Ext.form.field.Text',{
+	            	itemId: 'f2',
+	                fieldLabel: 'Longitude',
+	                value: clickLon,
+	                name: 'long',
+	                allowBlank: false
+	            });
+	            var field3 = Ext.create('Ext.form.field.Date',{
+	            	itemId: 'f3',
+	                fieldLabel: 'From',
+	                name: 'startdate',
+	                allowBlank: false
+	            });
+	            var field4 = Ext.create('Ext.form.field.Date',{
+	            	itemId: 'f4',
+	                fieldLabel: 'To',
+	                value: new Date(),
+	                name: 'startdate',
+	                allowBlank: false
+	            });
+	            windowInfo.add(field1);
+	            windowInfo.add(field2);
+	            windowInfo.add(field3);
+	            windowInfo.add(field4);
+         }
+         else {
+         	lat=Ext.ComponentQuery.query('windinfo textfield[itemId=f1]')[0];
+         	lat.setValue(clickLat);
+         	long=Ext.ComponentQuery.query('windinfo textfield[itemId=f2]')[0];
+         	long.setValue(clickLon);
+         }
+         windowInfo.show();
+    },
+    
+    onClickActive: function() {
+        markers = new OpenLayers.Layer.Markers( 'Markers' ); // warning this variable should not be global see line 35
+        map.addLayer(markers);
+        
+        map.events.register('click', map, mapController.handleMapClick);
+        
+        var clickLat, clickLon;
+    },
+    
+    onClickDeactivate: function() {
+//	    windowInfo=Ext.ComponentQuery.query('windinfo')[0];
+//	    windowInfo.hide();
+	    markers.clearMarkers(); // warning this variable should not be global see line 43
+	    map.events.unregister('click', map, mapController.handleMapClick);
     },
 
     onLayerTreePanelBeforeRender: function(layertree2) {
@@ -40,54 +146,15 @@ Ext.define('AM.controller.Map', {
 //        mapPanel = mapPanel;
     },
     
+
+    
     onLaunch: function() {
 //    	console.log(Ext.get('tabpanel0'));
     	//Code to upload layers to the map (try to do this from a json string)
     	
 //        map.addControl(new OpenLayers.Control.LayerSwitcher());
-        
-        var markers = new OpenLayers.Layer.Markers( 'Markers' );
-        map.addLayer(markers);
-        
-        map.events.register('click', map, handleMapClick);
-        
-        var clickLat, clickLon;
-        
-        function handleMapClick(e){
-           var lonlat = map.getLonLatFromViewPortPx(e.xy);
-           var position = map.getLonLatFromPixel(e.xy);
-           // use lonlat
 
-           // If you are using OpenStreetMap (etc) tiles and want to convert back 
-           // to gps coords add the following line :-
-            lonlat.transform('EPSG:3857', 'EPSG:4326');
-            
-            // get the latitude and longitude after a click
-            clickLon=Math.round(lonlat.lon*100000)/100000;
-            clickLat=Math.round(lonlat.lat*100000)/100000;
-            
-            
-            var size = new OpenLayers.Size(21,25);
-            var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
-            var icon = new OpenLayers.Icon('http://localhost/lib/openlayers/img/marker.png', size, offset);
-//            var markerslayer = map.getLayer('markers');
-            var marker = new OpenLayers.Marker(position, icon);
-            
-            // Remove all the markers if there is already any.
-            // At the end this will only allow one marker each time.
-            if(markers){
-            	markers.clearMarkers(); // Clear all the existing markers
-            	markers.addMarker(marker); // Add the new marker
-            } else {
-            	markers.addMarker(marker); // Add a new marker
-            };
-            
-            // Changing the latitude and logitude on the form so the data location will change for 
-            // all the portlet's available
-            console.log('Lat: ' + clickLat + '; Long: ' + clickLon);
-//            var changeLat = Ext.ComponentQuery.query('[name=latitude]')[0].setValue(Latitude);
-//            var changeLon = Ext.ComponentQuery.query('[name=longitude]')[0].setValue(Longitude);
-        };
+
 //        
 //        /**
 //         * Adding all the wind layers to the map

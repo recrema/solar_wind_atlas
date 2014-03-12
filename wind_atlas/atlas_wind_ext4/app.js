@@ -26,7 +26,7 @@ Ext.require([
  */
 Ext.application({
     name: 'AM',
-    appFolder: '/atlas_wind_ext4/app/',
+    appFolder: 'app/',
     controllers: [
         'Map',
         'Layertreepanel'

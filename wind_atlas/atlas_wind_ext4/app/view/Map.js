@@ -22,7 +22,8 @@ Ext.define('AM.view.Map', {
 //    zoom: 5,
 
     initComponent: function(config) {
-//        var me = this,
+
+    		var me = this,
             tbarItems = [],
             ctrl;
         
@@ -109,6 +110,23 @@ Ext.define('AM.view.Map', {
             disabled: true,
             tooltip: "next in history"
         })));
+        tbarItems.push(Ext.create('Ext.button.Button', {
+            text: "Wind Info",
+            toggleGroup: "draw",
+            enableToggle: true,
+            group: "draw",
+            toggleHandler: function(button, state) {
+            	if (state) {
+            		me.fireEvent('onClickActive');
+            		
+            	}
+            	else {
+            		me.fireEvent('onClickDeactivate');
+            	}
+            },
+            disabled: false,
+            tooltip: "Click to get coordinates"
+        }));
         tbarItems.push("->");
 
         // Help action
