@@ -12,7 +12,6 @@ Ext.define('AM.view.Layertreepanel', {
 	layout: 'fit',
 	width: 300,
 //	region: 'west',
-	title: 'Layers',
 //	split: 'true',
 	animate: 'tree',
 //	bodyStyle: 'transparent:50%;',

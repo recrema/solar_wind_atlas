@@ -141,7 +141,7 @@ Ext.define('AM.controller.Layertreepanel',{
         
         layerTree = [{
     	 	title: 'Overall Maps',
-    	 	items: overallLayerTree
+    	 	items: overallLayerTree,
     	 },{
     	 	title: 'Year Maps'
 //    	 	items: yearLayerTree

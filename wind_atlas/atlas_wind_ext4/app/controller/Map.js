@@ -4,7 +4,7 @@
  */
 Ext.define('AM.controller.Map', {
     extend: 'Ext.app.Controller',
-    
+    views: ['Windinfo'],
 //    requires: ['AM.view.Layertreepanel'],
 
     init: function() {
@@ -65,29 +65,28 @@ Ext.define('AM.controller.Map', {
          // Changing the latitude and logitude on the form so the data location will change for 
          // all the portlet's available
          
-         mapController.openWinInfo(clickLat,clickLon);
+         mapController.openWinInfoForm(clickLat,clickLon);
 
 //         var changeLat = Ext.ComponentQuery.query('[name=latitude]')[0].setValue(Latitude);
 //         var changeLon = Ext.ComponentQuery.query('[name=longitude]')[0].setValue(Longitude);
     },
     
-    openWinInfo: function(clickLat,clickLon) {
+    openWinInfoForm: function(clickLat,clickLon) {
 //     	console.log('Lat: ' + clickLat + '; Long: ' + clickLon);
-         windowInfo=Ext.ComponentQuery.query('windinfo')[0];
+    	windowInfo=Ext.ComponentQuery.query('windinfo')[0];
+         windowInfoForm=Ext.ComponentQuery.query('windinfoForm')[0];
          
-         if (!Ext.ComponentQuery.query('windinfo textfield[itemId=f1]')[0]) {
+         if (!Ext.ComponentQuery.query('windinfoForm textfield[itemId=f1]')[0]) {
          	
 	            var field1 = Ext.create('Ext.form.field.Text',{
 	            	itemId: 'f1',
 	                fieldLabel: 'Latitude',
-	                value: clickLat,
 	                name: 'lat',
 	                allowBlank: false
 	            });
 	            var field2 = Ext.create('Ext.form.field.Text',{
 	            	itemId: 'f2',
 	                fieldLabel: 'Longitude',
-	                value: clickLon,
 	                name: 'long',
 	                allowBlank: false
 	            });
@@ -104,20 +103,50 @@ Ext.define('AM.controller.Map', {
 	                name: 'startdate',
 	                allowBlank: false
 	            });
-	            windowInfo.add(field1);
-	            windowInfo.add(field2);
-	            windowInfo.add(field3);
-	            windowInfo.add(field4);
+	            windowInfoForm.add(field1);
+ /*
+  * The values are here because if you put them when you 
+  * create the fields, when we do a form reset it will put the first coordinate
+  * and will not clear the field!!!
+  *
+  */ 
+	            field1.setValue(clickLat); 
+	            windowInfoForm.add(field2);
+	            field2.setValue(clickLon);
+	            windowInfoForm.add(field3);
+	            windowInfoForm.add(field4);
+	            submitbutton=Ext.ComponentQuery.query('windinfoForm button[itemId=windfinfoFormSubmitButton]')[0];
+	            submitbutton.setHandler( function() {
+		            var form = this.up('form').getForm();
+		            if (form.isValid()) {
+		                form.submit({
+		                    success: function(form, action) {
+
+		                       mapController.openWinInfo(action.result.msg);
+		                    },
+		                    failure: function(form, action) {
+		                        Ext.Msg.alert('Failed', action.result.msg);
+		                    }
+		                });
+		            }
+		        });
          }
          else {
-         	lat=Ext.ComponentQuery.query('windinfo textfield[itemId=f1]')[0];
+         	lat=Ext.ComponentQuery.query('windinfoForm textfield[itemId=f1]')[0];
          	lat.setValue(clickLat);
-         	long=Ext.ComponentQuery.query('windinfo textfield[itemId=f2]')[0];
+         	long=Ext.ComponentQuery.query('windinfoForm textfield[itemId=f2]')[0];
          	long.setValue(clickLon);
          }
          windowInfo.show();
+         windowInfoForm.show();
     },
     
+    
+    openWinInfo: function(msg) {
+    	windowResult=Ext.ComponentQuery.query('windinfoResult')[0];
+    	windowResult.update(msg);
+    	
+    },
     onClickActive: function() {
         markers = new OpenLayers.Layer.Markers( 'Markers' ); // warning this variable should not be global see line 35
         map.addLayer(markers);
@@ -132,6 +161,11 @@ Ext.define('AM.controller.Map', {
 	    windowInfo.hide();
 	    markers.clearMarkers(); // warning this variable should not be global see line 43
 	    map.events.unregister('click', map, mapController.handleMapClick);
+	    
+//        var panelviewport = Ext.ComponentQuery.query('viewport panel[itemId=p1]')[0];
+//        var windinfo = mapController.getView('Windinfo').create();
+//        panelviewport.add(windinfo);
+//        panelviewport.doLayout();
     },
 
     onLayerTreePanelBeforeRender: function(layertree2) {

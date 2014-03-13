@@ -5,7 +5,7 @@
 Ext.define('AM.view.Viewport', {
     extend: 'Ext.Viewport',
     layout: 'fit',
-
+    
     requires: [
         'Ext.layout.container.Border',
         'Ext.layout.container.Fit',
@@ -22,7 +22,9 @@ Ext.define('AM.view.Viewport', {
         'GeoExt.tree.View',
         'GeoExt.tree.Column',
         'GeoExt.tree.LayerLoader',
-        'AM.view.Windinfo'
+        'AM.view.WindinfoForm',
+        'AM.view.Windinfo',
+        'AM.view.WindinfoResult'
 //        'AM.controller.Layertreepanel'
     ],
 
@@ -31,6 +33,7 @@ Ext.define('AM.view.Viewport', {
 //        Ext.apply(this, {
             this.items = [{
                 xtype: 'panel',
+                itemId: 'p1',
                 border: false,
                 layout: 'border',
                 dockedItems: [
@@ -38,7 +41,7 @@ Ext.define('AM.view.Viewport', {
                 ],
                 items: [{
                 	xtype: 'layertreepanel',
-                	region: 'west'
+                	region: 'west',
 //                	title: 'Layers',
 //                	id: 'tabpanel0',
 //                	region: 'west',
@@ -65,7 +68,14 @@ Ext.define('AM.view.Viewport', {
                     region: 'center'
                 },{
                 	xtype: 'windinfo',
-                	region: 'south'
+                	region: 'south',
+                	items: [{
+                    	xtype: 'windinfoForm',
+                    },
+                    {
+                    	xtype: 'windinfoResult',
+                    	flex: 1
+                    }]
                 }]
             }]
 //        });

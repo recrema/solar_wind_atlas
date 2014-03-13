@@ -3,51 +3,22 @@
  * @extends GeoExt.tree.Panel
  */
 Ext.define('AM.view.Windinfo', {
-	extend: 'Ext.form.Panel',
+	extend: 'Ext.panel.Panel',
 	alias: 'widget.windinfo',
-	
 	border: 'true',
-	layout: 'fit',
+    layout: {
+        type: 'hbox',
+        align: 'stretch'
+    },
 	height: 200,
 //	region: 'west',
-	title: 'Layers',
+	title: 'panel',
 //	split: 'true',
-	animate: 'tree',
 //	bodyStyle: 'transparent:50%;',
 	hidden: true,
 	collapsible: 'true',
 	autoScroll: 'true',
-	
-	
-	   layout: 'anchor',
-	    defaults: {
-	        anchor: '20%'
-	    },
-
-	
-	 buttons: [{
-	        text: 'Reset',
-	        handler: function() {
-	            this.up('form').getForm().reset();
-	        }
-	    }, {
-	        text: 'Submit',
-	        formBind: true, //only enabled once the form is valid
-	        disabled: true,
-	        handler: function() {
-	            var form = this.up('form').getForm();
-	            if (form.isValid()) {
-	                form.submit({
-	                    success: function(form, action) {
-	                       Ext.Msg.alert('Success', action.result.msg);
-	                    },
-	                    failure: function(form, action) {
-	                        Ext.Msg.alert('Failed', action.result.msg);
-	                    }
-	                });
-	            }
-	        }
-	    }],
+	renderTo: Ext.getBody(),
 	
 	initComponent: function() {
 		
