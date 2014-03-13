@@ -154,6 +154,7 @@ Ext.define('AM.controller.Map', {
         map.events.register('click', map, mapController.handleMapClick);
         
         var clickLat, clickLon;
+        mapController.openWinInfoForm(clickLat,clickLon);
     },
     
     onClickDeactivate: function() {

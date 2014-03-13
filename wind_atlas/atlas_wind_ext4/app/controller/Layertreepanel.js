@@ -142,6 +142,7 @@ Ext.define('AM.controller.Layertreepanel',{
         layerTree = [{
     	 	title: 'Overall Maps',
     	 	items: overallLayerTree,
+    	 	autoScroll: true
     	 },{
     	 	title: 'Year Maps'
 //    	 	items: yearLayerTree
@@ -151,6 +152,7 @@ Ext.define('AM.controller.Layertreepanel',{
     	 }];
         
         Ext.ComponentQuery.query('layertreepanel')[0].add(layerTree);
+        Ext.ComponentQuery.query('layertreepanel')[0].setActiveTab(0);
       //  Ext.ComponentQuery.query('layertreepanel')[0].doLayout();
 //        console.log(this.getInitialConfig('layertreepanel'));
 //        Ext.ComponentQuery.query('layertreepanel > tabpanel0').doLayout;

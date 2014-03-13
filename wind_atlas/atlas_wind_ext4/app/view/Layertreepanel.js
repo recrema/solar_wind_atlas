@@ -17,6 +17,7 @@ Ext.define('AM.view.Layertreepanel', {
 //	bodyStyle: 'transparent:50%;',
 //	collapsible: 'true',
 	autoScroll: 'true',
+
 //	items :[{
 //	 	title: "Overall Maps",
 //	 	itemId: 'tabpanel0'
