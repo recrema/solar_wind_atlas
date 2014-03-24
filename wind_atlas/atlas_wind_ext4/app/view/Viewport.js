@@ -11,20 +11,41 @@ Ext.define('AM.view.Viewport', {
         'Ext.layout.container.Fit',
         'Ext.tab.Panel',
         'Ext.tree.TreePanel',
+        'Ext.tree.plugin.TreeViewDragDrop',
+        'Ext.form.field.Date',
         'GeoExt.tree.Panel',
+        'GeoExt.panel.Map',
 //        'Ext.resizer.Splitter',
-        'AM.view.Header',
-        'AM.view.Map',
-        'AM.view.Layertreepanel',
         'GeoExt.tree.OverlayLayerContainer',
         'GeoExt.tree.BaseLayerContainer',
         'GeoExt.data.LayerTreeModel',
         'GeoExt.tree.View',
         'GeoExt.tree.Column',
         'GeoExt.tree.LayerLoader',
+        'GeoExt.slider.LayerOpacity',
+        'GeoExt.slider.Tip',
+        'AM.view.Header',
+        'AM.view.Map',
+        'AM.view.Layertreepanel',
         'AM.view.WindinfoForm',
         'AM.view.Windinfo',
-        'AM.view.WindinfoResult'
+        'AM.view.chart.Window',
+        'AM.view.WindinfoResult',
+        'Chart.ux.Highcharts',
+        'Chart.ux.Highcharts.Serie',
+//        'Chart.ux.Highcharts.AreaRangeSerie',
+//        'Chart.ux.Highcharts.AreaSerie',
+//        'Chart.ux.Highcharts.AreaSplineRangeSerie',
+//        'Chart.ux.Highcharts.AreaSplineSerie',
+//        'Chart.ux.Highcharts.BarSerie',
+//        'Chart.ux.Highcharts.ColumnRangeSerie',
+//        'Chart.ux.Highcharts.ColumnSerie',
+//        'Chart.ux.Highcharts.GaugeSerie',
+//        'Chart.ux.Highcharts.LineSerie',
+//        'Chart.ux.Highcharts.PieSerie',
+//        'Chart.ux.Highcharts.RangeSerie',
+//        'Chart.ux.Highcharts.ScatterSerie',
+//        'Chart.ux.Highcharts.SplineSerie'
 //        'AM.controller.Layertreepanel'
     ],
 
@@ -42,6 +63,7 @@ Ext.define('AM.view.Viewport', {
                 items: [{
                 	xtype: 'layertreepanel',
                 	region: 'west',
+
 //                	title: 'Layers',
 //                	id: 'tabpanel0',
 //                	region: 'west',
@@ -74,7 +96,7 @@ Ext.define('AM.view.Viewport', {
                     },
                     {
                     	xtype: 'windinfoResult',
-                    	flex: 1
+                    	flex: 1,
                     }]
                 }]
             }]

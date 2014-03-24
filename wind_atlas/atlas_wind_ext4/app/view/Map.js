@@ -13,7 +13,7 @@ Ext.define('AM.view.Map', {
         'AM.view.help.Action'
     ],
     border: 0,
-    layout: 'fit',
+//    layout: 'fit',
     
 //    region: 'west',
 //    width: 600,
@@ -26,7 +26,8 @@ Ext.define('AM.view.Map', {
     		var me = this,
             tbarItems = [],
             ctrl;
-        
+ 
+
 //        var map = new OpenLayers.Map(options);
 
     	var map = new OpenLayers.Map('map', {
@@ -50,22 +51,46 @@ Ext.define('AM.view.Map', {
  				    ),
                      new OpenLayers.Layer.OSM(
                          "Open Street Map"
-                     )
+                     ),
+                     new OpenLayers.Layer.Vector("imgLayer", {
+                	    attribution: "<img src='resources/images/windspeed_legend.png' style=' padding-right: 10px;'/>" //  ajustar a imagem em funcao do ecra!
+                	})
+ 					
                  ],
     	    displayProjection : 'EPSG:4326',
     	    center: new OpenLayers.LonLat(54.5, 24.5).transform('EPSG:4326', 'EPSG:3857'),
     	    zoom: 7
     	});
-    	
-    	map.addControl(new OpenLayers.Control.MousePosition());
+
+//    	map.addControl(new OpenLayers.Control.MousePosition());
         
 //        map.addControl(new OpenLayers.Control.LayerSwitcher());
     	
-    	map.events.register("mousemove", map, function(e) { 
-            var position = this.events.getMousePosition(e);
-            OpenLayers.Util.getElement("coords").innerHTML = position;
+    	map.events.register("updatesize", map, function() { 
+        	var controlMouse = map.getControlsBy("CLASS_NAME", "OpenLayers.Control.MousePosition")[0];
+        	map.removeControl(controlMouse);
+        	var size=map.getSize();
+        	var mapwidth=size.w;
+        	var mapheight=size.h;
+            map.addControl(
+                    new OpenLayers.Control.MousePosition({
+                        prefix: '<div style=\"color: grey; font-size: 12px;padding-left: 40%; width:'+mapwidth+'px;\">wgs84 coordinates: ',
+                        suffix: '</div>',
+                        separator: ' | ',
+                        numDigits: 3,
+                        emptyString: '<div style=\"color: grey; font-size: 12px;padding-left: 40%; width:'+mapwidth+'px;\">Mouse is not over map.</div>'
+                    })
+                );
+//            if (map.getLayersByName('imgLayer')[0]){
+//               var a=map.getLayersByName('My Data')[0];
+//                map.removeLayer(a);
+//            }
+//            var imgLayer= new OpenLayers.Layer.Vector("imgLayer", {
+//        	    attribution: "<img src='resources/images/windspeed_legend.png' style=' padding-right: 10px;'/>" //  ajustar a imagem em funcao do ecra!
+//        	});
+//            map.addLayer(imgLayer);
         });
-    	
+//    	
         // ZoomToMaxExtent control, a "button" control
     	tbarItems.push(Ext.create('Ext.button.Button', Ext.create('GeoExt.Action', {
             control: new OpenLayers.Control.ZoomToMaxExtent(),
@@ -159,14 +184,15 @@ Ext.define('AM.view.Map', {
     	//routine to create month and year maps' variables, add them to the temp array along with the respective WMS requests
     	for (var i=0; i<heights.length; i++){
     		for (year = year_start; year <= year_end; year++){
-    			layer_title = layer_text_prefix + " " + year + " at " + heights[i] + "m " + " - Masdar Institute";
+    			layer_title = layer_text_prefix + " " + year + " at " + heights[i] + " m" + " - Masdar Institute";
     			layer_name = layer_prefix + heights[i] + 'm_' + year;
     			temp[layer_name] = new OpenLayers.Layer.WMS(layer_title, geoserverUrl, {Layers: workspace + ":" + layer_name, format: format, tiled: true, transparent: true, tilesOrigin : map.maxExtent.left + ',' + map.maxExtent.bottom}, layers_configurations);
+//    			console.log(temp[layer_name]);
     			map.addLayers([temp[layer_name]]);
 //    			chartLayers.push(temp[layer_name]);
     			for (var ii=0; ii<month_numbers.length; ii++){
     				month_name = get_month_name(month_numbers[ii]);
-    				layer_title = layer_text_prefix + " " + month_name + " " + year + " at " + heights[i] + "m " + " - Masdar Institute";
+    				layer_title = layer_text_prefix + " " + month_name + " " + year + " at " + heights[i] + "m" + " - Masdar Institute";
     				layer_name = layer_prefix + heights[i] + 'm_' + year + month_numbers[ii];
     				temp[layer_name] = new OpenLayers.Layer.WMS(layer_title, geoserverUrl, {Layers: workspace + ":" + layer_name, format: format, tiled: true, transparent: true, tilesOrigin : map.maxExtent.left + ',' + map.maxExtent.bottom}, layers_configurations);
     				map.addLayers([temp[layer_name]]);
@@ -175,7 +201,7 @@ Ext.define('AM.view.Map', {
     		};
     	};
     	
-    	//routine to create overall maps' variables, add them to the temp array along with the respective WMS requests
+//    	routine to create overall maps' variables, add them to the temp array along with the respective WMS requests
     	for (var i=0; i<heights.length; i++) {
     		layer_title = layer_text_prefix + " at " + heights[i] + "m Annual" + " - Masdar Institute";
     		layer_name = layer_prefix + heights[i] + 'm_' + "Annual";
@@ -184,6 +210,7 @@ Ext.define('AM.view.Map', {
 //    		chartLayers.push(temp[layer_name]);
     		for (var ii=0; ii<month_numbers.length; ii++) {
     			month_name = get_month_name(month_numbers[ii]);
+
     			layer_title = layer_text_prefix + " at " + heights[i] + "m " + month_name + " - Masdar Institute";
     			layer_name = layer_prefix + heights[i] + 'm_' + month_numbers[ii];
     			temp[layer_name] = new OpenLayers.Layer.WMS(layer_title, geoserverUrl, {Layers: workspace + ":" + layer_name, format: format, tiled: true, transparent: true, tilesOrigin : map.maxExtent.left + ',' + map.maxExtent.bottom}, layers_configurations);

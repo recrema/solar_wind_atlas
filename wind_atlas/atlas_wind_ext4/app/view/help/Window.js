@@ -9,6 +9,7 @@ Ext.define('AM.view.help.Window', {
         Ext.apply(this, {
             bodyCls: "helpwindow",
             closeAction: "hide",
+        	modal: true,
             layout: 'fit',
             maxWidth: 600,
             title: "Help"

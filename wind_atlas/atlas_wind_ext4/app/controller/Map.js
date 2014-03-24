@@ -4,33 +4,62 @@
  */
 Ext.define('AM.controller.Map', {
     extend: 'Ext.app.Controller',
-    views: ['Windinfo'],
+    views: ['Windinfo', 'chart.Window'],
 //    requires: ['AM.view.Layertreepanel'],
 
     init: function() {
+    	
+    	
     	mapController = this;
         this.control({
             'mappanel': {
                 'beforerender': this.onMapPanelBeforeRender,
                 'onClickActive': this.onClickActive,
-                'onClickDeactivate': this.onClickDeactivate,
+                'onClickDeactivate': this.onClickDeactivate
+
                
+            },
+            'windinfoResult': {
+                'onChartActivate':this.onChartActivate
             },
             'layertreepanel': {
             	'beforerender': this.onLayerTreePanelBeforeRender
             }
         }, this);
     },
-    
+
 
     onMapPanelBeforeRender: function(mapPanel, options) {
-    	
-    	console.log('onMapPanelBeforeRender rendered');
 
+    	
         // for dev purpose
         map = mapPanel.map;
-        mapPanel = mapPanel;
+//        mapPanel = mapPanel;
+//        mapController.loading=0;
+//		panel=Ext.ComponentQuery.query('mappanel')[0];
+//		myMask = new Ext.LoadMask({
+//			msg:"Map loading...",
+//			target:panel,
+//			 });
+//        
+//        for (var src in map.layers)  {			
+//        		var lyr = map.layers[src];
+//				lyr.events.register('loadstart', this, function(){mapController.update( 1)});
+//				lyr.events.register('loadend',   this, function(){mapController.update( -1)});  
+//			};
+        
     },
+//	update: function(num) {
+//
+//		
+//		mapController.loading += num;
+//		if (mapController.loading > 0) {
+//			myMask.show();
+//		} else {
+//			mapController.loading = 0;
+//			myMask.hide();
+//		};
+//	},
  
     handleMapClick: function(e) {
 
@@ -47,9 +76,9 @@ Ext.define('AM.controller.Map', {
          clickLat=Math.round(lonlat.lat*100000)/100000;
          
          
-         var size = new OpenLayers.Size(21,25);
-         var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
-         var icon = new OpenLayers.Icon('../lib/openlayers/img/marker.png', size, offset);
+         var size = new OpenLayers.Size(40,40);
+//         var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+         var icon = new OpenLayers.Icon('resources/images/button.gif', size);
 //         var markerslayer = map.getLayer('markers');
          var marker = new OpenLayers.Marker(position, icon);
          
@@ -92,15 +121,29 @@ Ext.define('AM.controller.Map', {
 	            });
 	            var field3 = Ext.create('Ext.form.field.Date',{
 	            	itemId: 'f3',
+	                id: 'f3',
 	                fieldLabel: 'From',
+	                format: 'd/m/Y',
 	                name: 'startdate',
+	                endDateField: 'f4',
+                    listeners:{
+                        'change': function(th,a){
+                         Ext.getCmp('f4').setMinValue(a);
+                    }},
 	                allowBlank: false
 	            });
 	            var field4 = Ext.create('Ext.form.field.Date',{
 	            	itemId: 'f4',
+	                id: 'f4',
 	                fieldLabel: 'To',
-	                value: new Date(),
+	                format: 'd/m/Y',
+//	                value: new Date(),
 	                name: 'startdate',
+	                startDateField: 'f3',
+                    listeners:{
+                        'change': function(th,a){
+                         Ext.getCmp('f3').setMaxValue(a);
+                    }},
 	                allowBlank: false
 	            });
 	            windowInfoForm.add(field1);
@@ -117,15 +160,17 @@ Ext.define('AM.controller.Map', {
 	            windowInfoForm.add(field4);
 	            submitbutton=Ext.ComponentQuery.query('windinfoForm button[itemId=windfinfoFormSubmitButton]')[0];
 	            submitbutton.setHandler( function() {
+	            	Ext.ComponentQuery.query('windinfoResult')[0].setLoading(true);
 		            var form = this.up('form').getForm();
 		            if (form.isValid()) {
 		                form.submit({
 		                    success: function(form, action) {
-
-		                       mapController.openWinInfo(action.result.msg);
+		                    	Ext.ComponentQuery.query('windinfoResult')[0].setLoading(false);
+		                    	mapController.openWinInfo(action.result.msg1,'windinfoResultTab1','Wind roses');
+		                    	mapController.openWinInfo(action.result.msg2,'windinfoResultTab2','Wind speed charts');
 		                    },
 		                    failure: function(form, action) {
-		                        Ext.Msg.alert('Failed', action.result.msg);
+		                    	mapController.openWinInfo(action.result.msg);
 		                    }
 		                });
 		            }
@@ -142,31 +187,58 @@ Ext.define('AM.controller.Map', {
     },
     
     
-    openWinInfo: function(msg) {
-    	windowResult=Ext.ComponentQuery.query('windinfoResult')[0];
-    	windowResult.update(msg);
+    openWinInfo: function(msg,tab,tabTitle) {
+    	
+//    	windowResult=Ext.ComponentQuery.query('windinfoResult')[0];
+    	windowResultTab = Ext.getCmp(tab);
+    	windowResultTab.setTitle(tabTitle);
+    	windowResultTab.tab.show();
+    	windowResultTab.update(msg,true);
     	
     },
     onClickActive: function() {
-        markers = new OpenLayers.Layer.Markers( 'Markers' ); // warning this variable should not be global see line 35
-        map.addLayer(markers);
+    	if (typeof markers == "undefined") {
+            markers = new OpenLayers.Layer.Markers( 'Markers' ); // warning this variable should not be global see line 35
+            map.addLayer(markers);
+            map.events.register('click', map, mapController.handleMapClick);
+            clickLat=null;
+            clickLon=null;
+
+    	}
+    	else {
+    		markers.setVisibility(true);
+    		map.events.register('click', map, mapController.handleMapClick);
+    		}
         
-        map.events.register('click', map, mapController.handleMapClick);
-        
-        var clickLat, clickLon;
         mapController.openWinInfoForm(clickLat,clickLon);
     },
     
     onClickDeactivate: function() {
 	    windowInfo=Ext.ComponentQuery.query('windinfo')[0];
 	    windowInfo.hide();
-	    markers.clearMarkers(); // warning this variable should not be global see line 43
+//	    markers.clearMarkers(); // warning this variable should not be global
+	    markers.setVisibility(false);
 	    map.events.unregister('click', map, mapController.handleMapClick);
+	    
 	    
 //        var panelviewport = Ext.ComponentQuery.query('viewport panel[itemId=p1]')[0];
 //        var windinfo = mapController.getView('Windinfo').create();
 //        panelviewport.add(windinfo);
 //        panelviewport.doLayout();
+    },
+    onChartActivate: function(json) {
+
+        var panelviewport = Ext.ComponentQuery.query('viewport panel[itemId=p1]')[0];
+        chartWindow = mapController.getView('chart.Window').create();
+        panelviewport.add(chartWindow);
+        Ext.WindowManager.register(chartWindow);
+        Ext.WindowManager.bringToFront(chartWindow);
+        chartWindow.add([{
+		    xtype: 'highchart',
+				itemId: 'chart1',
+				initAnimAfterLoad: false,
+		    chartConfig: json
+		 }]);
     },
 
     onLayerTreePanelBeforeRender: function(layertree2) {
@@ -181,9 +253,30 @@ Ext.define('AM.controller.Map', {
 //        mapPanel = mapPanel;
     },
     
-
+    onLayerTreePanelBeforeRender: function(layertree2) {
+    	
+//    	console.log('onLayerTreeBeforeRender rendered');
+    	layertree = layertree2;
+//    	console.log(layertree);
+    	var treeConfigYear, treeConfigMonth, treeConfigHeight;
+    	
+        // for dev purpose
+//        map = mapPanel.map;
+//        mapPanel = mapPanel;
+    },
     
     onLaunch: function() {
+//    	var size=map.getSize();
+//    	mapwidth=size.w;
+//        map.addControl(
+//                new OpenLayers.Control.MousePosition({
+//                    prefix: '<div style=\"color: black; font-size: 12px;padding-left: 40%; width:'+mapwidth+'px; align: center;\">Coordinates: ',
+//                    suffix: '</div>',
+//                    separator: ' | ',
+//                    numDigits: 3,
+//                    emptyString: 'Mouse is not over map.'
+//                })
+//            );
 //    	console.log(Ext.get('tabpanel0'));
     	//Code to upload layers to the map (try to do this from a json string)
     	

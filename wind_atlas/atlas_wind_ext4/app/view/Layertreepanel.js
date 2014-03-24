@@ -16,7 +16,7 @@ Ext.define('AM.view.Layertreepanel', {
 	animate: 'tree',
 //	bodyStyle: 'transparent:50%;',
 //	collapsible: 'true',
-	autoScroll: 'true',
+
 
 //	items :[{
 //	 	title: "Overall Maps",
