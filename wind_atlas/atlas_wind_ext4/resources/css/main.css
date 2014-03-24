@@ -1,0 +1,37 @@
+.header {
+    background-color: #FFFFFF;
+    background-image: url(../images/banner_top.jpg);
+    color: grey;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 10px;
+    text-align: right;
+    vertical-align: middle;
+}
+
+/* .header SPAN { */
+/* 	vertical-align: middle; */
+/*     text-align: right; */
+/*     display: table-cell; */
+/* } */
+
+.helpwindow {
+    background-color: #FFFFFF;
+    padding: 5px;
+}
+
+.helpwindow div.cascade {
+    padding: 0 0 0 5px;
+}
+
+.helpwindow h2 {
+    margin: 2px 0 0 0;
+}
+
+.buttonwindclose {
+	border-color: #b3b4c6;
+	border-width: 1px 1px 0px 1px;
+	background-image: none;
+	background-color: #d9dbdd;
+	left:90%;
+}
