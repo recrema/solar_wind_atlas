@@ -6,19 +6,14 @@ Ext.define('AM.view.chart.Window', {
     extend: 'Ext.window.Window',
     alias : 'widget.chartwindow',
     itemId: 'chartWindow',
-//    closeAction: 'hide',
 	height: 500,
 	width: 500,
 	draggable : false,
 	border: false,
-//	region: 'west',
-//	split: 'true',
-//	bodyStyle: 'transparent:50%;',
-	hidden: false,
+	hidden: true,
 	modal: true,
-	autoShow: true,
+	animateTarget : '',//this value will be changed in the mapController.onChartActivate() function dynamically
 	header: false,
-	
 	initComponent: function() {
 		var me = this;
 		

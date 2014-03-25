@@ -4,9 +4,50 @@
     color: grey;
     font-size: 20px;
     font-weight: bold;
-    padding: 10px;
+    padding: 5px;
     text-align: right;
     vertical-align: middle;
+}
+
+.transparentCls {
+  opacity:0;
+}
+.agedi {
+  background-color: #FFFFFF;
+  border-color: #FFFFFF;
+  background-image: url(../images/agedi.png);
+  background-repeat: no-repeat;
+}
+.envagenc {
+  background-color: #FFFFFF;
+  border-color: #FFFFFF;
+  background-image: url(../images/envagenc.png);
+  background-repeat: no-repeat;
+}
+.irena {
+  background-color: #FFFFFF;
+  border-color: #FFFFFF;
+  background-image: url(../images/irena.png);
+  background-repeat: no-repeat;
+}
+.supcounener {
+  background-color: #FFFFFF;
+      padding: 10px;
+  border-color: #FFFFFF;
+  background-image: url(../images/supcounener.png);
+  background-repeat: no-repeat;
+}
+.min {
+  background-color: #FFFFFF;
+  border-color: #FFFFFF;
+  background-image: url(../images/min.png);
+  background-repeat: no-repeat;
+}
+.un {
+  background-color: #FFFFFF;
+  border-color: #FFFFFF;
+  background-image: url(../images/un.png);
+  background-repeat: no-repeat;
 }
 
 /* .header SPAN { */

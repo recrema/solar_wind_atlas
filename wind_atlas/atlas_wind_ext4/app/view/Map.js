@@ -137,6 +137,7 @@ Ext.define('AM.view.Map', {
         })));
         tbarItems.push(Ext.create('Ext.button.Button', {
             text: "Wind Info",
+
             toggleGroup: "info",
             enableToggle: true,
             group: "info",
@@ -157,6 +158,8 @@ Ext.define('AM.view.Map', {
         // Help action
         tbarItems.push(
             Ext.create('Ext.button.Button', Ext.create('AM.view.help.Action', {
+                id: "helpButton",
+            	
                 windowContentEl: "help"
             }))
         );
@@ -177,21 +180,21 @@ Ext.define('AM.view.Map', {
     	var layers_configurations = {buffer: 0, displayOutsideMaxExtent: true, ratio: 1, opacity: 1, visibility: false};
         
         function get_month_name(month){
-    		month_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    		var month_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     		return month_names[parseInt(month)-1];
     	};
 
     	//routine to create month and year maps' variables, add them to the temp array along with the respective WMS requests
     	for (var i=0; i<heights.length; i++){
-    		for (year = year_start; year <= year_end; year++){
-    			layer_title = layer_text_prefix + " " + year + " at " + heights[i] + " m" + " - Masdar Institute";
-    			layer_name = layer_prefix + heights[i] + 'm_' + year;
+    		for (var year = year_start; year <= year_end; year++){
+    			var layer_title = layer_text_prefix + " " + year + " at " + heights[i] + " m" + " - Masdar Institute";
+    			var layer_name = layer_prefix + heights[i] + 'm_' + year;
     			temp[layer_name] = new OpenLayers.Layer.WMS(layer_title, geoserverUrl, {Layers: workspace + ":" + layer_name, format: format, tiled: true, transparent: true, tilesOrigin : map.maxExtent.left + ',' + map.maxExtent.bottom}, layers_configurations);
 //    			console.log(temp[layer_name]);
     			map.addLayers([temp[layer_name]]);
 //    			chartLayers.push(temp[layer_name]);
     			for (var ii=0; ii<month_numbers.length; ii++){
-    				month_name = get_month_name(month_numbers[ii]);
+    				var month_name = get_month_name(month_numbers[ii]);
     				layer_title = layer_text_prefix + " " + month_name + " " + year + " at " + heights[i] + "m" + " - Masdar Institute";
     				layer_name = layer_prefix + heights[i] + 'm_' + year + month_numbers[ii];
     				temp[layer_name] = new OpenLayers.Layer.WMS(layer_title, geoserverUrl, {Layers: workspace + ":" + layer_name, format: format, tiled: true, transparent: true, tilesOrigin : map.maxExtent.left + ',' + map.maxExtent.bottom}, layers_configurations);

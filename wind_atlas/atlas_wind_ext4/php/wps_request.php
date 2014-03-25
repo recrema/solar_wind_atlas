@@ -288,39 +288,41 @@ $output1 = '
 		<script>
 			function bigImg(x)
 			{
-			x.style.height="110px";
-			x.style.width="170px";
+			x.style.border="solid";
+			x.style.borderColor="grey";
 			}
 		
 			function normalImg(x)
 			{
-			x.style.height="100px";
-			x.style.width="160px";
+			x.style.border="none";
 			}
 		</script>
 		<br>
 		<br>
-		<a href="javascript:void(0)"><img src="tmp/chart.svg" width="160" height="100" onmouseover="bigImg(this)" onmouseout="normalImg(this)" onClick="mapController.onChartActivate('.$json.');"></a>
-		<a href="javascript:void(0)"><img src="tmp/chart2.svg" width="160" height="100" onmouseover="bigImg(this)" onmouseout="normalImg(this)" onClick="mapController.onChartActivate('.$json2.');"></a>';
+		<a href="javascript:void(0)"><img style="float: left;" id="windRose1" src="tmp/chart.svg" width="160" height="100" onmouseover="bigImg(this)" onmouseout="normalImg(this)" onClick="mapController.onChartActivate('.$json.',\'windRose1\');"></a>
+		<a href="javascript:void(0)"><img style="float: left;" id="windRose2" src="tmp/chart2.svg" width="160" height="100" onmouseover="bigImg(this)" onmouseout="normalImg(this)" onClick="mapController.onChartActivate('.$json2.',\'windRose2\');"></a>
+		<a href="javascript:void(0)"><img style="float: left;" id="windRose3" src="tmp/chart2.svg" width="160" height="100" onmouseover="bigImg(this)" onmouseout="normalImg(this)" onClick="mapController.onChartActivate('.$json2.',\'windRose3\');"></a>
+		<a href="javascript:void(0)"><img style="float: left;" id="windRose4" src="tmp/chart2.svg" width="160" height="100" onmouseover="bigImg(this)" onmouseout="normalImg(this)" onClick="mapController.onChartActivate('.$json2.',\'windRose4\');"></a>
+		<a href="javascript:void(0)"><img style="float: left;" id="windRose5" src="tmp/chart2.svg" width="160" height="100" onmouseover="bigImg(this)" onmouseout="normalImg(this)" onClick="mapController.onChartActivate('.$json2.',\'windRose5\');"></a>';
 
 $output2 = '
 		<script>
 			function bigImg(x)
 			{
-			x.style.height="110px";
-			x.style.width="170px";
+			x.style.border="solid";
+			x.style.borderColor="grey";
 			}
 
 			function normalImg(x)
 			{
-			x.style.height="100px";
-			x.style.width="160px";
+			x.style.border="none";
 			}
 		</script>
 		<br>
 		<br>
-		<a href="javascript:void(0)"><img src="tmp/chart3.svg" width="160" height="100" onmouseover="bigImg(this)" onmouseout="normalImg(this)" onClick="mapController.onChartActivate('.$json3.');"></a>';
+		<a href="javascript:void(0)"><img id="windChart1" src="tmp/chart3.svg" width="160" height="100" onmouseover="bigImg(this)" onmouseout="normalImg(this)" onClick="mapController.onChartActivate('.$json3.',\'windChart1\');"></a>
+		<a href="javascript:void(0)"><img id="windChart2" src="tmp/chart3.svg" width="160" height="100" onmouseover="bigImg(this)" onmouseout="normalImg(this)" onClick="mapController.onChartActivate('.$json3.',\'windChart2\');"></a>';
 
-$arr = array ('success'=>true,'msg1'=>$output1,'msg2'=>$output2);
+$arr = array ('success'=>true,'msg1'=>$output1,'msg2'=>$output2,'msg3'=>'Some html or window were the user can view/download the report in pdf<br><br>This information comes from the php (the response from the server after the form submition)');
 print_r(json_encode($arr));
 ?>
