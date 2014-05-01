@@ -42,7 +42,7 @@ Ext.define('AM.view.help.Action', {
                 }
                 this._window.show();
             },
-            text: "Help"
+            text: "Help",
         });
         this.callParent(arguments);
     }

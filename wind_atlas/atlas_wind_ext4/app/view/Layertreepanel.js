@@ -10,6 +10,7 @@ Ext.define('AM.view.Layertreepanel', {
 	
 	border: 'true',
 	layout: 'fit',
+	border:false,
 	width: 300,
 //	region: 'west',
 //	split: 'true',

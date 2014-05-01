@@ -7,10 +7,259 @@
     padding: 5px;
     text-align: right;
     vertical-align: middle;
+
+}
+.x-panel-body {border-color: grey;}
+
+.windinfoFrom .x-panel-body  {
+border-color: red;
 }
 
 .transparentCls {
   opacity:0;
+}
+/**************************************************************/
+/********************  Login form ****************************/
+/************************************************************/
+
+.formlogin {
+position:absolute;
+left:100px;
+top:150px;
+
+}
+.loginMask.x-mask {
+    filter: alpha(opacity=70);
+    opacity: .95;
+    background: #333333 !important;
+}
+/**Warning this classes are main classes and I'm rewriting them here so the menu item text are grey and white **/
+.x-menu-item-active {
+    color:white;
+	background-color:grey;
+}
+.x-menu-item-active .x-menu-item-text{
+	border-color:#ffffff;
+    text-align: left;
+    color:white;
+    font-size: 12px;
+	font-weight: bold;
+	font-family: helvetica, arial, verdana, sans-serif;
+	background-color:grey;
+}
+.x-menu-item-text{
+	border-color:#ffffff;
+    text-align: left;
+    color:grey;
+    font-size: 12px;
+	font-weight: bold;
+	font-family: helvetica, arial, verdana, sans-serif;
+	color: #666666;
+}
+
+/**************************************************************/
+/********************  Icons And buttons ******************/
+/************************************************************/
+.help_menu {
+	background-image: url(../icons/menuhelp.png);
+	background-repeat: no-repeat;
+	background-position:2px 2px;
+	background-color:white;
+	border-color:#ffffff;
+}
+.feedback_button .x-btn-inner {
+	background-image: url(../icons/feedback.png);
+	background-repeat: no-repeat;
+	background-position:0px 0px;
+	border-color:white;
+	background-color:white;
+	color:grey;
+}
+.feedback_button:hover .x-btn-inner {
+	border-color:grey;
+	background-color:grey;
+	color:white;
+}
+.feedback_button{
+	border-color:white;
+	padding: 0px;
+}
+
+.help_button .x-btn-inner {
+	background-image: url(../icons/help.png);
+	background-repeat: no-repeat;
+	background-position:0px 0px;
+	border-color:white;
+	background-color:white;
+	color:grey;
+}
+.help_button:hover .x-btn-inner {
+	border-color:grey;
+	background-color:grey;
+	color:white;
+}
+.help_button{
+	border-color:white;
+	padding: 0px;
+}
+
+.polygon_button {
+	background-image: url(../icons/polygon.png);
+	background-repeat: no-repeat;
+	background-position:4px 4px;
+	background-color:white;
+	border-color:grey;
+	width:30px;
+	height:30px;
+}
+.x-polygon_button_pressed {
+	background-image: url(../icons/polygon.png);
+	background-repeat: no-repeat;
+	background-position:4px 4px;
+	background-color:grey;
+	border-color:grey;
+	width:30px;
+	height:30px;
+}
+.box_button {
+	background-image: url(../icons/box.png);
+	background-repeat: no-repeat;
+	background-position:4px 4px;
+	background-color:white;
+	border-color:grey;
+	width:30px;
+	height:30px;
+}
+.x-box_button_pressed {
+	background-image: url(../icons/box.png);
+	background-repeat: no-repeat;
+	background-position:4px 4px;
+	background-color:grey;
+	border-color:grey;
+	width:30px;
+	height:30px;
+}
+.line_button {
+	background-image: url(../icons/line.png);
+	background-repeat: no-repeat;
+	background-position:4px 4px;
+	background-color:white;
+	border-color:grey;
+	width:30px;
+	height:30px;
+}
+.x-line_button_pressed {
+	background-image: url(../icons/line.png);
+	background-repeat: no-repeat;
+	background-position:4px 4px;
+	background-color:grey;
+	border-color:grey;
+	width:30px;
+	height:30px;
+}
+.admin_button {
+	background-image: url(../icons/tools.png);
+	background-repeat: no-repeat;
+	background-position:2px 2px;
+	background-color:white;
+	border-color:#ffffff;
+}
+
+.measure_button .x-btn-inner {
+	background-image: url(../icons/rule.png);
+	background-repeat: no-repeat;
+	background-position:0px 0px;
+	border-color:white;
+	background-color:white;
+	color:grey;
+}
+.measure_button:hover .x-btn-inner {
+	border-color:grey;
+	background-color:grey;
+	color:white;
+}
+.measure_button{
+	border-color:white;
+	padding: 0px;
+}
+
+.login_button {
+	background-image: url(../icons/login.png);
+	background-repeat: no-repeat;
+	background-position:2px 2px;
+	background-color:white;
+	border-color:#ffffff;
+	width:35px
+}
+.logout_button {
+	background-image: url(../icons/logout.png);
+	background-repeat: no-repeat;
+	background-position:2px 2px;
+	background-color:white;
+	border-color:#ffffff;
+	width:35px
+}
+.toolbox_button {
+	background-image: url(../icons/toolbox.png);
+	background-repeat: no-repeat;
+	background-position:0px 0px;
+	background-color:white;
+	border-color:#ffffff;
+	width:50px
+}
+.wind_info {
+	background-image: url(../icons/chart.png);
+	background-repeat: no-repeat;
+	background-position:2px 2px;
+	background-color:white;
+	border-color:#ffffff;
+	width:25px
+}
+.x-customOverStyle {
+    background-color: rgba(0, 255, 0, 0.2);
+    background-image: none;
+    border-color: green;
+}
+.x-wind_info_pressed {
+	background-image: url(../icons/chart.png);
+	background-repeat: no-repeat;
+	background-position:2px 2px;
+	background-color:grey;
+	border-color:#ffffff;
+	width:25px
+}
+
+.context_maps {
+	background-image: url(../icons/contextmaps.png);
+	background-repeat: no-repeat;
+	background-position:1px 1px;
+	background-color:white;
+	border-color:#ffffff;
+	width:45px;
+}
+.icon_eye {
+  background-image: url(../icons/eye.png);
+  background-position:2px 2px;
+  background-repeat: no-repeat;
+}
+.icon_bullet_down {
+  background-image: url(../icons/bullet_arrow_down.png);
+  background-repeat: no-repeat;
+}
+.icon_bullet_up {
+  background-image: url(../icons/bullet_arrow_up.png);
+  background-repeat: no-repeat;
+}
+.icon_cross {
+  background-image: url(../icons/cross.png);
+  background-repeat: no-repeat;
+  background-position:4px 0px;
+  width:45px;
+}
+.icon_info {
+  background-image: url(../icons/information.png);
+  background-position:8px 0px;
+  background-repeat: no-repeat;
 }
 .agedi {
   background-color: #FFFFFF;
@@ -49,12 +298,21 @@
   background-image: url(../images/un.png);
   background-repeat: no-repeat;
 }
+.buttonwindclose {
+	border-color: #b3b4c6;
+	border-width: 1px 1px 0px 1px;
+	background-image: none;
+	background-color: #d9dbdd;
+	left:90%;
+}
+.buttonloginclose {
+	top:95%;
+	left:85%;
+}
 
-/* .header SPAN { */
-/* 	vertical-align: middle; */
-/*     text-align: right; */
-/*     display: table-cell; */
-/* } */
+/**************************************************************/
+/********************   Windows ******************************/
+/************************************************************/
 
 .helpwindow {
     background-color: #FFFFFF;
@@ -69,10 +327,3 @@
     margin: 2px 0 0 0;
 }
 
-.buttonwindclose {
-	border-color: #b3b4c6;
-	border-width: 1px 1px 0px 1px;
-	background-image: none;
-	background-color: #d9dbdd;
-	left:90%;
-}

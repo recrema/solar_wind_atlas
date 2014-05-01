@@ -5,9 +5,10 @@
 Ext.define('AM.view.WindinfoForm', {
 	extend: 'Ext.form.Panel',
 	alias: 'widget.windinfoForm',
-	url: 'php/wps_request.php',
+	url: 'php/wps_request.php', //?final_date=200303023&initial_date=2003020100&latitude=22.2&longitude=51.3
 	method : 'POST',
-	border: false,
+	border: true,
+    cls:'windinfoFrom',
 //	title: 'Layers',
 //	split: 'true',
 	width: 299,
@@ -16,11 +17,12 @@ Ext.define('AM.view.WindinfoForm', {
 //	hidden: true,
 //	collapsible: 'true',
 	autoScroll: 'true',
+	bodyPadding: 7,
 //	resizable: true,
 	
 	   layout: 'anchor',
 	    defaults: {
-	        anchor: '90%'
+	        anchor: '70%'
 	    },
 
 	    buttons: [{

@@ -2,15 +2,18 @@
 <html>
     <head>
         <title>ReCREMA Wind Atlas</title>
-
+		<link rel="SHORTCUT ICON" href="favicon.ico">
         <link rel="stylesheet" type="text/css" href="../lib/ext-4.2.2/resources/ext-theme-neptune/ext-theme-neptune-all-debug.css">
-        <link rel="stylesheet" type="text/css" href="http://openlayers.org/api/2.13/theme/default/style.css" />
+        <link rel="stylesheet" type="text/css" href="../lib/OpenLayers-2.13.1/theme/default/style.css" />
 	    <link rel="stylesheet" type="text/css" href="resources/css/main.css"/>
 	    
         <!-- Include OpenLayers.  Isn't managed by Ext.Loader -->
         <script src="../lib/OpenLayers-2.13.1/OpenLayers.js"></script>
+        <!-- Dinamic measure -->
+        <script src="../lib/OL-DynamicMeasure/lib/OpenLayers/Control/DynamicMeasure.js"></script>
+
 		
-		<script src="http://maps.google.com/maps/api/js?v=3.2&sensor=false"></script>
+		<script src="http://maps.google.com/maps/api/js?v=3.15&sensor=false"></script>
 		
         <!-- Usually you'd load ext.js, not ext-dev.js, but there is an issue currently:
         http://www.sencha.com/forum/showthread.php?264887-Ext-4.2.1-Commercial-Ext.cmd-missing-in-Ext.js-file -->
@@ -22,6 +25,7 @@
 	    <script type="text/javascript" src="http://code.highcharts.com/highcharts.js"></script>
 	    <script type="text/javascript" src="http://code.highcharts.com/highcharts-more.js"></script>
 	    <script type="text/javascript" src="http://code.highcharts.com/modules/exporting.js"></script>
+	    <script type="text/javascript" src="http://www.google.com/recaptcha/api/js/recaptcha_ajax.js"></script>
 
     </head>
 

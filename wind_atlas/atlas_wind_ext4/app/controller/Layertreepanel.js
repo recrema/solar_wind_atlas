@@ -4,7 +4,6 @@
  */
 Ext.define('AM.controller.Layertreepanel',{
 	extend: 'Ext.app.Controller',
-	
 //	refs:['AM.controller.Map'],
 	
 //	views: ['AM.view.Layertreepanel'],
@@ -35,13 +34,15 @@ Ext.define('AM.controller.Layertreepanel',{
 
      	   if (record.isExpanded()) {
 	           var action1 = Ext.create('Ext.Action', {
-	               text: 'Collapse',
+	               text: '&nbsp;Collapse',
+	               iconCls:"icon_bullet_up",
 	               handler: function(widget, event) {
 	            	   record.collapse();
 	               }
 	           });
 	           // create right click contex menu
 	           var ContextMenu = Ext.create('Ext.menu.Menu', {
+	        	   plain: true,
 	               items: [
 	                       action1
 	               ]
@@ -52,13 +53,15 @@ Ext.define('AM.controller.Layertreepanel',{
      	   else {
 
 	           var action1 = Ext.create('Ext.Action', {
-	               text: 'Expand',
+	               text: '&nbsp;Expand',
+	               iconCls:"icon_bullet_down",
 	               handler: function(widget, event) {
 	            	   record.expand();
 	               }
 	           });
 	           // create right click contex menu
 	           var ContextMenu = Ext.create('Ext.menu.Menu', {
+	        	   plain: true,
 	               items: [
 	                       action1
 	               ]
@@ -68,68 +71,79 @@ Ext.define('AM.controller.Layertreepanel',{
         }
         else {
 	        	event.stopEvent(); //stop the normal mouse action in browser!
-	           var action1 = Ext.create('Ext.Action', {
-	               text: 'Transparency',
-	               // First window manager closes all the transparency windows that are open
-	               handler: function(widget, event) {
-	            	   Ext.WindowManager.each(function(w) { 
-	            		   if(w.itemID=='sliderWindow') {
-	            		    w.close();}
-	            		});
-	            	   record.raw.layer.setVisibility(true);
-	            	   Ext.create('Ext.window.Window', {
-	            		   	itemID:'sliderWindow',
-	            		   	animateTarget:item,
-	            		    title: 'Transparency',
-	            		    height: 200,
-	            		    width: 100,
-	            		    layout: {
-	            		        type: 'hbox',
-	            		        align: 'middle'
-	            		    },
-	            		    items: [{
-	                            xtype: "gx_opacityslider",
-	                            layer: record.raw.layer,
-	                            changeVisibility: true,
-	                            padding : 10,
-	                            aggressive: true,
-	                            vertical: true,
-	                            height: 120,
-	                            x: 10,
-	                            y: 10,
-	                            plugins: Ext.create("GeoExt.slider.Tip", {
-	                                getText: function(thumb) {
-	                                    return Ext.String.format('{0}%', thumb.value);
-	                                }
-	                            })
-	                        }]
-	            		}).show();
-	               }
-	           });
-	           var action2 = Ext.create('Ext.Action', {
-	               text: 'Layer info',
-	               handler: function(widget, event) {
-	            	   Ext.WindowManager.each(function(w) { 
-	            		   if(w.itemID=='informationWindow') {
-	            		    w.close();}
-	            		});
-	            	   record.raw.layer.setVisibility(true);
-	            	   Ext.create('Ext.window.Window', {
-	            		   	itemID:'informationWindow',
-	            		    title: 'Layer info',
-	            		   	animateTarget:item,
-	            		    height: 200,
-	            		    width: 400,
-	            		    html:'Some information about the layer!!!!<br><br> For example layer name: <br>'+record.raw.layer.name,
-	            		    layout: {
-	            		        type: 'hbox',
-	            		        align: 'middle'
-	            		    }
-	            		}).show();
-	               }
-	           });
+		      var action1 = Ext.create('Ext.Action', {
+		               text: '&nbsp;&nbsp;Layer info',
+		               iconCls:"icon_info",
+		               
+		               handler: function(widget, event) {
+		            	   Ext.WindowManager.each(function(w) { 
+		            		   if(w.itemID=='informationWindow') {
+		            		    w.close();}
+		            		});
+//		            	   record.raw.layer.setVisibility(true); // activate de layer
+		            	   Ext.create('Ext.window.Window', {
+		            		   	itemID:'informationWindow',
+		            		    title: 'Layer info',
+		            		    modal:false,
+		            		    resizable: false,
+		            		   	animateTarget:item,
+		            		    height: 200,
+		            		    width: 400,
+		            		    html:'Some information about the layer!!!!<br><br> For example layer name: <br>'+record.raw.layer.name,
+		            		    layout: {
+		            		        type: 'hbox',
+		            		        align: 'middle'
+		            		    },
+			            		listeners: {
+			            		    show: function(win) {
+			            		        if (this.modal) {
+			            		            var dom = Ext.dom.Query.select('.x-mask');
+			            		            var el = Ext.get(dom[0]);
+			            		            el.addCls('loginMask');
+			            		        }
+			            		    },
+			            		    hide:  function(win) {
+			            		        if (this.modal) {
+			            		            var dom = Ext.dom.Query.select('.x-mask');
+			            		            var el = Ext.get(dom[0]);
+			            		            el.removeCls('loginMask');
+			            		        }
+			            		    }
+			            		}
+		            		}).show();
+		            	   a=record;
+		               }
+		           });
+		      var action2=Ext.create('Ext.Panel', {
+		        	   defaultType: 'container',
+		        	   border: false,
+		        	    layout: {
+		        	        type: 'hbox',
+		        	        // The total column count must be specified here
+		        	        align: 'stretch',
+		        	    },
+		        	    items: [{
+		        	        cls:"icon_eye",
+		        	        flex: 1
+		        	    }, {
+		        	    	flex: 3,
+		                    xtype: "gx_opacityslider",
+		                    layer: record.raw.layer,
+		                    changeVisibility: true,
+		                    aggressive: true,
+		                    vertical: false,
+		                    height: 20,
+		                    plugins: Ext.create("GeoExt.slider.Tip", {
+		                        getText: function(thumb) {
+		                            return Ext.String.format('{0}%', thumb.value);
+		                        }
+		                    })
+		                }]
+		        	});
+
 	           var action3 = Ext.create('Ext.Action', {
-	               text: 'Uncheck All',
+	               text: '&nbsp;&nbsp;Uncheck All',
+	               iconCls:"icon_cross",
 	               handler: function(widget, event) {
 	            	   map.layers.forEach(function(entry) 
 	            		{ 
@@ -140,8 +154,11 @@ Ext.define('AM.controller.Layertreepanel',{
 	            	   });
 	               }
 	           });
+
 	           // create right click contex menu
 	           var ContextMenu = Ext.create('Ext.menu.Menu', {
+	        	   plain: true,
+	        	   border: false,
 	               items: [
 	                       action1,
 	                       action2,

@@ -30,7 +30,9 @@ Ext.application({
     appFolder: 'app/',
     controllers: [
         'Map',
-        'Layertreepanel'
+        'Layertreepanel',
+        'LoginController',
+        'AdmController'
 //        'Layertree'
     ],
     autoCreateViewport: true

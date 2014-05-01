@@ -4,7 +4,7 @@
  */
 Ext.define('AM.view.Header', {
     extend: 'Ext.Panel',
-
+    border: false,
 //    dock: 'top',
     baseCls: 'header',
     height: 112,

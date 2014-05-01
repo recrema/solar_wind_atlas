@@ -10,11 +10,28 @@ Ext.define('AM.view.help.Window', {
             bodyCls: "helpwindow",
             closeAction: "hide",
         	modal: true,
-        	animateTarget:"helpButton",
+        	animateTarget:"helpMenu",
             layout: 'fit',
             maxWidth: 600,
-            title: "Help"
+            title: "Help",
+        	listeners: {
+        	    show: function(win) {
+        	        if (this.modal) {
+        	            var dom = Ext.dom.Query.select('.x-mask');
+        	            var el = Ext.get(dom[0]);
+        	            el.addCls('loginMask');
+        	        }
+        	    },
+        	    hide:  function(win) {
+        	        if (this.modal) {
+        	            var dom = Ext.dom.Query.select('.x-mask');
+        	            var el = Ext.get(dom[0]);
+        	            el.removeCls('loginMask');
+        	        }
+        	    }
+        	}
         });
+
         this.callParent(arguments);
     }
 });
