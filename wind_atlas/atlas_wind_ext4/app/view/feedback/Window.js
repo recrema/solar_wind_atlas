@@ -12,7 +12,6 @@ Ext.define('AM.view.feedback.Window', {
             resizable:false,
         	modal: true,
         	animateTarget:"helpMenu",
-//            layout: 'fit',
             width: 700,
             height: 650,
             title: "Feedback",
@@ -46,10 +45,6 @@ Ext.define('AM.view.feedback.Window', {
                 url: 'php/FeedbkController.php',
 
                 // Fields will be arranged vertically, stretched to full width
-//                layout: 'anchor',
-//                defaults: {
-//                    anchor: '90%'
-//                },
 
                 // The fields
 

@@ -1,13 +1,8 @@
 Ext.define('AM.view.WindinfoResult', {
 	extend: 'Ext.tab.Panel',
 	alias: 'widget.windinfoResult',
-
 	border: true,
-
-//	region: 'west',
-//	split: 'true',
 	hidden: false,
-//	bodyStyle: 'transparent:50%;',
 	autoScroll: 'true',
 
 
@@ -19,7 +14,8 @@ Ext.define('AM.view.WindinfoResult', {
 			id:'windinfoResultTab1',
             title: 'Warning',
             autoScroll: true,
-            html : 'A message or html with images to help the user how to use the form.',
+//            html : 'A message or html with images to help the user how to use the form.',
+            contentEl:'windinfoform',
 
         },
         {
@@ -37,8 +33,5 @@ Ext.define('AM.view.WindinfoResult', {
         	     ]
         });
 		this.callParent(arguments);
-		
-		
 	}
-
 })

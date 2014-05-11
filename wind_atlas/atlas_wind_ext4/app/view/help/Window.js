@@ -12,6 +12,7 @@ Ext.define('AM.view.help.Window', {
         	modal: true,
         	animateTarget:"helpMenu",
             layout: 'fit',
+            resizable:false,
             maxWidth: 600,
             title: "Help",
         	listeners: {

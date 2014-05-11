@@ -9,16 +9,9 @@ Ext.define('AM.view.WindinfoForm', {
 	method : 'POST',
 	border: true,
     cls:'windinfoFrom',
-//	title: 'Layers',
-//	split: 'true',
 	width: 299,
-//	animate: 'tree',
-//	bodyStyle: 'transparent:50%;',
-//	hidden: true,
-//	collapsible: 'true',
 	autoScroll: 'true',
 	bodyPadding: 7,
-//	resizable: true,
 	
 	   layout: 'anchor',
 	    defaults: {

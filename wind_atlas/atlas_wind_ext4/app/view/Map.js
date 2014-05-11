@@ -124,7 +124,7 @@ Ext.define('AM.view.Map', {
                 border: false,
                 items: [
                         {
-                            text: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Layer maps',
+                            text: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Layer Maps',
                             menu: {        // <-- submenu by nested config object
                                 items: [
                                     {
@@ -144,7 +144,7 @@ Ext.define('AM.view.Map', {
 
                                            }
                                     }, {
-                                        text: 'UAE main roads',
+                                        text: 'UAE Main Roads',
                                         checked: false,
                                         checkHandler: function (checked) {
                                         	if (checked.checked){
@@ -157,7 +157,7 @@ Ext.define('AM.view.Map', {
                                         	}
                                            }
                                     }, {
-                                        text: 'UAE transmission network',
+                                        text: 'UAE Transmission Network',
                                         checked: false,
                                         checkHandler: function (checked) {
                                         	if (checked.checked){
@@ -170,7 +170,7 @@ Ext.define('AM.view.Map', {
                                         	}
                                            }
                                     }, {
-                                        text: 'UAE power plants',
+                                        text: 'UAE Power Plants',
                                         checked: false,
                                         checkHandler: function (checked) {
                                         	if (checked.checked){
@@ -242,7 +242,6 @@ Ext.define('AM.view.Map', {
         }));
         tbarItems.push(
                 Ext.create('Ext.button.Button', {
-//                    text: "help",
                     id:"helpMenu",
                     cls:'help_menu',
                     toggleGroup: "layers",
@@ -259,17 +258,7 @@ Ext.define('AM.view.Map', {
                 	}));
 
         tbarItems.push("->");
-//        tbarItems.push(Ext.create('Ext.button.Button', {
-//            text: "Adm",
-//            id: 'admButton',
-//            handler: function(state) {
-//            	mapView.fireEvent('launchAdm');
-//            },
-//            disabled: false,
-//            tooltip: "Admin Panel"
-//        }));
         tbarItems.push(Ext.create('Ext.button.Button', {
-//            text: "Login",
             cls:'login_button',
             id: 'loginButton',
             itemId:'loginButton',
@@ -305,38 +294,33 @@ Ext.define('AM.view.Map', {
     	//routine to create month and year maps' variables, add them to the temp array along with the respective WMS requests
     	for (var i=0; i<heights.length; i++){
     		for (var year = year_start; year <= year_end; year++){
-    			var layer_title = layer_text_prefix + " " + year + " at " + heights[i] + " m" + " - Masdar Institute";
+    			var layer_title = layer_text_prefix + " " + year + " at " + heights[i] + " m" ;
     			var layer_name = layer_prefix + heights[i] + 'm_' + year;
     			temp[layer_name] = new OpenLayers.Layer.WMS(layer_title, geoserverUrl, {Layers: workspace + ":" + layer_name, format: format, tiled: true, transparent: true, tilesOrigin : map.maxExtent.left + ',' + map.maxExtent.bottom}, layers_configurations);
-//    			console.log(temp[layer_name]);
     			map.addLayers([temp[layer_name]]);
-//    			chartLayers.push(temp[layer_name]);
     			for (var ii=0; ii<month_numbers.length; ii++){
     				var month_name = get_month_name(month_numbers[ii]);
-    				layer_title = layer_text_prefix + " " + month_name + " " + year + " at " + heights[i] + "m" + " - Masdar Institute";
+    				layer_title = layer_text_prefix + " " + month_name + " " + year + " at " + heights[i] + "m" ;
     				layer_name = layer_prefix + heights[i] + 'm_' + year + month_numbers[ii];
     				temp[layer_name] = new OpenLayers.Layer.WMS(layer_title, geoserverUrl, {Layers: workspace + ":" + layer_name, format: format, tiled: true, transparent: true, tilesOrigin : map.maxExtent.left + ',' + map.maxExtent.bottom}, layers_configurations);
     				map.addLayers([temp[layer_name]]);
-//    				chartLayers.push(temp[layer_name]);
     			};
     		};
     	};
     	
 //    	routine to create overall maps' variables, add them to the temp array along with the respective WMS requests
     	for (var i=0; i<heights.length; i++) {
-    		layer_title = layer_text_prefix + " at " + heights[i] + "m Annual" + " - Masdar Institute";
+    		layer_title = layer_text_prefix + " at " + heights[i] + "m Annual" ;
     		layer_name = layer_prefix + heights[i] + 'm_' + "Annual";
     		temp[layer_name] = new OpenLayers.Layer.WMS(layer_title, geoserverUrl, {Layers: workspace + ":" + layer_name, format: format, tiled: true, transparent: true, tilesOrigin : map.maxExtent.left + ',' + map.maxExtent.bottom}, layers_configurations);
     		map.addLayers([temp[layer_name]]);
-//    		chartLayers.push(temp[layer_name]);
     		for (var ii=0; ii<month_numbers.length; ii++) {
     			month_name = get_month_name(month_numbers[ii]);
 
-    			layer_title = layer_text_prefix + " at " + heights[i] + "m " + month_name + " - Masdar Institute";
+    			layer_title = layer_text_prefix + " at " + heights[i] + "m " + month_name ;
     			layer_name = layer_prefix + heights[i] + 'm_' + month_numbers[ii];
     			temp[layer_name] = new OpenLayers.Layer.WMS(layer_title, geoserverUrl, {Layers: workspace + ":" + layer_name, format: format, tiled: true, transparent: true, tilesOrigin : map.maxExtent.left + ',' + map.maxExtent.bottom}, layers_configurations);
     			map.addLayers([temp[layer_name]]);
-//    			chartLayers.push(temp[layer_name]);
     		};
     	};
     	
@@ -362,6 +346,7 @@ Ext.define('AM.view.Map', {
                 }
             }]
         });
+        a=this;
         mapView.fireEvent('initCheckLogin');
         this.callParent(arguments);
     }

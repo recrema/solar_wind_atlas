@@ -18,7 +18,6 @@ Ext.define('AM.view.Viewport', {
         'GeoExt.tree.Panel',
         'GeoExt.panel.Map',
         'Ext.form.Label',
-//        'Ext.resizer.Splitter',
         'GeoExt.tree.OverlayLayerContainer',
         'GeoExt.tree.BaseLayerContainer',
         'GeoExt.data.LayerTreeModel',
@@ -28,71 +27,60 @@ Ext.define('AM.view.Viewport', {
         'GeoExt.slider.LayerOpacity',
         'GeoExt.slider.Tip',
         'AM.view.feedback.Action',
-        'AM.view.Header',
+        'AM.view.HeaderLogo',
+        'AM.view.HeaderMain',
         'AM.view.Map',
         'AM.view.Layertreepanel',
+        'AM.view.Footer',
         'AM.view.WindinfoForm',
         'AM.view.Windinfo',
         'AM.view.chart.Window',
         'AM.view.genericWindow',
         'AM.view.WindinfoResult',
         'Chart.ux.Highcharts',
-        'Chart.ux.Highcharts.Serie',
-//        'Chart.ux.Highcharts.AreaRangeSerie',
-//        'Chart.ux.Highcharts.AreaSerie',
-//        'Chart.ux.Highcharts.AreaSplineRangeSerie',
-//        'Chart.ux.Highcharts.AreaSplineSerie',
-//        'Chart.ux.Highcharts.BarSerie',
-//        'Chart.ux.Highcharts.ColumnRangeSerie',
-//        'Chart.ux.Highcharts.ColumnSerie',
-//        'Chart.ux.Highcharts.GaugeSerie',
-//        'Chart.ux.Highcharts.LineSerie',
-//        'Chart.ux.Highcharts.PieSerie',
-//        'Chart.ux.Highcharts.RangeSerie',
-//        'Chart.ux.Highcharts.ScatterSerie',
-//        'Chart.ux.Highcharts.SplineSerie'
-//        'AM.controller.Layertreepanel'
+        'Chart.ux.Highcharts.Serie'
     ],
 
     initComponent: function() {
 
-//        Ext.apply(this, {
             this.items = [{
                 xtype: 'panel',
                 itemId: 'p1',
                 border: false,
                 layout: 'border',
-                dockedItems: [
-                    Ext.create('AM.view.Header')
-                ],
-                items: [{
-                	xtype: 'layertreepanel',
-                	region: 'west',
 
-//                	title: 'Layers',
-//                	id: 'tabpanel0',
-//                	region: 'west',
-//                	activeTab: 0,
-//            		animCollapse: true,
-////            		autoScroll: true,
-//            		border: false,
-//            		defaults:{autoHeight: true},
-////                	items :[{
-////         		        	title: "Overall Maps",
-////         		        	id: 'tabpanel0'
-//////         		        	items: yearLayerTree
-////         		        },{
-////         		        	title: "Year Maps",
-////         		        	id: 'tabpanel1'
-//////         		        	items: monthLayerTree
-////         		        },{
-////         		        	title: "Month Maps",
-////         		        	id: 'tabpanel2'
-//////         		        	items: heightLayerTree
-////         		        }]
+                items: [
+                        {
+                	xtype: 'panel',
+                	region: 'west',
+                	layout:'vbox',
+                	border:false,
+                	items: [
+								{
+									xtype: 'headerLogo',
+				                	border:false,
+									region: 'north'
+								},
+								{
+									xtype: 'layertreepanel',
+									region: 'south',
+				                	border:false,
+									flex: 2
+								}
+                	        ],
                 },{
-                    xtype: 'mappanel',
-                    region: 'center'
+                    xtype: 'panel',
+                    region: 'center',
+                    layout:'border',
+                    border:false,
+                    items:[{
+						xtype: 'headerMain',
+	                	border:false,
+						region: 'north'
+					},{
+                        xtype: 'mappanel',
+                        region: 'center'
+                    }]
                 },{
                 	xtype: 'windinfo',
                 	region: 'south',
@@ -103,9 +91,11 @@ Ext.define('AM.view.Viewport', {
                     	xtype: 'windinfoResult',
                     	flex: 1,
                     }]
+                },{
+                    xtype: 'footer',
+                    region: 'south'
                 }]
             }]
-//        });
 
         this.callParent(arguments);
     }

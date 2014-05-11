@@ -11,17 +11,11 @@ Ext.define('AM.view.Windinfo', {
         align: 'stretch'
     },
 	height: 200,
-//	region: 'west',
-//	title: 'panel',
-//	split: 'true',
-//	bodyStyle: 'transparent:50%;',
 	hidden: true,
-//	collapsible: 'true',
 	closable:false,
 	border: false,
 	autoScroll: 'true',
 	renderTo: Ext.getBody(),
-//	resizable: true,
 	initComponent: function() {
 		
 		this.callParent(arguments);

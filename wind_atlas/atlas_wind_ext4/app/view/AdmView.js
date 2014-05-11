@@ -4,11 +4,9 @@ Ext.define('AM.view.AdmView', {
 	height: 600,
 	width: 700,
 	draggable : false,
-//	closable: false,
 	closeAction :'hide',
 	border: false,
 	hidden: false,
-//	layout : 'fit',
 	modal: true,
 	header: false,
 	initComponent: function() {

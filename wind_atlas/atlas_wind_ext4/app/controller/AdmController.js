@@ -5,7 +5,6 @@
 Ext.define('AM.controller.AdmController', {
     extend: 'Ext.app.Controller',
     views: ['AdmView'],
-    //    requires: ['AM.view.Layertreepanel'],
 
     init: function () {
 

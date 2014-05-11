@@ -38,41 +38,12 @@ Ext.define('AM.controller.Map', {
 
         // for dev purpose
         map = mapPanel.map;
-        //        mapPanel = mapPanel;
-        //        mapController.loading=0;
-        //		panel=Ext.ComponentQuery.query('mappanel')[0];
-        //		myMask = new Ext.LoadMask({
-        //			msg:"Map loading...",
-        //			target:panel,
-        //			 });
-        //        
-        //        for (var src in map.layers)  {			
-        //        		var lyr = map.layers[src];
-        //				lyr.events.register('loadstart', this, function(){mapController.update( 1)});
-        //				lyr.events.register('loadend',   this, function(){mapController.update( -1)});  
-        //			};
-
     },
-    //	update: function(num) {
-    //
-    //		
-    //		mapController.loading += num;
-    //		if (mapController.loading > 0) {
-    //			myMask.show();
-    //		} else {
-    //			mapController.loading = 0;
-    //			myMask.hide();
-    //		};
-    //	},
 
     handleMapClick: function (e) {
 
         var lonlat = map.getLonLatFromViewPortPx(e.xy);
         var position = map.getLonLatFromPixel(e.xy);
-        // use lonlat
-
-        // If you are using OpenStreetMap (etc) tiles and want to convert back 
-        // to gps coords add the following line :-
         lonlat.transform('EPSG:3857', 'EPSG:4326');
 
         // get the latitude and longitude after a click
@@ -99,13 +70,9 @@ Ext.define('AM.controller.Map', {
         // all the portlet's available
 
         mapController.openWinInfoForm(clickLat, clickLon);
-
-        //         var changeLat = Ext.ComponentQuery.query('[name=latitude]')[0].setValue(Latitude);
-        //         var changeLon = Ext.ComponentQuery.query('[name=longitude]')[0].setValue(Longitude);
     },
 
     openWinInfoForm: function (clickLat, clickLon) {
-        //     	console.log('Lat: ' + clickLat + '; Long: ' + clickLon);
         var windowInfo = Ext.ComponentQuery.query('windinfo')[0];
         var windowInfoForm = Ext.ComponentQuery.query('windinfoForm')[0];
 
@@ -113,20 +80,18 @@ Ext.define('AM.controller.Map', {
 
            var field1 = Ext.create('Ext.form.field.Text', {
                 itemId: 'f1',
-                fieldLabel: 'latitude',
+                fieldLabel: 'Latitude',
                 name: 'latitude',
                 allowBlank: false
             });
            var field2 = Ext.create('Ext.form.field.Text', {
                 itemId: 'f2',
-                fieldLabel: 'longitude',
+                fieldLabel: 'Longitude',
                 name: 'longitude',
                 allowBlank: false
             });
             
             var field3= Ext.create('Ext.Panel', {
-//          	width: 500,
-//          	height: 300,
             	border:false,
             	anchor: '100%',
             	layout: {
@@ -162,7 +127,6 @@ Ext.define('AM.controller.Map', {
                             increment: 60,
                             value:'00',
                             allowBlank: false
-//                            anchor: '-130'
                             },
                             {
                                 xtype: 'label',
@@ -171,12 +135,8 @@ Ext.define('AM.controller.Map', {
                             }
             	        ]
             });   
-            
-            
 
             var field4= Ext.create('Ext.Panel', {
-//          	width: 500,
-//          	height: 300,
             	border:false,
             	anchor: '100%',
             	layout: {
@@ -195,10 +155,6 @@ Ext.define('AM.controller.Map', {
             	        	value: '2003/08/30',
             	        	name: 'final_date',
             	        	startDateField: 'f3',
-//          	        	labelWidth: 65,
-//          	        	width: 160,
-//          	        	labelAlign: 'right',
-//          	        	width:40,
             	        	listeners: {
             	        		'change': function (th, a) {
             	        			Ext.getCmp('f3').setMaxValue(a);
@@ -217,7 +173,6 @@ Ext.define('AM.controller.Map', {
                         	name: 'final_time',
                             value:'00',
                             allowBlank: false
-//                            anchor: '-130'
                             },
                             {
                                 xtype: 'label',
@@ -274,7 +229,6 @@ Ext.define('AM.controller.Map', {
 
     openWinInfo: function (msg, tab, tabTitle) {
 
-        //    	windowResult=Ext.ComponentQuery.query('windinfoResult')[0];
         var windowResultTab = Ext.getCmp(tab);
         windowResultTab.setTitle(tabTitle);
         windowResultTab.tab.show();
@@ -300,15 +254,8 @@ Ext.define('AM.controller.Map', {
     onClickDeactivate: function () {
         var windowInfo = Ext.ComponentQuery.query('windinfo')[0];
         windowInfo.hide();
-        //	    markers.clearMarkers(); // warning this variable should not be global
         markers.setVisibility(false);
         map.events.unregister('click', map, mapController.handleMapClick);
-
-
-        //        var panelviewport = Ext.ComponentQuery.query('viewport panel[itemId=p1]')[0];
-        //        var windinfo = mapController.getView('Windinfo').create();
-        //        panelviewport.add(windinfo);
-        //        panelviewport.doLayout();
     },
     onChartActivate: function (json, targetId) {
 
@@ -353,7 +300,6 @@ Ext.define('AM.controller.Map', {
             }
         }
         element.update(out);
-//        console.log(out);
         
     },
 
@@ -563,26 +509,16 @@ Ext.define('AM.controller.Map', {
 
     onLayerTreePanelBeforeRender: function (layertree2) {
 
-        //    	console.log('onLayerTreeBeforeRender rendered');
         layertree = layertree2;
-        //    	console.log(layertree);
         var treeConfigYear, treeConfigMonth, treeConfigHeight;
 
-        // for dev purpose
-        //        map = mapPanel.map;
-        //        mapPanel = mapPanel;
     },
 
     onLayerTreePanelBeforeRender: function (layertree2) {
 
-        //    	console.log('onLayerTreeBeforeRender rendered');
         layertree = layertree2;
-        //    	console.log(layertree);
         var treeConfigYear, treeConfigMonth, treeConfigHeight;
 
-        // for dev purpose
-        //        map = mapPanel.map;
-        //        mapPanel = mapPanel;
     },
 
     onLaunch: function () {

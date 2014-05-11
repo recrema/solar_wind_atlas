@@ -8,7 +8,6 @@ Ext.define('AM.view.LoginView', {
 	height: 420,
 	width: 600,
 	draggable : true,
-//	closable: false,
 	closeAction :'hide',
 	border: false,
 	hidden: false,

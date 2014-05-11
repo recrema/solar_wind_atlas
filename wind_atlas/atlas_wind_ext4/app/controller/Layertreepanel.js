@@ -4,9 +4,6 @@
  */
 Ext.define('AM.controller.Layertreepanel',{
 	extend: 'Ext.app.Controller',
-//	refs:['AM.controller.Map'],
-	
-//	views: ['AM.view.Layertreepanel'],
 	
 	init: function() {
 		layerTreeController = this;
@@ -20,11 +17,6 @@ Ext.define('AM.controller.Layertreepanel',{
     onMapPanelRendered: function(temp) {
     	
     	console.log('onMapPanelRendered rendered');
-//    	console.log(Ext.ComponentQuery.query('mappanel').temp);
-
-        // for dev purpose
-//        map = mapPanel.map;
-//        mapPanel = mapPanel;
     },
     
     treeContextMenu: function(view, record, item, index, event) {
@@ -80,7 +72,6 @@ Ext.define('AM.controller.Layertreepanel',{
 		            		   if(w.itemID=='informationWindow') {
 		            		    w.close();}
 		            		});
-//		            	   record.raw.layer.setVisibility(true); // activate de layer
 		            	   Ext.create('Ext.window.Window', {
 		            		   	itemID:'informationWindow',
 		            		    title: 'Layer info',
@@ -172,10 +163,7 @@ Ext.define('AM.controller.Layertreepanel',{
     
 	loadLayersTree: function(mappanel) {
 		
-//		console.log('Loading layers Tree');
-//		console.log(mappanel.map.getLayersByName);
 		map2 = mappanel.map;
-//		console.log(map2.getLayersByName('Wind Speed 2003 at 10m  - Masdar Institute'));
 		
     	/**
     	 * Creating the layer tree to display on the layer tree panel
@@ -203,7 +191,7 @@ Ext.define('AM.controller.Layertreepanel',{
         	var month_name = get_month_name(month_numbers[i]);
         	for (var ii=0; ii<heights.length; ii++) {
         		
-        		var layer_title = layer_text_prefix + " at " + heights[ii] + "m " + month_name + " - Masdar Institute";
+        		var layer_title = layer_text_prefix + " at " + heights[ii] + "m " + month_name;
     			var a = {
     					plugins: [{ptype: 'gx_layer'}], 
     					layer: map2.getLayersByName(layer_title)[0],
@@ -219,7 +207,7 @@ Ext.define('AM.controller.Layertreepanel',{
         var overall_maps_tree_by_height = [];
         var overall_maps_tree_by_height_Annual = []; //Special case of Overall annual maps
         for (var i=0; i<heights.length; i++) {
-        	layer_title = layer_text_prefix + " at " + heights[i] + "m Annual" + " - Masdar Institute";
+        	layer_title = layer_text_prefix + " at " + heights[i] + "m Annual";
 			a = {
 					plugins: [{ptype: 'gx_layer'}], 
 					layer: map2.getLayersByName(layer_title)[0],
@@ -232,7 +220,7 @@ Ext.define('AM.controller.Layertreepanel',{
         	var maps_height_month = [];
         	for (var ii=0; ii<month_numbers.length; ii++) {
         		month_name = get_month_name(month_numbers[ii]);
-        		layer_title = layer_text_prefix + " at " + heights[i] + "m " + month_name + " - Masdar Institute";
+        		layer_title = layer_text_prefix + " at " + heights[i] + "m " + month_name;
     			a = {
     					plugins: [{ptype: 'gx_layer'}], 
     					layer: map2.getLayersByName(layer_title)[0],
@@ -255,8 +243,6 @@ Ext.define('AM.controller.Layertreepanel',{
             lines: false,
             scroll: false, //It removes the scroll from the tree panel 
             border: false,
-//            shrinkWrap: true, //This is important!
-//            width :400,
             
     	});
         
@@ -274,16 +260,13 @@ Ext.define('AM.controller.Layertreepanel',{
         for (var year = year_start; year <= year_end; year++){
         	var maps_year_height = [];
         	for (var i=0; i<heights.length; i++) {
-        		layer_title = layer_text_prefix + " " + year + " at " + heights[i] + " m - Masdar Institute";
+        		layer_title = layer_text_prefix + " " + year + " at " + heights[i] + " m";
     			a = {
     					plugins: [{ptype: 'gx_layer'}], 
     					layer: map2.getLayersByName(layer_title)[0],
     					text: layer_title
     			};
-//    			console.log(a);
     			maps_year_height.push(a);
-//    			console.log(layer_title);
-//    			console.log(map2.getLayersByName(layer_title));
     		};
         	year_maps_tree_by_year.push({text: year.toString(), leaf: false, children: maps_year_height});
         };
@@ -293,7 +276,7 @@ Ext.define('AM.controller.Layertreepanel',{
         for (var i=0; i<heights.length; i++) {
         	var maps_height_year = [];
         	for (year = year_start; year <= year_end; year++) {
-        		layer_title = layer_text_prefix + " " + year + " at " + heights[i] + " m - Masdar Institute";
+        		layer_title = layer_text_prefix + " " + year + " at " + heights[i] + " m";
     			a = {
     					plugins: [{ptype: 'gx_layer'}], 
     					layer: map2.getLayersByName(layer_title)[0],
@@ -316,7 +299,6 @@ Ext.define('AM.controller.Layertreepanel',{
             lines: false,
             scroll: false, //It removes the scroll from the tree panel 
             border: false,
-//            shrinkWrap: 3 //This is important!
     	});
         
         // Add Right click contex menu action
@@ -338,7 +320,7 @@ Ext.define('AM.controller.Layertreepanel',{
         		var maps_year_by_month_height = [];
         		month_name = get_month_name(month_numbers[i]);
         		for (var ii=0; ii<heights.length; ii++) {
-        			layer_title=layer_text_prefix+' '+month_name+' '+year+' at '+ heights[ii] + 'm - Masdar Institute';
+        			layer_title=layer_text_prefix+' '+month_name+' '+year+' at '+ heights[ii] + 'm';
         			a = {
         					plugins: [{ptype: 'gx_layer'}], 
         					layer: map2.getLayersByName(layer_title)[0],
@@ -353,7 +335,7 @@ Ext.define('AM.controller.Layertreepanel',{
         		var maps_year_by_height_month = [];
         		for (var ii=0; ii<month_numbers.length; ii++) {
         			month_name = get_month_name(month_numbers[ii]);
-        			layer_title=layer_text_prefix+' '+month_name+' '+year+' at '+ heights[i] + 'm - Masdar Institute';
+        			layer_title=layer_text_prefix+' '+month_name+' '+year+' at '+ heights[i] + 'm';
         			a = {
         					plugins: [{ptype: 'gx_layer'}], 
         					layer: map2.getLayersByName(layer_title)[0],
@@ -377,7 +359,7 @@ Ext.define('AM.controller.Layertreepanel',{
         	for (year = year_start; year <= year_end; year++) {
         		var maps_month_by_year_height = [];
         		for (var ii=0; ii<heights.length; ii++) {
-        			layer_title=layer_text_prefix+' '+month_name+' '+year+' at '+ heights[ii] + 'm - Masdar Institute';
+        			layer_title=layer_text_prefix+' '+month_name+' '+year+' at '+ heights[ii] + 'm';
         			a = {
         					plugins: [{ptype: 'gx_layer'}], 
         					layer: map2.getLayersByName(layer_title)[0],
@@ -391,7 +373,7 @@ Ext.define('AM.controller.Layertreepanel',{
     		for (var ii=0; ii<heights.length; ii++) {
         		var maps_month_by_height_year = [];
         		for (year = year_start; year <= year_end; year++) {
-        			layer_title=layer_text_prefix+' '+month_name+' '+year+' at '+ heights[ii] + 'm - Masdar Institute';
+        			layer_title=layer_text_prefix+' '+month_name+' '+year+' at '+ heights[ii] + 'm';
         			a = {
         					plugins: [{ptype: 'gx_layer'}], 
         					layer: map2.getLayersByName(layer_title)[0],
@@ -415,7 +397,7 @@ Ext.define('AM.controller.Layertreepanel',{
         		maps_month_by_year_height = [];
         		for (var ii=0; ii<month_numbers.length; ii++) {
         			month_name = get_month_name(month_numbers[ii]);
-        			layer_title=layer_text_prefix+' '+month_name+' '+year+' at '+ heights[i] + 'm - Masdar Institute';
+        			layer_title=layer_text_prefix+' '+month_name+' '+year+' at '+ heights[i] + 'm';
         			a = {
         					plugins: [{ptype: 'gx_layer'}], 
         					layer: map2.getLayersByName(layer_title)[0],
@@ -430,7 +412,7 @@ Ext.define('AM.controller.Layertreepanel',{
     			month_name = get_month_name(month_numbers[ii]);
         		var maps_height_by_month_year = [];
         		for (year = year_start; year <= year_end; year++) {
-        			layer_title=layer_text_prefix+' '+month_name+' '+year+' at '+ heights[i] + 'm - Masdar Institute';
+        			layer_title=layer_text_prefix+' '+month_name+' '+year+' at '+ heights[i] + 'm';
         			a = {
         					plugins: [{ptype: 'gx_layer'}], 
         					layer: map2.getLayersByName(layer_title)[0],
@@ -456,10 +438,9 @@ Ext.define('AM.controller.Layertreepanel',{
             rootVisible: false,
             lines: false,
             scroll: false, //It removes the scroll from the tree panel 
-            width: 400,
             border: false,
-//            shrinkWrap: 3 //This is important!
     	});
+
         
         // Add Right click contex menu action
         monthLayerTree.on('itemcontextmenu', function(view, record, item, index, event){
@@ -472,27 +453,24 @@ Ext.define('AM.controller.Layertreepanel',{
     	 	title: 'Overall Maps',
     	 	items: overallLayerTree,
     	 	overflowY: 'auto',
-    	 	overflowX: 'auto',
+    	 	overflowX: false,
     	 	border: false
     	 },{
     	 	title: 'Year Maps',
     	 	items: yearLayerTree,
     	 	overflowY: 'auto',
-    	 	overflowX: 'auto',
+    	 	overflowX: false,
     	 	border: false
     	 },{
     	 	title: 'Month Maps',
     	 	items: monthLayerTree,
     	 	overflowY: 'auto',
-    	 	overflowX: 'auto',
+    	 	overflowX: false,
     	 	border: false
     	 }];
         
         Ext.ComponentQuery.query('layertreepanel')[0].add(layerTree);
         Ext.ComponentQuery.query('layertreepanel')[0].setActiveTab(0);
-      //  Ext.ComponentQuery.query('layertreepanel')[0].doLayout();
-//        console.log(this.getInitialConfig('layertreepanel'));
-//        Ext.ComponentQuery.query('layertreepanel > tabpanel0').doLayout;
 	}
 	
 })

@@ -5,7 +5,6 @@
 Ext.define('AM.controller.LoginController', {
     extend: 'Ext.app.Controller',
     views: ['LoginView'],
-    //    requires: ['AM.view.Layertreepanel'],
 
     init: function () {
         loginController = this;
@@ -13,7 +12,6 @@ Ext.define('AM.controller.LoginController', {
             'mappanel': {
                 'launchLogin': this.onLoginLaunch,
                 'initCheckLogin':this.initCheckLogin,
-
             }
         	
         }, this);
@@ -58,7 +56,9 @@ Ext.define('AM.controller.LoginController', {
 	        			itemId:"labelLogin",
 	        			text: 'Welcome: '+result.user
 	        		},
-	        		'-',
+	        		{ xtype: 'tbseparator',
+	        			itemId:'loginSeparator'
+	        			},
 	            	{
 	            		xtype:"button",
 	            		cls:'admin_button',
@@ -70,7 +70,8 @@ Ext.define('AM.controller.LoginController', {
 	                    },
 	                    disabled: false,
 	                    tooltip: "Admin Panel"
-	                },'',
+	                },{ xtype: 'tbspacer',
+	                	itemId:'loginSpace'},
 	            	{
 	            		xtype:"button",
 	                    cls: 'logout_button',
@@ -99,12 +100,16 @@ Ext.define('AM.controller.LoginController', {
               if(response.success){
             	  Ext.ComponentQuery.query('mappanel #logOutButton')[0].destroy();
             	  Ext.ComponentQuery.query('mappanel #admButton')[0].destroy();
+            	  Ext.ComponentQuery.query('mappanel #loginSeparator')[0].destroy();
+            	  Ext.ComponentQuery.query('mappanel #loginSpace')[0].destroy();
             	  Ext.ComponentQuery.query('mappanel #labelLogin')[0].destroy();
             	  Ext.ComponentQuery.query('mappanel #loginButton')[0].show();
               }else{
                   if(typeof(Ext.ComponentQuery.query('mappanel #logOutButton')[0]) != "undefined" && Ext.ComponentQuery.query('mappanel #logOutButton')[0]!== null) {
                 	  Ext.ComponentQuery.query('mappanel #logOutButton')[0].destroy();
                 	  Ext.ComponentQuery.query('mappanel #admButton')[0].destroy();
+                	  Ext.ComponentQuery.query('mappanel #loginSeparator')[0].destroy();
+                	  Ext.ComponentQuery.query('mappanel #loginSpace')[0].destroy();
                 	  Ext.ComponentQuery.query('mappanel #labelLogin')[0].destroy();
                 	  Ext.ComponentQuery.query('mappanel #loginButton')[0].show();
                   }
