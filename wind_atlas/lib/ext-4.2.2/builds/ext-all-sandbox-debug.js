@@ -79623,6 +79623,2340 @@ Ext.define('Ext.data.XmlStore', {
 });
 
 
+
+Ext.define('Ext.data.amf.Encoder', {
+
+    alias: 'data.amf.Encoder',
+
+    config: {
+        format: 3
+    },
+
+    
+    bytes: [],
+
+    
+    constructor: function(config) {
+        this.initConfig(config);
+        this.clear();
+    },
+
+    
+    clear: function() {
+        this.bytes = [];
+    },
+
+    
+    applyFormat: function(protocol_version) {
+        var funcs = {
+            0: {
+                writeUndefined: this.write0Undefined,
+                writeNull: this.write0Null,
+                writeBoolean: this.write0Boolean,
+                writeNumber: this.write0Number,
+                writeString: this.write0String,
+                writeXml: this.write0Xml,
+                writeDate: this.write0Date,
+                writeArray: this.write0Array,
+                writeGenericObject: this.write0GenericObject
+            },
+
+            3: {
+                writeUndefined: this.write3Undefined,
+                writeNull: this.write3Null,
+                writeBoolean: this.write3Boolean,
+                writeNumber: this.write3Number,
+                writeString: this.write3String,
+                writeXml: this.write3Xml,
+                writeDate: this.write3Date,
+                writeArray: this.write3Array,
+                writeGenericObject: this.write3GenericObject
+            }
+
+        }[protocol_version];
+        if (funcs) {
+            Ext.apply(this, funcs);
+            return protocol_version;
+        } else {
+            return; 
+        }
+    },
+
+    
+    writeObject: function(item) {
+        var t = typeof(item);
+        
+        if (t === "undefined") {
+            this.writeUndefined();
+        } else if (item === null) { 
+            this.writeNull();
+        } else if (Ext.isBoolean(item)) {
+            this.writeBoolean(item);
+        } else if (Ext.isString(item)) {
+            this.writeString(item);
+        } else if (t === "number" || item instanceof Number) { 
+            this.writeNumber(item);
+        } else if (t === "object") {
+            
+            if (item instanceof Date) {
+                this.writeDate(item);
+            } else if (Ext.isArray(item)) { 
+                this.writeArray(item);
+            } else if (this.isXmlDocument(item)) {
+                this.writeXml(item);
+            } else {
+                
+                this.writeGenericObject(item);
+            }
+        } else {
+        }
+    },
+
+    
+    write3Undefined: function() {
+        this.writeByte(0x00); 
+    },
+
+    
+    write0Undefined: function() {
+        this.writeByte(0x06); 
+    },
+
+    
+    write3Null: function() {
+        this.writeByte(0x01); 
+    },
+
+    
+    write0Null: function() {
+        this.writeByte(0x05); 
+    },
+
+    
+    write3Boolean: function(item) {
+        if (item) {
+            this.writeByte(0x03); 
+        } else {
+            this.writeByte(0x02); 
+        }
+    },
+
+    
+    write0Boolean: function(item) {
+        this.writeByte(0x01); 
+        if (item) {
+            this.writeByte(0x01); 
+        } else {
+            this.writeByte(0x00); 
+        }
+    },
+
+    
+    encode29Int: function(item) {
+        var data = [], 
+            num = item,
+            nibble,
+            i;
+        if (num == 0) {
+            return [0]; 
+        }
+        
+        if (num > 0x001fffff) {
+            
+            nibble = num & 0xff;
+            data.unshift(nibble);
+            num = num >> 8;
+        }
+        
+        while (num > 0) {
+            nibble = num & 0x7f; 
+            data.unshift(nibble);
+            num = num >> 7;
+        }
+        
+        
+        for (i = 0; i < data.length - 1; i++) {
+            data[i] = data[i] | 0x80;
+        }
+        return data;
+    },
+
+    
+    write3Number: function(item) {
+        var data;
+        var maxInt = 0x1fffffff,
+            minSignedInt = -0xfffffff;
+
+        
+        if (item instanceof Number) {
+            item = item.valueOf();
+        }
+        
+        
+        if (item % 1 === 0 && item >= minSignedInt && item <= maxInt) {
+            
+            item = item & maxInt; 
+            data = this.encode29Int(item);
+            
+            data.unshift(0x04); 
+            
+            this.writeBytes(data);
+
+        } else {
+            data = this.encodeDouble(item);
+            data.unshift(0x05); 
+            this.writeBytes(data);
+        }
+    },
+
+    
+    write0Number: function(item) {
+        var data;
+
+        
+        if (item instanceof Number) {
+            item = item.valueOf();
+        }
+        
+        data = this.encodeDouble(item);
+        data.unshift(0x00); 
+        this.writeBytes(data);
+    },
+
+    
+    encodeUtf8Char: function(c) {
+        var data = [],
+            val, b, i,
+            marker;
+        if (c <= 0x7F) {
+            
+            data.push(c);
+        } else {
+            
+            if (c <= 0x7ff) {
+                b = 2;
+            } else if (c <= 0xffff) {
+                b = 3;
+            } else {
+                b = 4;
+            }
+            
+            marker = 0x80; 
+            for (i = 1; i < b; i++) {
+                val = (c & 0x3F) | 0x80; 
+                data.unshift(val);
+                c = c >> 6; 
+                marker = (marker >> 1) | 0x80; 
+            }
+            
+            val = c | marker;
+            data.unshift(val);
+        }
+        return data;
+    },
+
+    
+    encodeUtf8String: function(str) {
+        var i,
+            utf8Data = [];
+        for (i = 0; i < str.length; i++) {
+            var data = this.encodeUtf8Char(str.charCodeAt(i));
+            Ext.Array.push(utf8Data, data);
+        }
+        return utf8Data;
+
+        
+        
+        
+
+
+    },
+
+    
+    encode3Utf8StringLen: function(utf8Data) {
+        var len = utf8Data.length,
+            data = [];
+        if (len <= 0xFFFFFFF) {
+            
+            
+            len = len << 1;
+            len = len | 1; 
+            
+            data =this.encode29Int(len);
+        } else {
+        }
+        return data;
+    },
+
+    
+    write3String: function(item) {
+        if (item == "") { 
+            this.writeByte(0x06); 
+            this.writeByte(0x01); 
+        } else {
+            
+            var utf8Data = this.encodeUtf8String(item);
+            var lenData = this.encode3Utf8StringLen(utf8Data);
+            
+            this.writeByte(0x06); 
+            this.writeBytes(lenData);
+            this.writeBytes(utf8Data);
+        }
+    },
+
+    
+    encodeXInt: function(value, byte_count) {
+        var data = [],
+            i;
+        for (i = 0; i < byte_count; i++) {
+            data.unshift(value & 0xff);
+            value = value >> 8;
+        }
+        return data;
+    },
+
+    
+    write0String: function(item) {
+        if (item == "") { 
+            this.writeByte(0x02); 
+            this.writeBytes([0x00, 0x00]); 
+        } else {
+            
+            var utf8Data = this.encodeUtf8String(item);
+            var encoding;
+            var lenData;
+            if (utf8Data.length <= 0xffff) {
+                
+                encoding = 0x02; 
+                lenData = this.encodeXInt(utf8Data.length, 2);
+            } else {
+                
+                encoding = 0x0C; 
+                lenData = this.encodeXInt(utf8Data.length, 4);
+            }
+            this.writeByte(encoding); 
+            this.writeBytes(lenData);
+            this.writeBytes(utf8Data);
+        }
+    },
+
+    
+    write3XmlWithType: function(xml, amfType) {
+        var xmlStr = this.convertXmlToString(xml);
+        if (xmlStr == "") { 
+            this.writeByte(amfType); 
+            this.writeByte(0x01); 
+        } else {
+            
+            var utf8Data = this.encodeUtf8String(xmlStr);
+            var lenData = this.encode3Utf8StringLen(utf8Data);
+            
+            this.writeByte(amfType); 
+            this.writeBytes(lenData);
+            this.writeBytes(utf8Data);
+        }
+    },
+
+    
+    write3XmlDocument: function(xml) {
+        this.write3XmlWithType(xml, 0x07);
+    },
+
+    
+    write3Xml: function(xml) {
+        this.write3XmlWithType(xml, 0x0B);
+    },
+
+    
+    write0Xml: function(xml) {
+        var xmlStr = this.convertXmlToString(xml);
+        this.writeByte(0x0F); 
+
+        
+        var utf8Data = this.encodeUtf8String(xmlStr);
+        var lenData = this.encodeXInt(utf8Data.length, 4);
+        this.writeBytes(lenData);
+        this.writeBytes(utf8Data);
+
+    },
+
+    
+    write3Date: function(date) {
+
+        
+        this.writeByte(0x08); 
+        this.writeBytes(this.encode29Int(0x1)); 
+        this.writeBytes(this.encodeDouble(new Number(date)));
+    },
+
+    
+    write0Date: function(date) {
+
+        
+        this.writeByte(0x0B); 
+        this.writeBytes(this.encodeDouble(new Number(date)));
+        this.writeBytes([0x00, 0x00]); 
+    },
+
+    
+    write3Array: function(arr) {
+
+        
+        this.writeByte(0x09); 
+
+        
+        var len = arr.length;
+        len = len << 1; 
+        len = len | 0x1; 
+        this.writeBytes(this.encode29Int(len));
+
+        
+        this.writeByte(0x01); 
+
+        
+        Ext.each(arr, function(x) {this.writeObject(x);}, this);
+    },
+
+    
+    write0ObjectProperty: function(key, value) {
+        if (!(key instanceof String) && (typeof(key) !== "string")) {
+            
+            key = key + "";
+        }
+        
+        var utf8Data = this.encodeUtf8String(key);
+        var lenData;
+        lenData = this.encodeXInt(utf8Data.length, 2);
+        this.writeBytes(lenData);
+        this.writeBytes(utf8Data);
+        
+        this.writeObject(value);
+    },
+
+    
+    write0Array: function(arr) {
+        var key;
+
+        
+        
+        this.writeByte(0x08); 
+        
+        
+        var total = 0;
+        for (key in arr) {
+            total++;
+        }
+        
+        this.writeBytes(this.encodeXInt(total, 4));
+        
+        for (key in arr) {
+            Ext.Array.push(this.write0ObjectProperty(key, arr[key]));
+        }
+        
+        this.writeBytes([0x00, 0x00, 0x09]);
+    },
+
+    
+    write0StrictArray: function(arr) {
+
+
+        
+        this.writeByte(0x0A); 
+
+        
+        var len = arr.length;
+        this.writeBytes(this.encodeXInt(len, 4));
+
+        
+        Ext.each(arr, function(x) {this.writeObject(x);}, this);
+    },
+
+
+    
+    write3ByteArray: function(arr) {
+
+        this.writeByte(0x0c); 
+
+        
+
+        
+        var len = arr.length;
+        len = len << 1; 
+        len = len | 0x1; 
+        this.writeBytes(this.encode29Int(len));
+        
+        this.writeBytes(arr);
+    },
+
+    
+    write3GenericObject: function(obj) {
+        var name;
+
+        
+        this.writeByte(0x0A); 
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        var oType = 0x0b; 
+        this.writeByte(oType);
+        
+        
+        this.writeByte(0x01);
+        
+        
+        for (name in obj) {
+            
+            var newName = new String(name).valueOf();
+            if (newName == "") {
+            }
+            var nameData = (this.encodeUtf8String(name));
+            this.writeBytes(this.encode3Utf8StringLen(name));
+            this.writeBytes(nameData);
+            this.writeObject(obj[name]);
+        }
+        
+        this.writeByte(0x01);
+    },
+
+    
+    write0GenericObject: function(obj) {
+        var typed, amfType, key;
+        
+        
+        typed = !!obj.$flexType;
+        amfType = typed ? 0x10 : 0x03; 
+        this.writeByte(amfType); 
+        
+        if (typed) {
+            this.write0ShortUtf8String(obj.$flexType);
+        }
+        
+        for (key in obj) {
+            if (key != "$flexType") {
+                Ext.Array.push(this.write0ObjectProperty(key, obj[key]));
+            }
+        }
+        
+        this.writeBytes([0x00, 0x00, 0x09]);
+    },
+
+    
+    writeByte: function(b) {
+
+        Ext.Array.push(this.bytes, b);
+    },
+
+    
+    writeBytes: function(b) {
+        var i;
+        Ext.Array.push(this.bytes, b);
+    },
+
+    
+    convertXmlToString: function(xml) {
+        var str;
+        if (window.XMLSerializer) {
+            
+            str = new window.XMLSerializer().serializeToString(xml);
+        } else {
+            
+            str = xml.xml;
+        }
+        return str;
+    },
+
+
+    
+    isXmlDocument: function(item) {
+        
+        if (window.DOMParser) {
+            if (Ext.isDefined(item.doctype)) {
+                return true;
+            }
+        }
+        
+        if (Ext.isString(item.xml)) {
+            
+            return true;
+        }
+        return false;
+    },
+
+    
+
+    
+    encodeDouble: function(v) {
+        var ebits = 11, fbits = 52; 
+        var bias = (1 << (ebits - 1)) - 1,
+            s, e, f, ln,
+            i, bits, str, data = [];
+
+        
+        var K_INFINITY=[127,240,0,0,0,0,0,0],
+            K_NINFINITY=[255,240,0,0,0,0,0,0],
+            K_NAN=[255,248,0,0,0,0,0,0];
+
+
+        
+        if (isNaN(v)) {
+            data = K_NAN;
+        } else if (v === Infinity) {
+            data = K_INFINITY;
+        } else if (v == -Infinity) {
+            data = K_NINFINITY;
+        } else {
+            
+            if (v === 0) {
+                e = 0; f = 0; s = (1 / v === -Infinity) ? 1 : 0;
+            }
+            else {
+                s = v < 0;
+                v = Math.abs(v);
+
+                if (v >= Math.pow(2, 1 - bias)) {
+                    
+                    ln = Math.min(Math.floor(Math.log(v) / Math.LN2), bias);
+                    e = ln + bias;
+                    f = Math.round(v * Math.pow(2, fbits - ln) - Math.pow(2, fbits));
+                }
+                else {
+                    
+                    e = 0;
+                    f = Math.round(v / Math.pow(2, 1 - bias - fbits));
+                }
+            }
+
+            
+            bits = [];
+            for (i = fbits; i; i -= 1) { bits.push(f % 2 ? 1 : 0); f = Math.floor(f / 2); }
+            for (i = ebits; i; i -= 1) { bits.push(e % 2 ? 1 : 0); e = Math.floor(e / 2); }
+            bits.push(s ? 1 : 0);
+            bits.reverse();
+            str = bits.join('');
+
+            
+            data = [];
+            while (str.length) {
+                data.push(parseInt(str.substring(0, 8), 2));
+                str = str.substring(8);
+            }
+        }
+        return data;
+    },
+
+    
+    write0ShortUtf8String: function(str) {
+        var utf8Data = this.encodeUtf8String(str),
+            lenData;
+        lenData = this.encodeXInt(utf8Data.length, 2);
+        this.writeBytes(lenData);
+        this.writeBytes(utf8Data);
+    },
+
+    
+    writeAmfPacket: function(headers, messages) {
+        var i;
+        
+        this.writeBytes([0x00, 0x00]); 
+        
+        this.writeBytes(this.encodeXInt(headers.length, 2));
+        
+        for (i in headers) {
+            this.writeAmfHeader(headers[i].name, headers[i].mustUnderstand, headers[i].value);
+        }
+        
+        this.writeBytes(this.encodeXInt(messages.length, 2));
+        
+        for (i in messages) {
+            this.writeAmfMessage(messages[i].targetUri, messages[i].responseUri, messages[i].body);
+        }
+    },
+
+    
+    writeAmfHeader: function(headerName, mustUnderstand, value) {
+        
+        this.write0ShortUtf8String(headerName);
+        
+        var mu = mustUnderstand ? 0x01 : 0x00;
+        this.writeByte(mu);
+        
+        this.writeBytes(this.encodeXInt(-1, 4));
+        
+        this.writeObject(value);
+    },
+
+    
+    writeAmfMessage: function(targetUri, responseUri, body) {
+        
+        this.write0ShortUtf8String(targetUri);
+        
+        this.write0ShortUtf8String(responseUri);
+        
+        this.writeBytes(this.encodeXInt(-1, 4));
+        
+        this.write0StrictArray(body);
+    }
+
+});
+
+
+
+Ext.define('Ext.data.amf.Packet', function() {
+    var twoPowN52 = Math.pow(2, -52),
+        twoPow8 = Math.pow(2, 8),
+        pos = 0,
+        bytes, strings, objects, traits;
+
+    return {
+        
+
+        
+
+        
+
+        
+        typeMap: {
+            
+            0: {
+                0: 'readDouble',
+                1: 'readBoolean',
+                2: 'readAmf0String',
+                3: 'readAmf0Object',
+                5: 'readNull',
+                6: 'readUndefined',
+                7: 'readReference',
+                8: 'readEcmaArray',
+                10: 'readStrictArray',
+                11: 'readAmf0Date',
+                12: 'readLongString',
+                13: 'readUnsupported',
+                15: 'readAmf0Xml',
+                16: 'readTypedObject'
+            },
+            
+            3: {
+                0: 'readUndefined',
+                1: 'readNull',
+                2: 'readFalse',
+                3: 'readTrue',
+                4: 'readUInt29',
+                5: 'readDouble',
+                6: 'readAmf3String',
+                7: 'readAmf3Xml',
+                8: 'readAmf3Date',
+                9: 'readAmf3Array',
+                10: 'readAmf3Object',
+                11: 'readAmf3Xml',
+                12: 'readByteArray'
+            }
+        },
+
+        
+        decode: function(byteArray) {
+            var me = this,
+                headers = me.headers = [],
+                messages = me.messages = [],
+                headerCount, messageCount;
+
+            pos = 0;
+
+            bytes = me.bytes = byteArray;
+
+            
+            
+            
+            
+            strings = me.strings = [];
+
+            
+            
+            
+            
+            
+            
+            
+            objects = me.objects = [];
+
+            
+            
+            
+            
+            traits = me.traits = [];
+
+            
+            
+            me.version = me.readUInt(2);
+
+            
+            for (headerCount = me.readUInt(2); headerCount--;) {
+                headers.push({
+                    name: me.readAmf0String(),
+                    mustUnderstand: me.readBoolean(),
+                    byteLength: me.readUInt(4),
+                    value: me.readValue()
+                });
+                
+                strings = me.strings = [];
+                objects = me.objects = [];
+                traits = me.traits = [];
+            }
+
+            
+            for (messageCount = me.readUInt(2); messageCount--;) {
+                messages.push({
+                    targetURI: me.readAmf0String(),
+                    responseURI: me.readAmf0String(),
+                    byteLength: me.readUInt(4),
+                    body: me.readValue()
+                });
+                
+                strings = me.strings = [];
+                objects = me.objects = [];
+                traits = me.traits = [];
+            }
+
+            
+            pos = 0;
+            
+            bytes = strings = objects = traits =
+                me.bytes = me.strings = me.objects = me.traits = null;
+
+            return me;
+        },
+
+
+        
+        decodeValue: function(byteArray) {
+            var me = this;
+
+            bytes = me.bytes = byteArray;
+
+            
+            pos = 0;
+
+            
+            
+            me.version = 3;
+
+            
+            
+            
+            
+            strings = me.strings = [];
+
+            
+            
+            
+            
+            
+            
+            
+            objects = me.objects = [];
+
+            
+            
+            
+            
+            traits = me.traits = [];
+
+            
+            return me.readValue();
+        },
+
+
+
+        
+        parseXml: function(xml) {
+            var doc;
+
+            if (window.DOMParser) {
+                doc = (new DOMParser()).parseFromString(xml, "text/xml");
+            } else {
+                doc = new ActiveXObject("Microsoft.XMLDOM");
+                doc.loadXML(xml);
+            }
+
+            return doc;
+        },
+
+        
+        readAmf0Date: function() {
+            var date = new Date(this.readDouble());
+            
+            
+            
+            pos += 2; 
+            return date;
+        },
+
+        
+        readAmf0Object: function(obj) {
+            var me = this,
+                key;
+
+            obj = obj || {};
+
+            
+            
+            objects.push(obj);
+
+            
+            
+            
+            while ((key = me.readAmf0String()) || bytes[pos] !== 9) {
+                obj[key] = me.readValue();
+            }
+
+            
+            pos++;
+
+            return obj;
+        },
+
+        
+        readAmf0String: function() {
+            
+            return this.readUtf8(this.readUInt(2));
+        },
+
+        readAmf0Xml: function() {
+            return this.parseXml(this.readLongString());
+        },
+
+        readAmf3Array: function() {
+            var me = this,
+                header = me.readUInt29(),
+                count, key, array, i;
+
+            
+            
+            
+            
+            
+            
+            if (header & 1) {
+                
+                
+                
+                count = (header >> 1);
+                
+                
+                
+                key = me.readAmf3String();
+                if (key) {
+                    
+                    
+                    
+                    array = {};
+                    objects.push(array);
+                    do {
+                        array[key] = me.readValue();
+                    } while((key = me.readAmf3String()));
+                    
+                    
+                    for (i = 0; i < count; i++) {
+                        array[i] = me.readValue();
+                    }
+                } else {
+                    
+                    
+                    array = [];
+                    objects.push(array);
+                    for (i = 0; i < count; i++) {
+                        array.push(me.readValue());
+                    }
+                }
+            } else {
+                
+                
+                array = objects[header >> 1];
+            }
+
+            return array;
+        },
+
+        
+        readAmf3Date: function() {
+            var me = this,
+                header = me.readUInt29(),
+                date;
+
+            if (header & 1) {
+                
+                date = new Date(me.readDouble());
+                objects.push(date);
+            } else {
+                
+                
+                date = objects[header >> 1];
+            }
+
+            return date;
+        },
+
+        
+        readAmf3Object: function() {
+            var me = this,
+                header = me.readUInt29(),
+                members = [],
+                headerLast3Bits, memberCount, className,
+                dynamic, objectTraits, obj, key, klass, i;
+
+            
+            
+            
+            
+            
+            
+            
+            
+            if (header & 1) {
+                
+                
+                headerLast3Bits = (header & 0x07);
+                if (headerLast3Bits === 3) {
+                    
+                    
+                    className = me.readAmf3String();
+                    
+                    
+                    
+                    dynamic = !!(header & 0x08);
+                    
+                    
+                    
+                    memberCount = (header >> 4);
+                    for (i = 0; i < memberCount; i++) {
+                        members.push(me.readAmf3String());
+                    }
+                    objectTraits = {
+                        className: className,
+                        dynamic: dynamic,
+                        members: members
+                    };
+                    
+                    
+                    
+                    traits.push(objectTraits);
+                } else if ((header & 0x03) === 1) {
+                    
+                    
+                    
+                    objectTraits = traits[header >> 2];
+                    className = objectTraits.className;
+                    dynamic = objectTraits.dynamic;
+                    members = objectTraits.members;
+                    memberCount = members.length;
+                } else if (headerLast3Bits === 7) {
+                    
+                    
+
+                    
+                }
+
+                if (className) {
+                    klass = Ext.ClassManager.getByAlias('amf.' + className);
+                    obj = klass ? new klass() : {$className: className};
+                } else {
+                    obj = {};
+                }
+                objects.push(obj);
+
+                
+                for (i = 0; i < memberCount; i++) {
+                    obj[members[i]] = me.readValue();
+                }
+
+                if (dynamic) {
+                    
+                    
+                    
+                    
+                    while ((key = me.readAmf3String())) {
+                        obj[key] = me.readValue();
+                    }
+                }
+
+                
+                if ((!klass) && this.converters[className]) {
+                    obj = this.converters[className](obj);
+                }
+
+            } else {
+                
+                
+                
+                obj = objects[header >> 1];
+            }
+
+            return obj;
+        },
+
+        
+        readAmf3String: function() {
+            var me = this,
+                header = me.readUInt29(),
+                value;
+
+            if (header & 1) {
+                
+                
+                
+                value = me.readUtf8(header >> 1);
+                if (value) {
+                    
+                    strings.push(value);
+                }
+                return value;
+            } else {
+                
+                
+                
+                
+                return strings[header >> 1];
+            }
+        },
+
+        
+        readAmf3Xml: function() {
+            var me = this,
+                header = me.readUInt29(),
+                doc;
+
+            if (header & 1) {
+                
+                
+                doc = me.parseXml(me.readUtf8(header >> 1));
+                objects.push(doc);
+            } else {
+                
+                
+                doc = objects[header >> 1];
+            }
+
+            return doc;
+        },
+
+        
+        readBoolean: function() {
+            return !!bytes[pos++];
+        },
+
+        
+        readByteArray: function() {
+            var header = this.readUInt29(),
+                byteArray, end;
+
+            if (header & 1) {
+                
+                
+                end = pos + (header >> 1);
+                
+                
+                
+                byteArray = Array.prototype.slice.call(bytes, pos, end);
+                objects.push(byteArray);
+                
+                
+                pos = end;
+            } else {
+                
+                
+                byteArray = objects[header >> 1];
+            }
+
+            return byteArray;
+        },
+
+        
+        readDouble: function() {
+            var byte1 = bytes[pos++],
+                byte2 = bytes[pos++],
+                
+                
+                
+                sign = (byte1 >> 7) ? -1 : 1,
+                
+                exponent =
+                    
+                    
+                    
+                    (((byte1 & 0x7F) << 4)
+                     
+                     
+                     | (byte2 >> 4)),
+                
+                
+                significand = (byte2 & 0x0F),
+                
+                
+                
+                
+                
+                
+                hiddenBit = exponent ? 1 : 0,
+                i = 6;
+
+            
+            
+            
+            
+            
+            
+            
+            while (i--) {
+                significand = (significand * twoPow8) + bytes[pos++];
+            }
+
+            if (!exponent) {
+                if (!significand) {
+                    
+                    return 0;
+                }
+                
+                
+                
+                
+                exponent = 1;
+            }
+
+            
+            
+            if (exponent === 0x7FF) {
+                return significand ? NaN : (Infinity * sign);
+            }
+
+            return sign *
+                
+                
+                
+                Math.pow(2, exponent - 0x3FF) *
+                
+                
+                (hiddenBit + twoPowN52 * significand);
+        },
+
+        
+        readEcmaArray: function() {
+            
+            
+            
+            
+            pos += 4;
+            return this.readAmf0Object();
+        },
+
+        
+        readFalse: function() {
+            return false;
+        },
+
+        
+        readLongString: function() {
+            
+            return this.readUtf8(this.readUInt(4));
+        },
+
+        
+        readNull: function() {
+            return null;
+        },
+
+        
+        readReference: function() {
+            
+            
+            return objects[this.readUInt(2)];
+        },
+
+        
+        readStrictArray: function() {
+            var me = this,
+                len = me.readUInt(4),
+                arr = [];
+
+            objects.push(arr);
+
+            while (len--) {
+                arr.push(me.readValue());
+            }
+
+            return arr;
+        },
+
+        
+        readTrue: function() {
+            return true;
+        },
+
+        
+        readTypedObject: function() {
+            var me = this,
+                className = me.readAmf0String(),
+                klass, instance, modified;
+
+            klass = Ext.ClassManager.getByAlias('amf.' + className);
+            instance = klass ? new klass() : {$className: className}; 
+
+            modified = me.readAmf0Object(instance);
+
+            
+            if ((!klass) && this.converters[className]) {
+                modified = this.converters[className](instance);
+            }
+            return modified;
+        },
+
+        
+        readUInt: function(byteCount) {
+            var i = 1,
+                result;
+
+            
+            result = bytes[pos++];
+            
+            for (; i < byteCount; ++i) {
+                
+                result = (result << 8) | bytes[pos++];
+            }
+
+            return result;
+        },
+
+        
+        readUInt29: function() {
+            var value = bytes[pos++],
+                nextByte;
+
+            if (value & 0x80) {
+                
+                
+                nextByte = bytes[pos++];
+                
+                value = ((value & 0x7F) << 7) | (nextByte & 0x7F);
+                if (nextByte & 0x80) {
+                    
+                    
+                    nextByte = bytes[pos++];
+                    
+                    
+                    value = (value << 7) | (nextByte & 0x7F);
+                    if (nextByte & 0x80) {
+                        
+                        nextByte = bytes[pos++];
+                        
+                        value = (value << 8) | nextByte;
+                    }
+
+                }
+            }
+
+            return value;
+        },
+
+        
+        readUndefined: Ext.emptyFn,
+
+        
+        readUnsupported: Ext.emptyFn,
+
+        
+        readUtf8: function(byteLength) {
+            var end = pos + byteLength, 
+                chars = [],
+                charCount = 0,
+                maxCharCount = 65535,
+                charArrayCount = 1,
+                result = [],
+                i = 0,
+                charArrays, byteCount, charCode;
+
+            charArrays = [chars];
+
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            while (pos < end) {
+                
+                
+                charCode = bytes[pos++];
+                if (charCode > 127) {
+                    
+                    
+                    if (charCode > 239) {
+                        
+                        
+                        byteCount = 4;
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        charCode = (charCode & 0x07);
+                    } else if (charCode > 223) {
+                        
+                        
+                        byteCount = 3;
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        charCode = (charCode & 0x0F);
+                    } else {
+                        
+                        
+                        byteCount = 2;
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        charCode = (charCode & 0x1F);
+                    }
+
+                    while (--byteCount) {
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        charCode = ((charCode << 6) | (bytes[pos++] & 0x3F));
+                    }
+                }
+
+                chars.push(charCode);
+
+                if (++charCount === maxCharCount) {
+                    charArrays.push(chars = []);
+                    charCount = 0;
+                    charArrayCount ++;
+                }
+            }
+
+            
+            
+            
+            
+            
+            for (; i < charArrayCount; i++) {
+                
+                
+                result.push(String.fromCharCode.apply(String, charArrays[i]));
+            }
+
+            return result.join('');
+        },
+
+        
+        readValue: function() {
+            var me = this,
+                marker = bytes[pos++];
+
+            
+            
+            
+            
+            if (marker === 17) {
+                
+                me.version = 3;
+                marker = bytes[pos++];
+            }
+
+            return me[me.typeMap[me.version][marker]]();
+        },
+
+        
+
+        converters: {
+            'flex.messaging.io.ArrayCollection': function(obj) {
+                return obj.source || []; 
+            }
+        }
+
+    };
+});
+
+
+
+Ext.define('Ext.data.amf.Reader', {
+
+    extend:  Ext.data.reader.Json ,
+
+    alias : 'reader.amf',
+
+               
+                             
+      
+
+    
+    messageIndex: 0,
+
+    
+    read: function(response) {
+        var me = this,
+            bytes = response.responseBytes,
+            packet, messages, resultSet;
+
+        if (!bytes) {
+            throw "AMF Reader cannot process the response because it does not contain binary data. Make sure the Proxy's 'binary' config is true.";
+        }
+            
+        packet = new Ext.data.amf.Packet(),
+        packet.decode(bytes);
+        messages = packet.messages;
+
+        if (messages.length) {
+            resultSet = me.readRecords(messages[me.messageIndex].body);
+        } else {
+            
+            resultSet = me.nullResultSet;
+            if (packet.invalid) {
+                
+                resultSet.success = false;
+            }
+        }
+
+        return resultSet;
+    }
+});
+
+
+
+
+Ext.define('Ext.data.amf.Proxy', {
+    extend:  Ext.data.proxy.Ajax ,
+
+    alias: 'proxy.amf',
+
+               
+                             
+      
+
+    
+    binary: true,
+
+    
+    reader: 'amf'
+});
+
+
+
+
+
+
+Ext.define('Ext.data.amf.RemotingMessage', {
+
+    alias: 'data.amf.remotingmessage',
+
+    config: {
+
+        $flexType: 'flex.messaging.messages.RemotingMessage',
+
+        
+        body: [],
+
+        
+        clientId: "",
+
+        
+        destination: "",
+
+        
+        headers: [],
+
+        
+        messageId: "",
+
+        
+        operation: "",
+
+        
+        source: "",
+
+        
+        timestamp: [],
+
+        
+        timeToLive: []
+
+
+    },
+
+
+    
+    constructor: function(config) {
+        this.initConfig(config);
+    },
+
+
+
+    
+    encodeMessage: function() {
+        var encoder = Ext.create('Ext.data.amf.XmlEncoder'),
+            cleanObj;
+        cleanObj = Ext.copyTo({}, this, "$flexType,body,clientId,destination,headers,messageId,operation,source,timestamp,timeToLive", true);
+        encoder.writeObject(cleanObj);
+        return encoder.body;
+    }
+
+});
+
+
+
+Ext.define('Ext.data.amf.XmlDecoder', {
+
+    alias: 'data.amf.xmldecoder',
+
+    statics: {
+
+        
+        readXml: function(xml) {
+            var doc;
+
+            if (window.DOMParser) {
+                doc = (new DOMParser()).parseFromString(xml, "text/xml");
+            } else {
+                doc = new ActiveXObject("Microsoft.XMLDOM");
+                doc.loadXML(xml);
+            }
+
+            return doc;
+        },
+
+        
+        readByteArray: function(node) {
+            var bytes = [],
+                c, i, str;
+            str = node.firstChild.nodeValue;
+            for (i = 0; i < str.length; i = i + 2) {
+                c = str.substr(i, 2);
+                bytes.push(parseInt(c, 16));
+            }
+            return bytes;
+        },
+
+        
+        readAMF3Value: function(bytes) {
+            var packet;
+            packet = Ext.create('Ext.data.amf.Packet');
+            return packet.decodeValue(bytes);
+        },
+
+        
+        decodeTidFromFlexUID: function(messageId) {
+            var str;
+            str = messageId.substr(0,8);
+            return parseInt(str, 16);
+        }
+
+    },
+
+    
+    constructor: function(config) {
+        this.initConfig(config);
+        this.clear();
+    },
+
+    
+    clear: function() {
+        
+        this.objectReferences=[];
+        this.traitsReferences=[];
+        this.stringReferences=[];
+    },
+
+    
+    readAmfxMessage: function(xml) {
+        var doc, amfx, body,
+            i, resp={};
+        this.clear(); 
+        doc = Ext.data.amf.XmlDecoder.readXml(xml);
+        amfx = doc.getElementsByTagName('amfx')[0];
+        body = amfx.getElementsByTagName('body')[0];
+        resp.targetURI = body.getAttribute('targetURI');
+        resp.responseURI = body.getAttribute('responseURI'); 
+        for (i = 0; i < body.childNodes.length; i++) {
+            if (body.childNodes.item(i).nodeType != 1) {
+                
+                continue;
+            }
+            resp.message = this.readValue(body.childNodes.item(i));
+            break; 
+        }
+        return resp;
+    },
+
+    
+    readValue: function(node) {
+        var val;
+        if (typeof node.normalize === 'function') {
+            node.normalize();
+        }
+        
+        if (node.tagName == "null") {
+            return null;
+        } else if (node.tagName == "true") {
+            return true;
+        } else if (node.tagName == "false") {
+            return false;
+        } else if (node.tagName == "string") {
+            return this.readString(node);
+        } else if (node.tagName == "int") {
+            return parseInt(node.firstChild.nodeValue);
+        } else if (node.tagName == "double") {
+            return parseFloat(node.firstChild.nodeValue);
+        } else if (node.tagName == "date") {
+            val = new Date(parseFloat(node.firstChild.nodeValue));
+            
+            this.objectReferences.push(val);
+            return val;
+        } else if (node.tagName == "dictionary") {
+            return this.readDictionary(node);
+        } else if (node.tagName == "array") {
+            return this.readArray(node);
+        } else if (node.tagName == "ref") {
+            return this.readObjectRef(node);
+        } else if (node.tagName == "object") {
+            return this.readObject(node);
+        } else if (node.tagName == "xml") {
+            
+            return Ext.data.amf.XmlDecoder.readXml(node.firstChild.nodeValue);
+        } else if (node.tagName == "bytearray") {
+            
+            return Ext.data.amf.XmlDecoder.readAMF3Value(Ext.data.amf.XmlDecoder.readByteArray(node));
+        }
+        return null;
+    },
+
+    
+    readString: function(node) {
+        var val;
+        if (node.getAttributeNode('id')) {
+            return this.stringReferences[parseInt(node.getAttribute('id'))];
+        }
+        val = (node.firstChild ? node.firstChild.nodeValue : "") || "";
+        this.stringReferences.push(val);
+        return val;
+    },
+
+    
+    readTraits: function(node) {
+        var traits = [], i, rawtraits;
+        if (node === null) {
+            return null;
+        }
+        if (node.getAttribute('externalizable') == "true") {
+            
+            return null;
+        }
+        if (node.getAttributeNode('id')) {
+            
+            return this.traitsReferences[parseInt(node.getAttributeNode('id').value)];
+        }
+        
+        rawtraits = node.childNodes;
+        for (i = 0; i < rawtraits.length; i++) {
+            if (rawtraits.item(i).nodeType != 1) {
+                
+                continue;
+            }
+            
+            traits.push(this.readValue(rawtraits.item(i)));
+        }
+
+        
+        this.traitsReferences.push(traits);
+        return traits;
+    },
+
+    
+    readObjectRef: function(node) {
+        var id;
+        id = parseInt(node.getAttribute('id'));
+        return this.objectReferences[id];
+    },
+
+    
+    readObject: function(node) {
+        var obj,
+            traits = [],
+            traitsNode,
+            i, j, n,
+            key, val,
+            klass = null, className;
+
+        className = node.getAttribute('type');
+        if (className) {
+            klass = Ext.ClassManager.getByAlias('amfx.' + className); 
+        }
+        obj = klass ? new klass() : (className ? {$className: className} : {}); 
+
+        
+        if ((!klass) && this.converters[className]) {
+            obj = this.converters[className](this,node);
+            return obj; 
+        }
+
+        traitsNode = node.getElementsByTagName('traits')[0];
+        traits = this.readTraits(traitsNode);
+        
+        this.objectReferences.push(obj);
+
+
+        
+        j = 0;
+        for (i = 0; i < node.childNodes.length; i++) {
+            n = node.childNodes.item(i);
+            if (n.nodeType != 1) {
+                
+                continue;
+            }
+            if (n.tagName == "traits") {
+                
+                continue;
+            }
+            key = traits[j];
+            val = this.readValue(n);
+            j = j + 1;
+            obj[key] = val;
+        }
+        return obj;
+    },
+
+    
+    readArray: function(node) {
+        var arr=[],
+            n,i,j,l,name, val, len, childnodes, cn;
+
+        
+        this.objectReferences.push(arr);
+
+        len = parseInt(node.getAttributeNode('length').value);
+        i = 0;
+        
+        for (l = 0; l < node.childNodes.length; l++) {
+            n = node.childNodes.item(l);
+            if (n.nodeType != 1) {
+                
+                continue;
+            }
+            if (n.tagName == "item") {
+                
+                name = n.getAttributeNode('name').value;
+                childnodes = n.childNodes;
+                for (j = 0; j < childnodes.length; j++) {
+                    cn = childnodes.item(j);
+                    if (cn.nodeType != 1) {
+                        
+                        continue;
+                    }
+                    val = this.readValue(cn);
+                    break; 
+                }
+                arr[name] = val;
+            } else {
+                
+                arr[i] = this.readValue(n);
+                i++;
+            }
+        }
+        return arr;
+    },
+
+    
+    readDictionary: function(node) {
+        
+        var dict = {},
+            key, val,
+            i, j, n, len;
+
+        len = parseInt(node.getAttribute('length'));
+        
+        this.objectReferences.push(dict);
+
+
+        
+        key = null;
+        val = null;
+        j = 0;
+        for (i = 0; i < node.childNodes.length; i++) {
+            n = node.childNodes.item(i);
+            if (n.nodeType != 1) {
+                
+                continue;
+            }
+            if (!key) {
+                key = this.readValue(n);
+                continue; 
+            }
+            val = this.readValue(n);
+            j = j + 1;
+            dict[key] = val;
+            key = null;
+            val = null;
+        }
+        return dict;
+    },
+
+
+    
+    convertObjectWithSourceField: function(node) {
+        var i, n, val;
+        for (i = 0; i < node.childNodes.length; i++) {
+            n = node.childNodes.item(i);
+            if (n.tagName == "bytearray") {
+                val = this.readValue(n);
+                this.objectReferences.push(val);
+                return val;
+            }
+        }
+        return null; 
+    },
+
+    
+
+    converters: {
+        'flex.messaging.io.ArrayCollection': function(decoder,node) {
+            return decoder.convertObjectWithSourceField(node);
+        },
+        'mx.collections.ArrayList':  function(decoder,node) {
+            return decoder.convertObjectWithSourceField(node);
+        },
+        'mx.collections.ArrayCollection':  function(decoder,node) {
+            return decoder.convertObjectWithSourceField(node);
+        }
+    }
+});
+
+
+
+
+Ext.define('Ext.data.amf.XmlEncoder', {
+
+    alias: 'data.amf.xmlencoder',
+
+    
+    body: "",
+
+    statics: {
+        
+        generateFlexUID: function(id) {
+            var uid = "",
+                i, j, t;
+            if (id === undefined) {
+                id = Ext.Number.randomInt(0, 0xffffffff);
+            }
+            
+            
+            t =  (id + 0x100000000).toString(16).toUpperCase(); 
+            uid = t.substr(t.length - 8, 8); 
+
+            for (j = 0; j < 3; j++) {
+                
+                uid += "-";
+                for (i = 0; i < 4; i++) {
+                    uid += Ext.Number.randomInt(0, 15).toString(16).toUpperCase();
+                }
+            }
+            uid += "-";
+            
+            t = new Number(new Date()).valueOf().toString(16).toUpperCase(); 
+            j = 0;
+            if (t.length < 8) { 
+                for (i = 0; i < t.length - 8; i++) {
+                    j++;
+                    uid += "0";
+                }
+            }
+            
+            uid += t.substr(-(8-j)); 
+            
+            for (i = 0; i < 4; i++) {
+                uid += Ext.Number.randomInt(0, 15).toString(16).toUpperCase();
+            }
+            return uid;
+        }
+    },
+
+    
+    constructor: function(config) {
+        this.initConfig(config);
+        this.clear();
+    },
+
+    
+    clear: function() {
+        this.body = "";
+    },
+
+    
+    encodeUndefined: function() {
+        return this.encodeNull();
+    },
+
+    
+    writeUndefined: function() {
+        this.write(this.encodeUndefined());
+    },
+
+    
+    encodeNull: function() {
+        return "<null />";
+    },
+
+    
+    writeNull: function() {
+        this.write(this.encodeNull());
+    },
+
+    
+    encodeBoolean: function(val) {
+        var str;
+        if (val) {
+            str = "<true />";
+        } else {
+            str = "<false />";
+        }
+        return str;
+    },
+
+    
+    writeBoolean: function(val) {
+        this.write(this.encodeBoolean(val));
+    },
+
+
+    
+    encodeString: function(str) {
+        var ret;
+        if (str === "") {
+            ret = "<string />";
+        } else {
+            ret ="<string>"+str+"</string>";
+        }
+        return ret;
+    },
+
+    
+    writeString: function(str) {
+        this.write(this.encodeString(str));
+    },
+
+    
+    encodeInt: function(num) {
+        return "<int>" + num.toString() + "</int>";
+    },
+
+    
+    writeInt: function(num) {
+        this.write(this.encodeInt(num));
+    },
+
+    
+    encodeDouble: function(num) {
+        return "<double>" + num.toString() + "</double>";
+    },
+
+    
+    writeDouble: function(num) {
+        this.write(this.encodeDouble(num));
+    },
+
+    
+    encodeNumber: function(num) {
+        var maxInt = 0x1fffffff,
+            minSignedInt = -0xfffffff;
+
+        
+        if (num instanceof Number) {
+            num = num.valueOf();
+        }
+        
+        if (num % 1 === 0 && num >= minSignedInt && num <= maxInt) {
+            
+            return this.encodeInt(num);
+        } else {
+            return this.encodeDouble(num);
+        }
+    },
+
+    
+    writeNumber: function(num) {
+        this.write(this.encodeNumber(num));
+    },
+
+    
+    encodeDate: function(date) {
+        return "<date>" + (new Number(date)).toString() + "</date>";
+    },
+
+    
+    writeDate: function(date) {
+        this.write(this.encodeDate(date));
+    },
+
+    
+    encodeEcmaElement: function(key, value) {
+        var str = '<item name="' + key.toString() + '">' + this.encodeObject(value) + '</item>';
+        return str;
+    },
+
+    
+    encodeArray: function(array) {
+        var ordinals=[],
+            firstNonOrdinal,
+            ecmaElements=[],
+            length = array.length, 
+            i, str;
+        for (i in array) {
+            if (Ext.isNumeric(i) && (i % 1 == 0)) {
+                
+                ordinals[i] = this.encodeObject(array[i]);
+            } else {
+                ecmaElements.push(this.encodeEcmaElement(i, array[i]));
+            }
+        }
+        firstNonOrdinal=ordinals.length;
+        
+        for (i = 0; i < ordinals.length; i++) {
+            if (ordinals[i] === undefined) {
+                
+                firstNonOrdinal = i;
+                break;
+            }
+        }
+        if (firstNonOrdinal < ordinals.length) {
+            
+            for (i = firstNonOrdinals; i < ordinals.length; i++) {
+                if (ordinals[i] !== undefined) {
+                    ecmaElements.push(this.encodeEcmaElement(i, ordinals[i]));
+                }
+            }
+            ordinals = ordinals.slice(0, firstNonOrdinal);
+        }
+
+        
+        str = '<array length="' + ordinals.length + '"';
+        if (ecmaElements.length > 0) {
+            str += ' ecma="true"';
+        }
+        str += '>';
+
+        
+        for (i = 0; i < ordinals.length; i++) { 
+            str += ordinals[i];
+        }
+        
+        for (i in ecmaElements) {
+            str += ecmaElements[i];
+        }
+        
+        str += '</array>';
+        return str;
+    },
+
+    
+    writeArray: function(array) {
+        this.write(this.encodeArray(array));
+    },
+
+    
+    encodeXml: function(xml) {
+        var str = this.convertXmlToString(xml);
+        return "<xml><![CDATA[" + str + "]]></xml>";
+    },
+
+    
+    writeXml: function(xml) {
+        this.write(this.encodeXml(xml));
+    },
+
+    
+    encodeGenericObject: function(obj) {
+        var traits = [],
+            values = [],
+            flexType = null,
+            i, str;
+        for (i in obj) {
+            if (i == "$flexType") {
+                flexType = obj[i];
+            } else {
+                traits.push(this.encodeString(new String(i)));
+                values.push(this.encodeObject(obj[i]));
+            }
+        }
+        if (flexType) {
+            str = '<object type="' +flexType + '">';
+        } else {
+            str="<object>";
+        }
+        if (traits.length > 0) {
+            str += "<traits>";
+            str += traits.join("");
+            str += "</traits>";
+        } else {
+            str += "<traits />";
+        }
+        str += values.join("");
+        str += "</object>";
+        return str;
+    },
+
+    
+    writeGenericObject: function(obj) {
+        this.write(this.encodeGenericObject(obj));
+    },
+
+    
+    encodeByteArray: function(array) {
+        var str, i, h;
+        if (array.length > 0) {
+            str = "<bytearray>";
+            for (i = 0; i < array.length; i++) {
+                h = array[i].toString(16).toUpperCase();
+                if (array[i] < 0x10) {
+                    h = "0" + h;
+                }
+                str += h;
+            }
+            str += "</bytearray>";
+        } else {
+            str = "<bytearray />";
+        }
+        return str;
+    },
+
+    
+    writeByteArray: function(array) {
+        this.write(this.encodeByteArray(array));
+    },
+
+    
+    encodeObject: function(item) {
+        var t = typeof(item);
+        
+        if (t === "undefined") {
+            return this.encodeUndefined();
+        } else if (item === null) { 
+            return this.encodeNull();
+        } else if (Ext.isBoolean(item)) {
+            return this.encodeBoolean(item);
+        } else if (Ext.isString(item)) {
+            return this.encodeString(item);
+        } else if (t === "number" || item instanceof Number) { 
+            return this.encodeNumber(item);
+        } else if (t === "object") {
+            
+            if (item instanceof Date) {
+                return this.encodeDate(item);
+            } else if (Ext.isArray(item)) {
+                return this.encodeArray(item);
+            } else if (this.isXmlDocument(item)) {
+                return this.encodeXml(item);
+            } else {
+                
+                return this.encodeGenericObject(item);
+            }
+        } else {
+        }
+        return null; 
+    },
+
+    
+    writeObject: function(item) {
+        this.write(this.encodeObject(item));
+    },
+
+    
+    encodeAmfxRemotingPacket: function(message) {
+        var msg, str;
+        str = '<amfx ver="3" xmlns="http://www.macromedia.com/2005/amfx"><body>';
+        str += message.encodeMessage();
+        str += '</body></amfx>';
+        return str;
+    },
+
+    
+    writeAmfxRemotingPacket: function(params) {
+        this.write(this.encodeAmfxRemotingPacket(params));
+    },
+
+    
+    convertXmlToString: function(xml) {
+        var str;
+        if (window.XMLSerializer) {
+            
+            str = new window.XMLSerializer().serializeToString(xml);
+        } else {
+            
+            str = xml.xml;
+        }
+        return str;
+    },
+    
+    
+    isXmlDocument: function(item) {
+        
+        if (window.DOMParser) {
+            if (Ext.isDefined(item.doctype)) {
+                return true;
+            }
+        }
+        
+        if (Ext.isString(item.xml)) {
+            
+            return true;
+        }
+        return false;
+    },
+
+    
+    write: function(str) {
+        this.body += str;
+    }
+});
+
+
 Ext.define('Ext.data.association.BelongsTo', {
     extend:  Ext.data.association.Association ,
     alternateClassName: 'Ext.data.BelongsToAssociation',
@@ -80796,6 +83130,131 @@ Ext.define('Ext.data.proxy.SessionStorage', {
 
 
 
+Ext.define('Ext.data.soap.Reader', {
+    extend:  Ext.data.reader.Xml ,
+    alias: 'reader.soap',
+	
+    getData: function(data) {
+        var envelope = data.documentElement,
+            
+            
+            prefix = envelope.prefix; 
+
+        return Ext.DomQuery.selectNode(prefix + '|Body', data);
+    }
+});
+
+
+
+Ext.define('Ext.data.soap.Proxy', {
+    extend:  Ext.data.proxy.Ajax ,
+    alias: 'proxy.soap',
+
+               
+                              
+      
+
+    
+
+    
+
+    
+    operationParam: 'op',
+
+    
+    reader: 'soap',
+
+    
+
+    
+    envelopeTpl: [
+        '<?xml version="1.0" encoding="utf-8" ?>',
+        '<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">',
+            '{[values.bodyTpl.apply(values)]}',
+        '</soap:Envelope>'
+    ],
+
+    
+
+    
+    readBodyTpl: [
+        '<soap:Body>',
+            '<{operation} xmlns="{targetNamespace}">',
+                '<tpl foreach="params">',
+                    '<{$}>{.}</{$}>',
+                '</tpl>',
+            '</{operation}>',
+        '</soap:Body>'
+    ],
+
+    
+
+    
+
+    
+    writeBodyTpl: [
+        '<soap:Body>',
+            '<{operation} xmlns="{targetNamespace}">',
+                '<tpl for="records">',
+                    '{% var recordName=values.modelName.split(".").pop(); %}',
+                    '<{[recordName]}>',
+                        '<tpl for="fields">',
+                            '<{name}>{[parent.get(values.name)]}</{name}>',
+                        '</tpl>',
+                    '</{[recordName]}>',
+                '</tpl>',
+            '</{operation}>',
+        '</soap:Body>'
+    ],
+
+    
+    
+    
+    
+    constructor: function(config) {
+        this.callParent(arguments);
+        this.api = config.api || {};
+        this.soapAction = config.soapAction || {};
+    },
+
+    doRequest: function(operation, callback, scope) {
+        var me = this,
+            XTemplate = Ext.XTemplate,
+            action = operation.action,
+            soapOperation = me.api[action],
+            params = Ext.applyIf(operation.params || {}, me.extraParams || {}),
+            bodyTplName = action + 'BodyTpl',
+            xmlData = XTemplate.getTpl(me, 'envelopeTpl').apply({
+                operation: soapOperation,
+                targetNamespace: me.targetNamespace,
+                params: params,
+                records: operation.records,
+                bodyTpl: XTemplate.getTpl(me, me[bodyTplName] ? bodyTplName : 'writeBodyTpl')
+            }),
+            request = new Ext.data.Request({
+                url: me.url + '?' + me.operationParam + '=' + soapOperation,
+                method: 'POST',
+                action: action,
+                operation: operation,
+                xmlData: xmlData,
+                headers: Ext.apply({
+                    SOAPAction: me.soapAction[action]
+                }, me.headers),
+                timeout: me.timeout,
+                scope: me,
+                disableCaching: false 
+            });
+
+        request.callback = me.createRequestCallback(request, operation, callback, scope);
+
+        Ext.Ajax.request(request);
+                
+        return request;
+    }
+});
+
+
+
 
 
 Ext.define('Ext.dd.DDTarget', {
@@ -81760,6 +84219,140 @@ Ext.define('Ext.dd.DropZone', {
 });
 
 
+Ext.define('Ext.direct.Transaction', {
+    alias: 'direct.transaction',
+    alternateClassName: 'Ext.Direct.Transaction',
+   
+    statics: {
+        TRANSACTION_ID: 0
+    },
+    
+    
+   
+    
+    constructor: function(config) {
+        var me = this;
+        
+        Ext.apply(me, config);
+
+        me.id = me.tid = ++me.self.TRANSACTION_ID;
+        me.retryCount = 0;
+    },
+   
+    send: function() {
+        var me = this;
+        
+        me.provider.queueTransaction(me);
+    },
+
+    retry: function() {
+        var me = this;
+        
+        me.retryCount++;
+        me.send();
+    },
+
+    getProvider: function() {
+        return this.provider;
+    }
+});
+
+
+Ext.define('Ext.direct.RemotingMethod', {
+
+    constructor: function(config) {
+        var me = this,
+            params = Ext.isDefined(config.params) ? config.params : config.len,
+            name, pLen, p, param;
+
+        me.name = config.name;
+        me.formHandler = config.formHandler;
+
+        if (Ext.isNumeric(params)) {
+            
+            me.len = params;
+            me.ordered = true;
+        }
+        else {
+            
+            me.params = {};
+			pLen = params.length;
+
+            for (p = 0; p < pLen; p++) {
+                param = params[p];
+                name  = Ext.isObject(param) ? param.name : param;
+                me.params[name] = true;
+            }
+        }
+    },
+    
+    getArgs: function(params, paramOrder, paramsAsHash) {
+        var me = this,
+            args = [],
+            i, len;
+        
+        if (me.ordered) {
+            if (me.len > 0) {
+                
+                if (paramOrder) {
+                    for (i = 0, len = paramOrder.length; i < len; i++) {
+                        args.push(params[paramOrder[i]]);
+                    }
+                }
+                else if (paramsAsHash) {
+                    
+                    args.push(params);
+                }
+            }
+        }
+        else {
+            args.push(params);
+        } 
+        
+        return args;
+    },
+
+    
+    getCallData: function(args) {
+        var me = this,
+            data = null,
+            len  = me.len,
+            params = me.params,
+            callback, scope, name, options;
+
+        if (me.ordered) {
+            callback = args[len];
+            scope    = args[len + 1];
+            options  = args[len + 2];
+            
+            if (len !== 0) {
+                data = args.slice(0, len);
+            }
+        }
+        else {
+            data     = Ext.apply({}, args[0]);
+            callback = args[1];
+            scope    = args[2];
+            options  = args[3];
+
+            
+            for (name in data) {
+                if (data.hasOwnProperty(name) && !params[name]) {
+                    delete data[name];
+                }
+            }
+        }
+
+        return {
+            data: data,
+            callback: callback,
+            scope: scope,
+            options: options
+        };
+    }
+});
+
+
 Ext.define('Ext.direct.Event', {
     alias: 'direct.event',
 
@@ -81800,6 +84393,431 @@ Ext.define('Ext.direct.ExceptionEvent', {
     alias:  'direct.exception',
    
    status: false
+});
+
+
+
+Ext.define('Ext.direct.AmfRemotingProvider', {
+    
+    
+   
+    alias: 'direct.amfremotingprovider',
+    
+    extend:  Ext.direct.Provider , 
+    
+               
+                                    
+                                
+                                 
+                                    
+                                  
+                                  
+                               
+                              
+                                       
+                                   
+      
+   
+    
+   
+   
+    
+    
+    
+    
+    
+    
+
+    
+    
+    
+    binary: false,
+    
+    
+    maxRetries: 1,
+    
+    
+    timeout: undefined,
+    
+    constructor : function(config){
+        var me = this;
+        me.callParent(arguments);
+        me.addEvents(
+                        
+            'beforecall',            
+                        
+            'call'
+        );
+        me.namespace = (Ext.isString(me.namespace)) ? Ext.ns(me.namespace) : me.namespace || window;
+        me.transactions = new Ext.util.MixedCollection();
+        me.callBuffer = [];
+    },
+
+    
+    initAPI : function(){
+        var actions = this.actions,
+            namespace = this.namespace,
+            action,
+            cls,
+            methods,
+            i,
+            len,
+            method;
+        
+        for (action in actions) {
+            if (actions.hasOwnProperty(action)) {
+                cls = namespace[action];
+                if (!cls) {
+                    cls = namespace[action] = {};
+                }
+                methods = actions[action];
+                
+                for (i = 0, len = methods.length; i < len; ++i) {
+                    method = new Ext.direct.RemotingMethod(methods[i]);
+                    cls[method.name] = this.createHandler(action, method);
+                }
+            }
+        }
+    },
+    
+    
+    createHandler : function(action, method){
+        var me = this,
+            handler;
+        
+        if (!method.formHandler) {
+            handler = function(){
+                me.configureRequest(action, method, Array.prototype.slice.call(arguments, 0));
+            };
+        } else {
+            handler = function(form, callback, scope){
+                me.configureFormRequest(action, method, form, callback, scope);
+            };
+        }
+        handler.directCfg = {
+            action: action,
+            method: method
+        };
+        return handler;
+    },
+    
+    
+    isConnected: function(){
+        return !!this.connected;
+    },
+
+    
+    connect: function(){
+        var me = this;
+        
+        if (me.url) {
+            
+            me.clientId = Ext.data.amf.XmlEncoder.generateFlexUID();
+            me.initAPI();
+            me.connected = true;
+            me.fireEvent('connect', me);
+            me.DSId = null;
+        } else if(!me.url) {
+        }
+    },
+
+    
+    disconnect: function(){
+        var me = this;
+        
+        if (me.connected) {
+            me.connected = false;
+            me.fireEvent('disconnect', me);
+        }
+    },
+    
+    
+    runCallback: function(transaction, event){
+        var success = !!event.status,
+            funcName = success ? 'success' : 'failure',
+            callback,
+            result;
+        if (transaction && transaction.callback) {
+            callback = transaction.callback;
+            result = Ext.isDefined(event.result) ? event.result : event.data;
+            
+            if (Ext.isFunction(callback)) {
+                callback(result, event, success);
+            } else {
+                Ext.callback(callback[funcName], callback.scope, [result, event, success]);
+                Ext.callback(callback.callback, callback.scope, [result, event, success]);
+            }
+        }
+    },
+    
+    
+    onData: function(options, success, response){
+        var me = this,
+            i = 0,
+            len,
+            events,
+            event,
+            transaction,
+            transactions;
+        
+        if (success) {
+            events = me.createEvents(response);
+            for (len = events.length; i < len; ++i) {
+                event = events[i];
+                transaction = me.getTransaction(event);
+                me.fireEvent('data', me, event);
+                if (transaction) {
+                    me.runCallback(transaction, event, true);
+                    Ext.direct.Manager.removeTransaction(transaction);
+                }
+            }
+        } else {
+            transactions = [].concat(options.transaction);
+            for (len = transactions.length; i < len; ++i) {
+                transaction = me.getTransaction(transactions[i]);
+                if (transaction && transaction.retryCount < me.maxRetries) {
+                    transaction.retry();
+                } else {
+                    event = new Ext.direct.ExceptionEvent({
+                        data: null,
+                        transaction: transaction,
+                        code: Ext.direct.Manager.exceptions.TRANSPORT,
+                        message: 'Unable to connect to the server.',
+                        xhr: response
+                    });
+                    me.fireEvent('data', me, event);
+                    if (transaction) {
+                        me.runCallback(transaction, event, false);
+                        Ext.direct.Manager.removeTransaction(transaction);
+                    }
+                }
+            }
+        }
+    },
+    
+    
+    getTransaction: function(options){
+        return options && options.tid ? Ext.direct.Manager.getTransaction(options.tid) : null;
+    },
+    
+    
+    configureRequest: function(action, method, args){
+        var me = this,
+            callData = method.getCallData(args),
+            data = callData.data, 
+            callback = callData.callback, 
+            scope = callData.scope,
+            transaction;
+
+        transaction = new Ext.direct.Transaction({
+            provider: me,
+            args: args,
+            action: action,
+            method: method.name,
+            data: data,
+            callback: scope && Ext.isFunction(callback) ? Ext.Function.bind(callback, scope) : callback
+        });
+
+        if (me.fireEvent('beforecall', me, transaction, method) !== false) {
+            Ext.direct.Manager.addTransaction(transaction);
+            me.queueTransaction(transaction);
+            me.fireEvent('call', me, transaction, method);
+        }
+    },
+    
+    
+    getCallData: function(transaction){
+        if (this.binary) {
+            return {
+                targetUri: transaction.action + "." + transaction.method,
+                responseUri: '/' + transaction.id,
+                body: transaction.data || []
+            };
+        } else {
+            return new Ext.data.amf.RemotingMessage( 
+                              {
+                                  body: transaction.data || [],
+                                  clientId: this.clientId,
+                                  destination: transaction.action,
+                                  headers: {
+                                      DSEndpoint: this.endpoint,
+                                      DSId: this.DSId || "nil" 
+                                  },
+                                  messageId: Ext.data.amf.XmlEncoder.generateFlexUID(transaction.id), 
+                                  operation: transaction.method,
+                                  timestamp: 0,
+                                  timeToLive: 0
+                              });
+        }
+        
+    },
+    
+    
+    sendRequest : function(data){
+        var me = this,
+            request = {
+                url: me.url,
+                callback: me.onData,
+                scope: me,
+                transaction: data,
+                timeout: me.timeout
+            }, callData,
+            i = 0,
+            len,
+            params,
+            encoder,
+            amfMessages = [],
+            amfHeaders = [];
+        
+
+        
+        if (Ext.isArray(data)) {
+            for (len = data.length; i < len; ++i) {
+                amfMessages.push(me.getCallData(data[i]));
+            }
+        } else {
+            amfMessages.push(me.getCallData(data));
+        }
+        
+        if (me.binary) {
+            encoder = new Ext.data.amf.Encoder( {format: 0}); 
+            
+            encoder.writeAmfPacket(amfHeaders, amfMessages);
+            request.binaryData = encoder.bytes;
+            request.binary = true; 
+            request.headers = {'Content-Type': 'application/x-amf'};
+        } else {
+            encoder = new Ext.data.amf.XmlEncoder();
+            
+            encoder.writeAmfxRemotingPacket(amfMessages[0]);
+            request.xmlData = encoder.body;
+        }
+        
+        
+        
+        Ext.Ajax.request(request);
+
+    },
+    
+    
+    queueTransaction: function(transaction){
+        var me = this,
+            enableBuffer = false; 
+        
+        if (transaction.form) {
+            me.sendFormRequest(transaction);
+            return;
+        }
+        
+        me.callBuffer.push(transaction);
+        if (enableBuffer) {
+            if (!me.callTask) {
+                me.callTask = new Ext.util.DelayedTask(me.combineAndSend, me);
+            }
+            me.callTask.delay(Ext.isNumber(enableBuffer) ? enableBuffer : 10);
+        } else {
+            me.combineAndSend();
+        }
+    },
+    
+    
+    combineAndSend : function(){
+        var buffer = this.callBuffer,
+            len = buffer.length;
+        
+        if (len > 0) {
+            this.sendRequest(len == 1 ? buffer[0] : buffer);
+            this.callBuffer = [];
+        }
+    },
+    
+    
+    configureFormRequest : function(action, method, form, callback, scope){
+        
+    },
+    
+    
+    sendFormRequest: function(transaction){
+        
+    },
+
+    
+    createEvents: function(response){
+        var data = null,
+            rawBytes = [],
+            events = [],
+            event,
+            i = 0,
+            len,
+            decoder;
+        try {
+            if (this.binary) {
+                decoder = new Ext.data.amf.Packet();
+                data = decoder.decode(response.responseBytes);
+            } else {
+                decoder = new Ext.data.amf.XmlDecoder();
+                data = decoder.readAmfxMessage(response.responseText);
+            }
+            
+        } catch(e) {
+
+            event = new Ext.direct.ExceptionEvent({
+                data: e,
+                xhr: response,
+                code: Ext.direct.Manager.exceptions.PARSE,
+                message: 'Error parsing AMF response: \n\n ' + data
+            });
+            return [event];
+        }
+
+        if (this.binary) {
+            for (i=0; i < data.messages.length; i++) {
+                events.push(this.createEvent(data.messages[i]));
+            }
+        } else {
+            
+            events.push(this.createEvent(data));
+        }
+        return events;
+    },
+
+    
+    createEvent: function(response){
+        
+        var status = response.targetURI.split("/"),
+            tid,
+            event,
+            data, statusIndex,
+            me = this;
+        if (me.binary) {
+            tid = status[1];
+            statusIndex = 2;
+        } else {
+            tid = Ext.data.amf.XmlDecoder.decodeTidFromFlexUID(response.message.correlationId);
+            statusIndex = 1;
+        }
+        
+        if (status[statusIndex] == "onStatus") {
+            
+            data = {
+                tid: tid,
+                data: (me.binary ? response.body : response.message)
+            };
+            event = Ext.create('direct.exception', data);
+        } else if(status[statusIndex] == "onResult") {
+            
+            data = {
+                tid: tid,
+                data: (me.binary ? response.body : response.message.body)
+            };
+            event = Ext.create('direct.rpc', data);
+        } else {
+        }
+        
+        return event;
+    }
+
+    
 });
 
 
@@ -81985,140 +85003,6 @@ Ext.define('Ext.direct.PollingProvider', {
             
             me.fireEvent('data', me, events);
         }
-    }
-});
-
-
-Ext.define('Ext.direct.RemotingMethod', {
-
-    constructor: function(config) {
-        var me = this,
-            params = Ext.isDefined(config.params) ? config.params : config.len,
-            name, pLen, p, param;
-
-        me.name = config.name;
-        me.formHandler = config.formHandler;
-
-        if (Ext.isNumeric(params)) {
-            
-            me.len = params;
-            me.ordered = true;
-        }
-        else {
-            
-            me.params = {};
-			pLen = params.length;
-
-            for (p = 0; p < pLen; p++) {
-                param = params[p];
-                name  = Ext.isObject(param) ? param.name : param;
-                me.params[name] = true;
-            }
-        }
-    },
-    
-    getArgs: function(params, paramOrder, paramsAsHash) {
-        var me = this,
-            args = [],
-            i, len;
-        
-        if (me.ordered) {
-            if (me.len > 0) {
-                
-                if (paramOrder) {
-                    for (i = 0, len = paramOrder.length; i < len; i++) {
-                        args.push(params[paramOrder[i]]);
-                    }
-                }
-                else if (paramsAsHash) {
-                    
-                    args.push(params);
-                }
-            }
-        }
-        else {
-            args.push(params);
-        } 
-        
-        return args;
-    },
-
-    
-    getCallData: function(args) {
-        var me = this,
-            data = null,
-            len  = me.len,
-            params = me.params,
-            callback, scope, name, options;
-
-        if (me.ordered) {
-            callback = args[len];
-            scope    = args[len + 1];
-            options  = args[len + 2];
-            
-            if (len !== 0) {
-                data = args.slice(0, len);
-            }
-        }
-        else {
-            data     = Ext.apply({}, args[0]);
-            callback = args[1];
-            scope    = args[2];
-            options  = args[3];
-
-            
-            for (name in data) {
-                if (data.hasOwnProperty(name) && !params[name]) {
-                    delete data[name];
-                }
-            }
-        }
-
-        return {
-            data: data,
-            callback: callback,
-            scope: scope,
-            options: options
-        };
-    }
-});
-
-
-Ext.define('Ext.direct.Transaction', {
-    alias: 'direct.transaction',
-    alternateClassName: 'Ext.Direct.Transaction',
-   
-    statics: {
-        TRANSACTION_ID: 0
-    },
-    
-    
-   
-    
-    constructor: function(config) {
-        var me = this;
-        
-        Ext.apply(me, config);
-
-        me.id = me.tid = ++me.self.TRANSACTION_ID;
-        me.retryCount = 0;
-    },
-   
-    send: function() {
-        var me = this;
-        
-        me.provider.queueTransaction(me);
-    },
-
-    retry: function() {
-        var me = this;
-        
-        me.retryCount++;
-        me.send();
-    },
-
-    getProvider: function() {
-        return this.provider;
     }
 });
 

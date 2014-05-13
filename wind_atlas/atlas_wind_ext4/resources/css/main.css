@@ -373,11 +373,40 @@ top:150px;
 }
 
 .buttonwindclose {
+    border-color: rgba(0,0,0,0);
+    background-color: rgba(0,0,0,0);
+	border-width: 1px 1px 1px 1px;
+	background-repeat: no-repeat;
+	background-position:50% 50%;
+	background-image: url(../icons/cross.png);
+	left:93%;
+}
+.buttonwindclose:hover {
 	border-color: #b3b4c6;
-	border-width: 1px 1px 0px 1px;
-	background-image: none;
+	border-width: 1px 1px 1px 1px;
+	background-repeat: no-repeat;
+	background-position: 50% 50%;
+	background-image: url(../icons/cross.png);
 	background-color: #d9dbdd;
-	left:90%;
+	left:93%;
+}
+.buttonwindinfoclose {
+    border-color: rgba(0,0,0,0);
+    background-color: rgba(0,0,0,0);
+	border-width: 1px 1px 1px 1px;
+	background-repeat: no-repeat;
+	background-position:50% 50%;
+	background-image: url(../icons/cross.png);
+left:88%;
+}
+.buttonwindinfoclose:hover {
+	border-color: #b3b4c6;
+	border-width: 1px 1px 1px 1px;
+	background-repeat: no-repeat;
+	background-position: 50% 50%;
+	background-image: url(../icons/cross.png);
+	background-color: #d9dbdd;
+left:88%;
 }
 .buttonloginclose {
 	top:95%;

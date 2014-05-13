@@ -19,7 +19,9 @@ Ext.define('AM.view.chart.Window', {
 		
         Ext.apply(this, {
         	  items: [{ xtype: 'button',
-   	              text : 'close',
+				    style: {
+				        marginTop: '10px',
+				    },
    	              cls:'buttonwindclose',
 	              handler:  function () {
 	            	  me.hide();
@@ -29,4 +31,4 @@ Ext.define('AM.view.chart.Window', {
 		this.callParent(arguments);
 	}
 
-})
+});

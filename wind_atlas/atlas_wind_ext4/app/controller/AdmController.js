@@ -13,15 +13,11 @@ Ext.define('AM.controller.AdmController', {
         this.control({
             'mappanel': {
                 'launchAdm': this.onAdmLaunch,
-
             }
         }, this);
     },
 
-
-    
     onAdmLaunch: function () {
-    	console.log('admin pannel launched');
     	var window=admController.getView('AdmView').create();
     	window.show();
     },

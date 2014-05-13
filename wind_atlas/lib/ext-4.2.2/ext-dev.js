@@ -32860,6 +32860,13 @@ Ext.ClassManager.addNameAlternateMappings({
   "Ext.data.Types": [],
   "Ext.data.UuidGenerator": [],
   "Ext.data.XmlStore": [],
+  "Ext.data.amf.Encoder": [],
+  "Ext.data.amf.Packet": [],
+  "Ext.data.amf.Proxy": [],
+  "Ext.data.amf.Reader": [],
+  "Ext.data.amf.RemotingMessage": [],
+  "Ext.data.amf.XmlDecoder": [],
+  "Ext.data.amf.XmlEncoder": [],
   "Ext.data.association.Association": [
     "Ext.data.Association"
   ],
@@ -32921,6 +32928,8 @@ Ext.ClassManager.addNameAlternateMappings({
   "Ext.data.reader.Xml": [
     "Ext.data.XmlReader"
   ],
+  "Ext.data.soap.Proxy": [],
+  "Ext.data.soap.Reader": [],
   "Ext.data.validations": [],
   "Ext.data.writer.Json": [
     "Ext.data.JsonWriter"
@@ -32948,6 +32957,7 @@ Ext.ClassManager.addNameAlternateMappings({
   "Ext.dd.Registry": [],
   "Ext.dd.ScrollManager": [],
   "Ext.dd.StatusProxy": [],
+  "Ext.direct.AmfRemotingProvider": [],
   "Ext.direct.Event": [],
   "Ext.direct.ExceptionEvent": [],
   "Ext.direct.JsonProvider": [],
@@ -33649,6 +33659,25 @@ Ext.ClassManager.addNameAliasMappings({
   "Ext.data.XmlStore": [
     "store.xml"
   ],
+  "Ext.data.amf.Encoder": [
+    "data.amf.Encoder"
+  ],
+  "Ext.data.amf.Packet": [],
+  "Ext.data.amf.Proxy": [
+    "proxy.amf"
+  ],
+  "Ext.data.amf.Reader": [
+    "reader.amf"
+  ],
+  "Ext.data.amf.RemotingMessage": [
+    "data.amf.remotingmessage"
+  ],
+  "Ext.data.amf.XmlDecoder": [
+    "data.amf.xmldecoder"
+  ],
+  "Ext.data.amf.XmlEncoder": [
+    "data.amf.xmlencoder"
+  ],
   "Ext.data.association.Association": [],
   "Ext.data.association.BelongsTo": [
     "association.belongsto"
@@ -33700,6 +33729,12 @@ Ext.ClassManager.addNameAliasMappings({
   "Ext.data.reader.Xml": [
     "reader.xml"
   ],
+  "Ext.data.soap.Proxy": [
+    "proxy.soap"
+  ],
+  "Ext.data.soap.Reader": [
+    "reader.soap"
+  ],
   "Ext.data.validations": [],
   "Ext.data.writer.Json": [
     "writer.json"
@@ -33723,6 +33758,9 @@ Ext.ClassManager.addNameAliasMappings({
   "Ext.dd.Registry": [],
   "Ext.dd.ScrollManager": [],
   "Ext.dd.StatusProxy": [],
+  "Ext.direct.AmfRemotingProvider": [
+    "direct.amfremotingprovider"
+  ],
   "Ext.direct.Event": [
     "direct.event"
   ],

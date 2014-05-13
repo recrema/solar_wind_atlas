@@ -21,7 +21,7 @@ $user_id=$login_sessionid;
 	<meta name="crawl_key" content="06a9c7a2a53faadc417db597a5e48844"/>
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
 
-	<link rel="stylesheet" href="http://yui.yahooapis.com/combo?pure/0.2.0/base-min.css&pure/0.2.0/grids-min.css&pure/0.2.0/forms-min.css&pure/0.2.0/buttons-min.css&pure/0.2.0/menus-min.css&pure/0.2.0/tables-min.css">
+	<link rel="stylesheet" href="grey/combo.css">
 	<link type="text/css" rel="stylesheet" href="grey/grey_panel.css"/>
 
 	<style type="text/css">

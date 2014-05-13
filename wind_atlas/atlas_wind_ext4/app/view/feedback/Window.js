@@ -105,7 +105,6 @@ html:"<center>Please send us your feedback. We're sorry if you experienced any d
                     html: '<div id="recaptcha">adsf</div>',
                     listeners:{
                         afterrender:function() {
-                            console.log(Ext.getDom(this.body));
                             Recaptcha.create("6Lekj_ISAAAAALWDT5P-ld561ElCOPSOXlnjN-DV",
                                 Ext.getDom(this.body),
                                 {

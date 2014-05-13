@@ -13,7 +13,9 @@ Ext.define('AM.view.AdmView', {
 		admView = this;
         Ext.apply(this, {
         	  items: [ { xtype: 'button',
-   	              text : 'close',
+				    style: {
+				        marginTop: '10px',
+				    },
    	              cls:'buttonwindclose',
 	              handler:  function () {
 	            	  admView.hide();

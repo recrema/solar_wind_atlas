@@ -73,6 +73,7 @@ Ext.define('AM.view.Map', {
 
         tbarItems.push(Ext.create('Ext.button.Button', {
             toggleGroup: "info",
+            itemId:'viewwindinfo',
             enableToggle: true,
         	cls:'wind_info',
         	pressedCls: 'wind_info_pressed',
