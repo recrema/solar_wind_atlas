@@ -146,7 +146,7 @@ else {
 	
 	
 	file_put_contents('../tmp/chart.json',$json);
-	exec('phantomjs /var/www/recrema_wind_atlas/wind_atlas/lib/phantomjs/highcharts-convert.js -infile /var/www/recrema_wind_atlas/wind_atlas/atlas_wind_ext4/tmp/chart.json -outfile /var/www/recrema_wind_atlas/wind_atlas/atlas_wind_ext4/tmp/chart.svg -scale 4 -width 600 -constr Chart', $output1, $return1);
+	exec('phantomjs /var/www/recrema_wind_atlas/wind_atlas/lib/phantomjs/highcharts-convert.js -infile /var/www/recrema_wind_atlas/wind_atlas/atlas_wind_ext4/tmp/chart.json -outfile /var/www/recrema_wind_atlas/wind_atlas/atlas_wind_ext4/tmp/chart.png -scale 4 -width 600 -constr Chart', $output1, $return1);
 	#unlink('../tmp/chart.json');
 	############################################################################################################
 	############################## Second chart ################################################################
@@ -211,7 +211,7 @@ else {
 	series:[{                name: '>12',                legendIndex: 7,                color: '#7f0000',                data: [0.0, 0.04, 0.0, 0.0, 0.0, 0.0, 0.02, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.02, 0.0]                },{                name: '10-12',                legendIndex: 6,                color: '#ff0000',                data: [0.51, 0.36, 0.02, 0.02, 0.0, 0.0, 0.0, 0.0, 0.06, 0.14, 0.08, 0.0, 0.0, 0.02, 0.0, 0.06]                },{                name: '8-10',                legendIndex: 5,                color: '#ff4900',                data: [2.35, 1.11, 1.03, 0.02, 0.02, 0.04, 0.08, 0.36, 0.59, 0.16, 0.28, 0.08, 0.02, 0.0, 0.02, 0.49]                },{                name: '6-8',                legendIndex: 4,                color: '#ebff13',                data: [3.1, 2.78, 2.69, 0.34, 0.08, 0.12, 0.45, 0.83, 0.71, 0.18, 0.3, 0.08, 0.04, 0.02, 0.36, 0.93]                },{                name: '4-6',                legendIndex: 3,                color: '#23ffdb',                data: [3.95, 4.34, 5.51, 1.88, 0.59, 0.45, 1.38, 1.56, 1.46, 0.79, 0.51, 0.22, 0.32, 0.32, 0.53, 1.97]                },{                name: '2-4',                legendIndex: 2,                color: '#0059ff',                data: [4.4, 4.54, 6.02, 3.93, 1.84, 2.07, 1.86, 1.92, 1.09, 0.67, 0.41, 0.85, 0.65, 1.18, 1.48, 2.59]                },{                name: '0-2',                legendIndex: 1,                color: '#00008f',                data: [1.6, 1.76, 2.03, 2.01, 1.38, 1.4, 0.91, 1.01, 0.63, 0.43, 0.67, 0.83, 0.81, 0.83, 0.57, 0.85]                }]
 			        		    }";
 	file_put_contents('../tmp/chart2.json',$json2);
-	exec('phantomjs /var/www/recrema_wind_atlas/wind_atlas/lib/phantomjs/highcharts-convert.js -infile /var/www/recrema_wind_atlas/wind_atlas/atlas_wind_ext4/tmp/chart2.json -outfile /var/www/recrema_wind_atlas/wind_atlas/atlas_wind_ext4/tmp/chart2.svg -scale 4 -width 600 -constr Chart', $output1, $return1);
+	exec('phantomjs /var/www/recrema_wind_atlas/wind_atlas/lib/phantomjs/highcharts-convert.js -infile /var/www/recrema_wind_atlas/wind_atlas/atlas_wind_ext4/tmp/chart2.json -outfile /var/www/recrema_wind_atlas/wind_atlas/atlas_wind_ext4/tmp/chart2.png -scale 4 -width 600 -constr Chart', $output1, $return1);
 	unlink('../tmp/chart2.json');
 	
 	############################################################################################################
@@ -276,7 +276,7 @@ else {
 	        			    series:$series6
 	        		    }";
 	file_put_contents('../tmp/chart3.json',$json3);
-	exec('phantomjs /var/www/recrema_wind_atlas/wind_atlas/lib/phantomjs/highcharts-convert.js -infile /var/www/recrema_wind_atlas/wind_atlas/atlas_wind_ext4/tmp/chart3.json -outfile /var/www/recrema_wind_atlas/wind_atlas/atlas_wind_ext4/tmp/chart3.svg -scale 4 -width 600 -constr Chart', $output1, $return1);
+	exec('phantomjs /var/www/recrema_wind_atlas/wind_atlas/lib/phantomjs/highcharts-convert.js -infile /var/www/recrema_wind_atlas/wind_atlas/atlas_wind_ext4/tmp/chart3.json -outfile /var/www/recrema_wind_atlas/wind_atlas/atlas_wind_ext4/tmp/chart3.png -scale 4 -width 600 -constr Chart', $output1, $return1);
 	unlink('../tmp/chart3.json');
 	
 	
@@ -295,8 +295,8 @@ else {
 			</script>
 			<br>
 			<br>
-			<a href="javascript:void(0)"><img id="windRose1" src="tmp/chart.svg" width="160" height="100" onmouseover="bigImg(this)" onmouseout="normalImg(this)" onClick="mapController.onChartActivate('.$json.',\'windRose1\');"></a>
-			<a href="javascript:void(0)"><img id="windRose2" src="tmp/chart2.svg" width="160" height="100" onmouseover="bigImg(this)" onmouseout="normalImg(this)" onClick="mapController.onChartActivate('.$json2.',\'windRose2\');"></a>';
+			<a href="javascript:void(0)"><img id="windRose1" src="tmp/chart.png" width="160" height="100" onmouseover="bigImg(this)" onmouseout="normalImg(this)" onClick="mapController.onChartActivate('.$json.',\'windRose1\');"></a>
+			<a href="javascript:void(0)"><img id="windRose2" src="tmp/chart2.png" width="160" height="100" onmouseover="bigImg(this)" onmouseout="normalImg(this)" onClick="mapController.onChartActivate('.$json2.',\'windRose2\');"></a>';
 	
 	$output2 = '
 			<script>
@@ -313,7 +313,7 @@ else {
 			</script>
 			<br>
 			<br>
-			<a href="javascript:void(0)"><img id="windChart2" src="tmp/chart3.svg" width="160" height="100" onmouseover="bigImg(this)" onmouseout="normalImg(this)" onClick="mapController.onChartActivate('.$json3.',\'windChart2\');"></a>';
+			<a href="javascript:void(0)"><img id="windChart2" src="tmp/chart3.png" width="160" height="100" onmouseover="bigImg(this)" onmouseout="normalImg(this)" onClick="mapController.onChartActivate('.$json3.',\'windChart2\');"></a>';
 	
 	$arr = array ('success'=>true,'msg1'=>$output1,'msg2'=>$output2,'msg3'=>'Some html or window were the user can view/download the report in pdf<br><br>This information comes from the php (the response from the server after the form submition)');
 	print_r(json_encode($arr));
