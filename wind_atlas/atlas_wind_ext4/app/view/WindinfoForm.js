@@ -9,7 +9,7 @@ Ext.define('AM.view.WindinfoForm', {
 	method : 'POST',
 	border: true,
 	cls:'windinfoFrom',
-	width: 299,
+	width: 298,
 	autoScroll: 'true',
 	bodyPadding: 7,
 
@@ -22,6 +22,7 @@ Ext.define('AM.view.WindinfoForm', {
 		anchor: '10%',
 		style: {
 			marginTop: '3px',
+			left: '250px',
 		},
 		cls:'buttonwindinfoclose',
 		handler:  function () {

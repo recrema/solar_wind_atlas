@@ -192,26 +192,28 @@ Ext.define('AM.controller.Layertreepanel',{
         	for (var ii=0; ii<heights.length; ii++) {
         		
         		var layer_title = layer_text_prefix + " at " + heights[ii] + "m " + month_name;
+        		var layer_title2 = month_name + " at " + heights[ii] + "m ";
     			var a = {
     					plugins: [{ptype: 'gx_layer'}], 
     					layer: map2.getLayersByName(layer_title)[0],
-    					text: layer_title
+    					text: layer_title2
     			};
     			maps_month_height.push(a);
     		};
         	overall_maps_tree_by_month.push({text: month_name, leaf: false, children: maps_month_height});
         };
-        overall_maps_tree.push({text: "by Month", leaf: false, children: overall_maps_tree_by_month});
+        overall_maps_tree.push({text: "by Month - Wind Speed", leaf: false, children: overall_maps_tree_by_month});
         //by Height
         var v;
         var overall_maps_tree_by_height = [];
         var overall_maps_tree_by_height_Annual = []; //Special case of Overall annual maps
         for (var i=0; i<heights.length; i++) {
         	layer_title = layer_text_prefix + " at " + heights[i] + "m Annual";
+        	layer_title2 = heights[i] + "m Annual";
 			a = {
 					plugins: [{ptype: 'gx_layer'}], 
 					layer: map2.getLayersByName(layer_title)[0],
-					text: layer_title
+					text: layer_title2
 			};
         	overall_maps_tree_by_height.push(a);
         	v = a
@@ -221,16 +223,17 @@ Ext.define('AM.controller.Layertreepanel',{
         	for (var ii=0; ii<month_numbers.length; ii++) {
         		month_name = get_month_name(month_numbers[ii]);
         		layer_title = layer_text_prefix + " at " + heights[i] + "m " + month_name;
+        		layer_title2 = month_name + " at " + heights[i] + "m ";
     			a = {
     					plugins: [{ptype: 'gx_layer'}], 
     					layer: map2.getLayersByName(layer_title)[0],
-    					text: layer_title
+    					text: layer_title2
     			};
         		maps_height_month.push(a);
         	};
         	overall_maps_tree_by_height.push({text: heights[i] + " m", leaf: false, checked: false, children:maps_height_month});
         };
-        overall_maps_tree.push({text: "by Height", leaf: false, children: overall_maps_tree_by_height});
+        overall_maps_tree.push({text: "by Height - Wind Speed", leaf: false, children: overall_maps_tree_by_height});
       
         var overallStore = Ext.create('Ext.data.TreeStore', {
         	model: 'GeoExt.data.LayerTreeModel',
@@ -261,32 +264,34 @@ Ext.define('AM.controller.Layertreepanel',{
         	var maps_year_height = [];
         	for (var i=0; i<heights.length; i++) {
         		layer_title = layer_text_prefix + " " + year + " at " + heights[i] + " m";
+        		layer_title2 = year + " at " + heights[i] + " m";
     			a = {
     					plugins: [{ptype: 'gx_layer'}], 
     					layer: map2.getLayersByName(layer_title)[0],
-    					text: layer_title
+    					text: layer_title2
     			};
     			maps_year_height.push(a);
     		};
         	year_maps_tree_by_year.push({text: year.toString(), leaf: false, children: maps_year_height});
         };
-        year_maps_tree.push({text: "by Year", leaf: false, children: year_maps_tree_by_year});
+        year_maps_tree.push({text: "by Year - Wind Speed", leaf: false, children: year_maps_tree_by_year});
         //by Height
         var year_maps_tree_by_height = [];
         for (var i=0; i<heights.length; i++) {
         	var maps_height_year = [];
         	for (year = year_start; year <= year_end; year++) {
         		layer_title = layer_text_prefix + " " + year + " at " + heights[i] + " m";
+        		layer_title2 = year + " at " + heights[i] + " m";
     			a = {
     					plugins: [{ptype: 'gx_layer'}], 
     					layer: map2.getLayersByName(layer_title)[0],
-    					text: layer_title
+    					text: layer_title2
     			};
     			maps_height_year.push(a);
         	};
         	year_maps_tree_by_height.push({text: heights[i] + " m", leaf: false, children:maps_height_year});
         };
-        year_maps_tree.push({text: "by Height", leaf: false, children: year_maps_tree_by_height});
+        year_maps_tree.push({text: "by Height - Wind Speed", leaf: false, children: year_maps_tree_by_height});
         
         var yearStore = Ext.create('Ext.data.TreeStore', {
         	model: 'GeoExt.data.LayerTreeModel',
@@ -321,10 +326,11 @@ Ext.define('AM.controller.Layertreepanel',{
         		month_name = get_month_name(month_numbers[i]);
         		for (var ii=0; ii<heights.length; ii++) {
         			layer_title=layer_text_prefix+' '+month_name+' '+year+' at '+ heights[ii] + 'm';
+        			layer_title2=month_name+' '+year+' at '+ heights[ii] + 'm';
         			a = {
         					plugins: [{ptype: 'gx_layer'}], 
         					layer: map2.getLayersByName(layer_title)[0],
-        					text: layer_title
+        					text:layer_title2
         			};
     				maps_year_by_month_height.push(a);
         		};
@@ -336,10 +342,11 @@ Ext.define('AM.controller.Layertreepanel',{
         		for (var ii=0; ii<month_numbers.length; ii++) {
         			month_name = get_month_name(month_numbers[ii]);
         			layer_title=layer_text_prefix+' '+month_name+' '+year+' at '+ heights[i] + 'm';
+        			layer_title2=month_name+' '+year+' at '+ heights[i] + 'm';
         			a = {
         					plugins: [{ptype: 'gx_layer'}], 
         					layer: map2.getLayersByName(layer_title)[0],
-        					text: layer_title
+        					text: layer_title2
         			};
     				maps_year_by_height_month.push(a);
         		};
@@ -349,7 +356,7 @@ Ext.define('AM.controller.Layertreepanel',{
     		maps_year_month_height.push({text: "by Height", leaf: false, children: maps_year_by_height});
     		month_maps_tree_by_year.push({text: year.toString(), leaf: false, children: maps_year_month_height});
         };
-        month_maps_tree.push({text: "by Year", leaf: false, children: month_maps_tree_by_year});
+        month_maps_tree.push({text: "by Year - Wind Speed", leaf: false, children: month_maps_tree_by_year});
         //by Month
         var month_maps_tree_by_month = [];
         for (var i=0; i<month_numbers.length; i++){
@@ -360,10 +367,11 @@ Ext.define('AM.controller.Layertreepanel',{
         		var maps_month_by_year_height = [];
         		for (var ii=0; ii<heights.length; ii++) {
         			layer_title=layer_text_prefix+' '+month_name+' '+year+' at '+ heights[ii] + 'm';
+        			layer_title2=month_name+' '+year+' at '+ heights[ii] + 'm';
         			a = {
         					plugins: [{ptype: 'gx_layer'}], 
         					layer: map2.getLayersByName(layer_title)[0],
-        					text: layer_title
+        					text: layer_title2
         			};
     				maps_month_by_year_height.push(a);
         		};
@@ -374,10 +382,11 @@ Ext.define('AM.controller.Layertreepanel',{
         		var maps_month_by_height_year = [];
         		for (year = year_start; year <= year_end; year++) {
         			layer_title=layer_text_prefix+' '+month_name+' '+year+' at '+ heights[ii] + 'm';
+        			layer_title2=month_name+' '+year+' at '+ heights[ii] + 'm';
         			a = {
         					plugins: [{ptype: 'gx_layer'}], 
         					layer: map2.getLayersByName(layer_title)[0],
-        					text: layer_title
+        					text: layer_title2
         			};
     				maps_month_by_height_year.push(a);
         		};
@@ -387,7 +396,7 @@ Ext.define('AM.controller.Layertreepanel',{
     		maps_month_year_height.push({text: "by Height", leaf: false, children: maps_month_by_height});
     		month_maps_tree_by_month.push({text: month_name, leaf: false, children: maps_month_year_height});
         };
-        month_maps_tree.push({text: "by Month", leaf: false, children: month_maps_tree_by_month});
+        month_maps_tree.push({text: "by Month - Wind Speed", leaf: false, children: month_maps_tree_by_month});
         //by Height
         var month_maps_tree_by_height = [];
         for (var i=0; i<heights.length; i++){
@@ -398,10 +407,11 @@ Ext.define('AM.controller.Layertreepanel',{
         		for (var ii=0; ii<month_numbers.length; ii++) {
         			month_name = get_month_name(month_numbers[ii]);
         			layer_title=layer_text_prefix+' '+month_name+' '+year+' at '+ heights[i] + 'm';
+        			layer_title2=month_name+' '+year+' at '+ heights[i] + 'm';
         			a = {
         					plugins: [{ptype: 'gx_layer'}], 
         					layer: map2.getLayersByName(layer_title)[0],
-        					text: layer_title
+        					text: layer_title2
         			};
     				maps_month_by_year_height.push(a);
         		};
@@ -413,10 +423,11 @@ Ext.define('AM.controller.Layertreepanel',{
         		var maps_height_by_month_year = [];
         		for (year = year_start; year <= year_end; year++) {
         			layer_title=layer_text_prefix+' '+month_name+' '+year+' at '+ heights[i] + 'm';
+        			layer_title2=month_name+' '+year+' at '+ heights[i] + 'm';
         			a = {
         					plugins: [{ptype: 'gx_layer'}], 
         					layer: map2.getLayersByName(layer_title)[0],
-        					text: layer_title
+        					text: layer_title2
         			};
     				maps_height_by_month_year.push(a);
         		};
@@ -426,7 +437,8 @@ Ext.define('AM.controller.Layertreepanel',{
     		maps_height_month_year.push({text: "by Month", leaf: false, children: maps_height_by_month});
     		month_maps_tree_by_height.push({text: heights[i] + " m", leaf: false, children: maps_height_month_year});
         };
-        month_maps_tree.push({text: "by Height", leaf: false, children: month_maps_tree_by_height});
+        month_maps_tree.push({text: "by Height - Wind Speed", leaf: false, children: month_maps_tree_by_height});
+        
         
         var monthStore = Ext.create('Ext.data.TreeStore', {
         	model: 'GeoExt.data.LayerTreeModel',

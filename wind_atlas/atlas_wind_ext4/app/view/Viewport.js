@@ -55,6 +55,7 @@ Ext.define('AM.view.Viewport', {
                 	region: 'west',
                 	layout:'vbox',
                 	border:false,
+                	width: 298,
                 	items: [
 								{
 									xtype: 'headerLogo',

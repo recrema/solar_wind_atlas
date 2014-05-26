@@ -397,7 +397,6 @@ top:150px;
 	background-repeat: no-repeat;
 	background-position:50% 50%;
 	background-image: url(../icons/cross.png);
-left:88%;
 }
 .buttonwindinfoclose:hover {
 	border-color: #b3b4c6;
@@ -406,7 +405,6 @@ left:88%;
 	background-position: 50% 50%;
 	background-image: url(../icons/cross.png);
 	background-color: #d9dbdd;
-left:88%;
 }
 .buttonloginclose {
 	top:95%;
