@@ -37,10 +37,11 @@ if (!$resp->is_valid)
 	$mail->AddAddress('lcalisto@masdar.ac.ae');
 	$mail->AddAddress('jestima@masdar.ac.ae');
 	$mail->IsHTML(true);
-	$mail->Subject = $_POST["summary"];
+	$mail->Subject = 'Recrema Wind Atlas - ';
+	$mail->Subject .= $_POST["summary"];
 	$mail->Body = utf8_decode($_POST["feedback"]);
 	if (isset($isauth)){
-		$mail->Body .= utf8_decode("<p>&nbsp;</p><p>&nbsp;</p><p>This User is registered in the Atlas and the username is: <b>$user</b> &nbsp;and the group is: <b>$group</b> &nbsp;</p>");
+		$mail->Body .= utf8_decode("<p>&nbsp;</p><p>&nbsp;</p><p>This User is registered in the Atlas, the username is: <b>$user</b> &nbsp;and the group is: <b>$group</b> &nbsp;</p>");
 	}
 	else{
 		$mail->Body .= utf8_decode("<p>&nbsp;</p><p>&nbsp;</p><p>This user is not registered in the Atlas! &nbsp;</p>");

@@ -1,0 +1,575 @@
+
+/* In this css i am rewriting several extjs native classes, this is not the best way to do the styling, In future versions it should be done in SASS*/
+
+/**************************************************************/
+/********************  tab pannels  ****************************/
+/************************************************************/
+.x-tab-default-top {
+-moz-border-radius-topleft: 3px;
+-webkit-border-top-left-radius: 3px;
+border-top-left-radius: 3px;
+-moz-border-radius-topright: 3px;
+-webkit-border-top-right-radius: 3px;
+border-top-right-radius: 3px;
+-moz-border-radius-bottomright: 0;
+-webkit-border-bottom-right-radius: 0;
+border-bottom-right-radius: 0;
+-moz-border-radius-bottomleft: 0;
+-webkit-border-bottom-left-radius: 0;
+border-bottom-left-radius: 0;
+padding: 8px 12px 7px 12px;
+border-width: 0 0 0 0;
+border-style: solid;
+background-color: rgb(120,120,120);
+}
+/*backgound big panel*/
+.x-tab-bar-default {
+background-color: rgb(245,245,245);
+}
+/*Small strip panel*/
+.x-tab-bar-strip-default {
+border-style: solid;
+border-color: grey;
+background-color: rgb(220,220,220);
+}
+/*Active button*/
+.x-tab-default-active {
+background-color: rgb(220,220,220);
+}
+/*Active back for the text*/
+.x-tab-default-active .x-tab-inner {
+color: grey;
+}
+
+
+/**************************************************************/
+/********************  footer headers **********************/
+/************************************************************/
+
+.headerlogo {
+    background-color: #FFFFFF;
+    background-image: url(../images/banner_top.jpg);
+    color: grey;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 5px;
+    text-align: right;
+    vertical-align: middle;
+}
+.headerwind {
+	position: fixed;
+	height:90px;
+    background-color: rgba(255,255,255,0);
+    background-image: url(../images/windmill.png);
+    background-repeat: no-repeat;
+}
+.headermain {
+	position: absolute;
+    background-color: rgba(255,255,255,1);
+    background-image: url(../images/loginbanner2.png);
+    background-position: -25px 10px;
+    background-repeat: repeat-x;
+    color: grey;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 5px;
+    padding-top: 5px;
+    text-align: left;
+    vertical-align: middle;
+}
+
+
+.footer {
+    background-color: rgb(240,240,240);
+
+
+}
+.x-panel-body {border-color: grey;}
+
+.windinfoFrom .x-panel-body  {
+border-color: grey;
+}
+
+.transparentCls {
+  opacity:0;
+}
+.windmillTransparentCls{
+
+background-color: rgba(255,255,255,0);
+border-color: rgba(0,0,0,0);
+  background-repeat: no-repeat;
+    background-image: url(../images/windmill2.png);
+padding-right:50px;
+    filter: url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'><filter id=\'grayscale\'><feColorMatrix type=\'matrix\' values=\'0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0\'/></filter></svg>#grayscale");
+  filter: gray;
+  -webkit-filter: grayscale(100%); 
+  -moz-transition: all 0.5s ease-in-out;
+  -webkit-transition: all 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out;
+}
+.windmillTransparentCls:hover{
+  filter: none;
+  -webkit-filter: grayscale(0%);
+}
+
+.solarmillText{
+    color: grey;
+    border-color: rgba(0,0,0,0);
+    background-color: rgba(0,0,0,0);
+    font-size: 20px;
+    font-weight: bold;
+
+}
+.windAtlas{
+    color: grey;
+    border-color: rgba(0,0,0,0);
+    background-color: rgba(0,0,0,0);
+    font-size: 13px;
+    font-weight: bold;
+
+}
+/**************************************************************/
+/********************  Login form ****************************/
+/************************************************************/
+
+.formlogin {
+position:absolute;
+left:100px;
+top:150px;
+
+}
+.loginMask.x-mask {
+    filter: alpha(opacity=70);
+    opacity: .95;
+    background: #333333 !important;
+}
+/**Warning this classes are main classes and I'm rewriting them here so the menu item text are grey and white **/
+.x-menu-item-active {
+    color:white;
+	background-color:grey;
+}
+.x-menu-item-active .x-menu-item-text{
+	border-color:#ffffff;
+    text-align: left;
+    color:white;
+    font-size: 12px;
+	font-weight: bold;
+	font-family: helvetica, arial, verdana, sans-serif;
+	background-color:grey;
+}
+.x-menu-item-text{
+	border-color:#ffffff;
+    text-align: left;
+    color:grey;
+    font-size: 12px;
+	font-weight: bold;
+	font-family: helvetica, arial, verdana, sans-serif;
+	color: #666666;
+}
+
+/**************************************************************/
+/********************  Icons And buttons ******************/
+/************************************************************/
+.help_menu {
+	background-image: url(../icons/menuhelp.png);
+	background-repeat: no-repeat;
+	background-position:2px 2px;
+	background-color:white;
+	border-color:#ffffff;
+}
+.feedback_button .x-btn-inner {
+	background-image: url(../icons/feedback.png);
+	background-repeat: no-repeat;
+	background-position:0px 0px;
+	border-color:white;
+	background-color:white;
+	color:grey;
+}
+.feedback_button:hover .x-btn-inner {
+	border-color:grey;
+	background-color:grey;
+	color:white;
+}
+.feedback_button{
+	border-color:white;
+	padding: 0px;
+}
+
+.help_button .x-btn-inner {
+	background-image: url(../icons/help.png);
+	background-repeat: no-repeat;
+	background-position:0px 0px;
+	border-color:white;
+	background-color:white;
+	color:grey;
+}
+.help_button:hover .x-btn-inner {
+	border-color:grey;
+	background-color:grey;
+	color:white;
+}
+.help_button{
+	border-color:white;
+	padding: 0px;
+}
+
+.polygon_button {
+	background-image: url(../icons/polygon.png);
+	background-repeat: no-repeat;
+	background-position:4px 4px;
+	background-color:white;
+	border-color:grey;
+	width:30px;
+	height:30px;
+}
+.x-polygon_button_pressed {
+	background-image: url(../icons/polygon.png);
+	background-repeat: no-repeat;
+	background-position:4px 4px;
+	background-color:grey;
+	border-color:grey;
+	width:30px;
+	height:30px;
+}
+.box_button {
+	background-image: url(../icons/box.png);
+	background-repeat: no-repeat;
+	background-position:4px 4px;
+	background-color:white;
+	border-color:grey;
+	width:30px;
+	height:30px;
+}
+.x-box_button_pressed {
+	background-image: url(../icons/box.png);
+	background-repeat: no-repeat;
+	background-position:4px 4px;
+	background-color:grey;
+	border-color:grey;
+	width:30px;
+	height:30px;
+}
+.line_button {
+	background-image: url(../icons/line.png);
+	background-repeat: no-repeat;
+	background-position:4px 4px;
+	background-color:white;
+	border-color:grey;
+	width:30px;
+	height:30px;
+}
+.x-line_button_pressed {
+	background-image: url(../icons/line.png);
+	background-repeat: no-repeat;
+	background-position:4px 4px;
+	background-color:grey;
+	border-color:grey;
+	width:30px;
+	height:30px;
+}
+.admin_button {
+	background-image: url(../icons/tools.png);
+	background-repeat: no-repeat;
+	background-position:2px 2px;
+	background-color:white;
+	border-color:#ffffff;
+}
+
+.measure_button .x-btn-inner {
+	background-image: url(../icons/rule.png);
+	background-repeat: no-repeat;
+	background-position:0px 0px;
+	border-color:white;
+	background-color:white;
+	color:grey;
+}
+.measure_button:hover .x-btn-inner {
+	border-color:grey;
+	background-color:grey;
+	color:white;
+}
+.measure_button{
+	border-color:white;
+	padding: 0px;
+}
+
+.login_button {
+	background-image: url(../icons/login.png);
+	background-repeat: no-repeat;
+	background-position:2px 2px;
+	background-color:white;
+	border-color:#ffffff;
+	width:35px
+}
+.logout_button {
+	background-image: url(../icons/logout.png);
+	background-repeat: no-repeat;
+	background-position:2px 2px;
+	background-color:white;
+	border-color:#ffffff;
+	width:35px
+}
+.toolbox_button {
+	background-image: url(../icons/toolbox.png);
+	background-repeat: no-repeat;
+	background-position:0px 0px;
+	background-color:white;
+	border-color:#ffffff;
+	width:50px
+}
+.wind_info {
+	background-image: url(../icons/chart.png);
+	background-repeat: no-repeat;
+	background-position:2px 2px;
+	background-color:white;
+	border-color:#ffffff;
+	width:25px
+}
+.x-customOverStyle {
+    background-color: rgba(0, 255, 0, 0.2);
+    background-image: none;
+    border-color: green;
+}
+.x-wind_info_pressed {
+	background-image: url(../icons/chart.png);
+	background-repeat: no-repeat;
+	background-position:2px 2px;
+	background-color:grey;
+	border-color:#ffffff;
+	width:25px
+}
+
+.context_maps {
+	background-image: url(../icons/contextmaps.png);
+	background-repeat: no-repeat;
+	background-position:1px 1px;
+	background-color:white;
+	border-color:#ffffff;
+	width:45px;
+}
+.icon_eye {
+  background-image: url(../icons/eye.png);
+  background-position:2px 2px;
+  background-repeat: no-repeat;
+}
+.icon_bullet_down {
+  background-image: url(../icons/bullet_arrow_down.png);
+  background-repeat: no-repeat;
+}
+.icon_bullet_up {
+  background-image: url(../icons/bullet_arrow_up.png);
+  background-repeat: no-repeat;
+}
+.icon_cross {
+  background-image: url(../icons/cross.png);
+  background-repeat: no-repeat;
+  background-position:4px 0px;
+  width:45px;
+}
+.icon_info {
+  background-image: url(../icons/information.png);
+  background-position:8px 0px;
+  background-repeat: no-repeat;
+}
+.icon_legend {
+  background-image: url(../icons/legend.png);
+  background-position:3px 0px;
+  background-repeat: no-repeat;
+}
+
+.buttonwindclose {
+    border-color: rgba(0,0,0,0);
+    background-color: rgba(0,0,0,0);
+	border-width: 1px 1px 1px 1px;
+	background-repeat: no-repeat;
+	background-position:50% 50%;
+	background-image: url(../icons/cross.png);
+	left:93%;
+}
+.buttonwindclose:hover {
+	border-color: #b3b4c6;
+	border-width: 1px 1px 1px 1px;
+	background-repeat: no-repeat;
+	background-position: 50% 50%;
+	background-image: url(../icons/cross.png);
+	background-color: #d9dbdd;
+	left:93%;
+}
+.buttonwindinfoclose {
+    border-color: rgba(0,0,0,0);
+    background-color: rgba(0,0,0,0);
+	border-width: 1px 1px 1px 1px;
+	background-repeat: no-repeat;
+	background-position:50% 50%;
+	background-image: url(../icons/cross.png);
+}
+.buttonwindinfoclose:hover {
+	border-color: #b3b4c6;
+	border-width: 1px 1px 1px 1px;
+	background-repeat: no-repeat;
+	background-position: 50% 50%;
+	background-image: url(../icons/cross.png);
+	background-color: #d9dbdd;
+}
+.buttonloginclose {
+	top:95%;
+	left:85%;
+}
+
+/**************************************************************/
+/********************   Footer images ************************/
+/************************************************************/
+
+.agedi {
+
+  background-color: rgba(0,0,0,0);
+  border-color: #FFFFFF;
+  background-image: url(../images/agedi.png);
+  background-repeat: no-repeat;
+/*   filter: url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'><filter id=\'grayscale\'><feColorMatrix type=\'matrix\' values=\'0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0\'/></filter></svg>#grayscale"); Firefox 3.5+
+  filter: gray; IE6-9
+  -webkit-filter: grayscale(100%); 
+  -moz-transition: all 0.5s ease-in-out;
+  -webkit-transition: all 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out; */
+}
+
+/* .agedi:hover {
+  filter: none;
+  -webkit-filter: grayscale(0%);
+} */
+
+.envagenc {
+  background-color: rgba(0,0,0,0);
+  border-color: #FFFFFF;
+  background-image: url(../images/envagenc.png);
+  background-repeat: no-repeat;
+/*     filter: url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'><filter id=\'grayscale\'><feColorMatrix type=\'matrix\' values=\'0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0\'/></filter></svg>#grayscale"); Firefox 3.5+
+  filter: gray; IE6-9
+  -webkit-filter: grayscale(100%); 
+  -moz-transition: all 0.5s ease-in-out;
+  -webkit-transition: all 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out; */
+}
+/* .envagenc:hover {
+  filter: none;
+  -webkit-filter: grayscale(0%);
+} */
+.irena {
+  background-color: rgba(0,0,0,0);
+  border-color: #FFFFFF;
+  background-image: url(../images/irena.png);
+  background-repeat: no-repeat;
+/*     filter: url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'><filter id=\'grayscale\'><feColorMatrix type=\'matrix\' values=\'0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0\'/></filter></svg>#grayscale"); Firefox 3.5+
+  filter: gray; IE6-9
+  -webkit-filter: grayscale(100%); 
+  -moz-transition: all 0.5s ease-in-out;
+  -webkit-transition: all 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out; */
+}
+/* .irena:hover {
+  filter: none;
+  -webkit-filter: grayscale(0%);
+} */
+.supcounener {
+  background-color: rgba(0,0,0,0);
+      padding: 10px;
+  border-color: #FFFFFF;
+  background-image: url(../images/supcounener.png);
+  background-repeat: no-repeat;
+/*     filter: url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'><filter id=\'grayscale\'><feColorMatrix type=\'matrix\' values=\'0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0\'/></filter></svg>#grayscale"); Firefox 3.5+
+  filter: gray; IE6-9
+  -webkit-filter: grayscale(100%); 
+  -moz-transition: all 0.5s ease-in-out;
+  -webkit-transition: all 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out; */
+}
+/* .supcounener:hover {
+  filter: none;
+  -webkit-filter: grayscale(0%);
+} */
+.min {
+  background-color: rgba(0,0,0,0);
+  border-color: #FFFFFF;
+  background-image: url(../images/min.png);
+  background-repeat: no-repeat;
+/*     filter: url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'><filter id=\'grayscale\'><feColorMatrix type=\'matrix\' values=\'0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0\'/></filter></svg>#grayscale"); Firefox 3.5+
+  filter: gray; IE6-9
+  -webkit-filter: grayscale(100%); 
+  -moz-transition: all 0.5s ease-in-out;
+  -webkit-transition: all 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out; */
+}
+/* .min:hover {
+  filter: none;
+  -webkit-filter: grayscale(0%);
+} */
+.un {
+  background-color: rgba(0,0,0,0);
+  border-color: #FFFFFF;
+  background-image: url(../images/un.png);
+  background-repeat: no-repeat;
+/*     filter: url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'><filter id=\'grayscale\'><feColorMatrix type=\'matrix\' values=\'0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0\'/></filter></svg>#grayscale"); Firefox 3.5+
+  filter: gray; IE6-9
+  -webkit-filter: grayscale(100%); 
+  -moz-transition: all 0.5s ease-in-out;
+  -webkit-transition: all 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out; */
+}
+/* .un:hover {
+  filter: none;
+  -webkit-filter: grayscale(0%);
+} */
+
+/**************************************************************/
+/********************   Windows ******************************/
+/************************************************************/
+.blue .x-window-default {
+border-color: rgb(150,150,150);
+-webkit-border-radius: 4px;
+-moz-border-radius: 4px;
+-ms-border-radius: 4px;
+-o-border-radius: 4px;
+border-radius: 4px;
+}
+.x-window-body-default {
+border-color: rgb(150,150,150);
+border-width: 1px;
+border-style: solid;
+background: white;
+color: black;
+font-size: 13px;
+font-weight: normal;
+font-family: helvetica, arial, verdana, sans-serif;
+}
+.x-window-header-default {
+font-size: 13px;
+border-color: rgb(150,150,150);
+zoom: 1;
+background-color: rgb(150,150,150);
+}
+.x-window-default {
+border-color: rgb(150,150,150);
+-webkit-border-radius: 4px;
+-moz-border-radius: 4px;
+-ms-border-radius: 4px;
+-o-border-radius: 4px;
+border-radius: 4px;
+}
+.x-window-header-default .x-tool-img {
+background-color: rgb(150,150,150);
+}
+
+.helpwindow {
+    background-color: #FFFFFF;
+    padding: 5px;
+}
+
+.helpwindow div.cascade {
+    padding: 0 0 0 5px;
+}
+
+.helpwindow h2 {
+    margin: 2px 0 0 0;
+}
+

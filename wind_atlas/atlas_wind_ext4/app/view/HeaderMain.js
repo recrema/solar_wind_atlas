@@ -23,7 +23,7 @@ Ext.define('AM.view.HeaderMain', {
         height: 60,
         margin: '50 0 0 -50',
         cls: "windmillTransparentCls",
-        href : "http://solaratlas.masdar.ac.ae/",
+        href : "../atlas_solar_ext4",
         listeners: {
                 mouseover: function(a,e) {
                        var solar=Ext.create('Ext.panel.Panel', {
