@@ -18,7 +18,6 @@ Ext.define('AM.view.Map', {
     		var mapView = this,
             tbarItems = [],
             ctrl;
-
     	var map = new OpenLayers.Map('map', {
     	    projection : 'EPSG:3857',
     	    layers: [

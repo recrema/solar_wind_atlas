@@ -376,6 +376,11 @@ top:150px;
   background-position:3px 0px;
   background-repeat: no-repeat;
 }
+.icon_list {
+  background-image: url(../icons/list.png);
+  background-position:4px 0px;
+  background-repeat: no-repeat;
+}
 
 .buttonwindclose {
     border-color: rgba(0,0,0,0);

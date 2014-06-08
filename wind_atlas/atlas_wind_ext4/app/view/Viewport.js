@@ -26,6 +26,8 @@ Ext.define('AM.view.Viewport', {
         'GeoExt.tree.LayerLoader',
         'GeoExt.slider.LayerOpacity',
         'GeoExt.slider.Tip',
+        'GeoExt.data.reader.WmsCapabilities',
+        'GeoExt.data.WmsCapabilitiesLayerStore',
         'AM.view.feedback.Action',
         'AM.view.HeaderLogo',
         'AM.view.HeaderMain',

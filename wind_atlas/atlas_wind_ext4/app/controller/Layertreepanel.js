@@ -20,6 +20,7 @@ Ext.define('AM.controller.Layertreepanel',{
     },
     
     treeContextMenu: function(view, record, item, index, event) {
+    	var registo=record;
     	// Only add the contex if you click in a map layer, otherwise does nothing
         if (typeof record.raw.layer=='undefined') {
      	   event.stopEvent(); //stop the normal mouse action in browser!
@@ -72,37 +73,56 @@ Ext.define('AM.controller.Layertreepanel',{
 		            		   if(w.itemID=='informationWindow') {
 		            		    w.close();}
 		            		});
-		            	   Ext.create('Ext.window.Window', {
-		            		   	itemID:'informationWindow',
-		            		    title: 'Layer info',
-		            		    modal:false,
-		            		    resizable: false,
-		            		   	animateTarget:item,
-		            		    height: 200,
-		            		    width: 400,
-		            		    html:'Some information about the layer!!!!<br><br> For example layer name: <br>'+record.raw.layer.name,
-		            		    layout: {
-		            		        type: 'hbox',
-		            		        align: 'middle'
-		            		    },
-			            		listeners: {
-			            		    show: function(win) {
-			            		        if (this.modal) {
-			            		            var dom = Ext.dom.Query.select('.x-mask');
-			            		            var el = Ext.get(dom[0]);
-			            		            el.addCls('loginMask');
-			            		        }
-			            		    },
-			            		    hide:  function(win) {
-			            		        if (this.modal) {
-			            		            var dom = Ext.dom.Query.select('.x-mask');
-			            		            var el = Ext.get(dom[0]);
-			            		            el.removeCls('loginMask');
-			            		        }
-			            		    }
-			            		}
-		            		}).show();
-		            	   a=record;
+							var infowindow=Ext.create('Ext.window.Window', {
+								itemID:'informationWindow',
+								title: 'Layer info',
+								modal:false,
+								resizable: false,
+								animateTarget:item,
+								height: 300,
+								width: 400,
+								layout: {
+									type: 'fit',
+									align: 'middle'
+								},
+								listeners: {
+									show: function(win) {
+										if (this.modal) {
+											var dom = Ext.dom.Query.select('.x-mask');
+											var el = Ext.get(dom[0]);
+											el.addCls('loginMask');
+										}
+									},
+									hide:  function(win) {
+										if (this.modal) {
+											var dom = Ext.dom.Query.select('.x-mask');
+											var el = Ext.get(dom[0]);
+											el.removeCls('loginMask');
+										}
+									}
+								}
+							});
+							infowindow.show().setLoading(true);
+							// if the store does not exist we need to create it and load the data, this shoud be more than 1 MB
+							if (typeof Ext.data.StoreManager.lookup('layersStore')=='undefined'){
+							       var store = Ext.create('GeoExt.data.WmsCapabilitiesStore', {
+							            storeId: 'layersStore',
+							            url:'http://localhost/cgi-bin/proxy.cgi?url=http%3A%2F%2Fatlas.masdar.ac.ae%3A8080%2Fgeoserver%2Fwms%3Fservice%3Dwms%26request%3DGetCapabilities%26namespace%3Dwind',
+							            autoLoad: true
+							        });
+							       store.on('load', function(records, operation, success) {
+								        var valor=store.findRecord('name', registo.raw.layer.servername);
+								        infowindow.add([{html:'<b> Layer Title: </br></br></b>'+valor.raw.metadata.title+'</br><pre style="white-space: pre-wrap;">'+valor.raw.metadata.abstract+'</pre>'}]);
+								        infowindow.setLoading(false);
+							    	 });
+								
+							}else {
+								// if the store exists, no need to load the data again
+								var store=Ext.data.StoreManager.lookup('layersStore');
+								var valor=store.findRecord('name', registo.raw.layer.servername);
+						        infowindow.add([{html:'<b> Layer Title: </br></br></b>'+valor.raw.metadata.title+'</br><pre style="white-space: pre-wrap;">'+valor.raw.metadata.abstract+'</pre>'}]);
+						        infowindow.setLoading(false);
+							}
 		               }
 		           });
 		      var action2=Ext.create('Ext.Panel', {

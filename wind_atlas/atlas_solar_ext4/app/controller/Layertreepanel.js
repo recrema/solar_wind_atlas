@@ -4,7 +4,6 @@
  */
 Ext.define('AM.controller.Layertreepanel',{
 	extend: 'Ext.app.Controller',
-
 	init: function() {
 		layerTreeController = this;
 		this.control({
@@ -21,7 +20,11 @@ Ext.define('AM.controller.Layertreepanel',{
 
 	treeContextMenu: function(view, record, item, index, event) {
 		// Only add the contex if you click in a map layer, otherwise does nothing
+        // create a new WMS capabilities store
+
+		
 		var registo=record;
+		
 		if (typeof record.raw.layer=='undefined') {
 			event.stopEvent(); //stop the normal mouse action in browser!
 
@@ -73,15 +76,15 @@ Ext.define('AM.controller.Layertreepanel',{
 						if(w.itemID=='informationWindow' || w.itemID=='legendWindow') {
 							w.close();}
 					});
-					Ext.create('Ext.window.Window', {
+
+					var infowindow=Ext.create('Ext.window.Window', {
 						itemID:'informationWindow',
 						title: 'Layer info',
 						modal:false,
 						resizable: false,
 						animateTarget:item,
-						height: 200,
-						width: 400,
-						html:record.raw.layer.name+'<br>',
+						height: 400,
+						width: 1100,
 						layout: {
 							type: 'fit',
 							align: 'middle'
@@ -102,8 +105,28 @@ Ext.define('AM.controller.Layertreepanel',{
 								}
 							}
 						}
-					}).show();
-					a=record;
+					});
+					infowindow.show().setLoading(true);
+					// if the store does not exist we need to create it and load the data, this shoud be more than 1 MB
+					if (typeof Ext.data.StoreManager.lookup('layersStore')=='undefined'){
+					       var store = Ext.create('GeoExt.data.WmsCapabilitiesStore', {
+					            storeId: 'layersStore',
+					            url:'http://localhost/cgi-bin/proxy.cgi?url=http%3A%2F%2Fatlas.masdar.ac.ae%3A8080%2Fgeoserver%2Fwms%3Fservice%3Dwms%26request%3DGetCapabilities%26namespace%3Dmasdar',
+					            autoLoad: true
+					        });
+					       store.on('load', function(records, operation, success) {
+						        var valor=store.findRecord('name', 'masdar:'+registo.raw.layer.name);
+						        infowindow.add([{html:'<b>'+valor.raw.metadata.title+'</b></br><pre style="white-space: pre-wrap;">'+valor.raw.metadata.abstract+'</pre>'}]);
+						        infowindow.setLoading(false);
+					    	 });
+						
+					}else {
+						// if the store exists, no need to load the data again
+						var store=Ext.data.StoreManager.lookup('layersStore');
+						var valor=store.findRecord('name', 'masdar:'+registo.raw.layer.name);
+				        infowindow.add([{html:'<b>'+valor.raw.metadata.title+'</b></br><pre style="white-space: pre-wrap;">'+valor.raw.metadata.abstract+'</pre>'}]);
+				        infowindow.setLoading(false);
+					}
 				}
 			});
 			var action2 = Ext.create('Ext.Action', {
@@ -135,7 +158,7 @@ Ext.define('AM.controller.Layertreepanel',{
 								windw.add([
 								           new GeoExt.panel.Legend({
 								        	   filter: function(record) {
-								        		   SelectedLayer = record.raw.id.indexOf(registo.raw.layer.id) !== -1
+								        		   var SelectedLayer = record.raw.id.indexOf(registo.raw.layer.id) !== -1
 								        		   return SelectedLayer;
 								        	   },
 								        	   autoScroll: true,
@@ -207,6 +230,7 @@ Ext.define('AM.controller.Layertreepanel',{
 					})
 				}]
 			});
+			
 
 			var action4 = Ext.create('Ext.Action', {
 				text: '&nbsp;&nbsp;Uncheck All',
@@ -221,6 +245,8 @@ Ext.define('AM.controller.Layertreepanel',{
 							});
 				}
 			});
+			
+
 
 			// create right click contex menu
 			var ContextMenu = Ext.create('Ext.menu.Menu', {
@@ -240,7 +266,7 @@ Ext.define('AM.controller.Layertreepanel',{
 
 	loadLayersTree: function(mappanel) {
 
-		map2 = mappanel.map;
+		var map2 = mappanel.map;
 
 		/**
 		 * Creating the layer tree to display on the layer tree panel

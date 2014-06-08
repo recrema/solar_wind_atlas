@@ -297,12 +297,14 @@ Ext.define('AM.view.Map', {
     		for (var year = year_start; year <= year_end; year++){
     			var layer_title = layer_text_prefix + " " + year + " at " + heights[i] + " m" ;
     			var layer_name = layer_prefix + heights[i] + 'm_' + year;
+    			layers_configurations.servername=workspace + ":" +layer_name;
     			temp[layer_name] = new OpenLayers.Layer.WMS(layer_title, geoserverUrl, {Layers: workspace + ":" + layer_name, format: format, tiled: true, transparent: true, tilesOrigin : map.maxExtent.left + ',' + map.maxExtent.bottom}, layers_configurations);
     			map.addLayers([temp[layer_name]]);
     			for (var ii=0; ii<month_numbers.length; ii++){
     				var month_name = get_month_name(month_numbers[ii]);
     				layer_title = layer_text_prefix + " " + month_name + " " + year + " at " + heights[i] + "m" ;
     				layer_name = layer_prefix + heights[i] + 'm_' + year + month_numbers[ii];
+    				layers_configurations.servername=workspace + ":" +layer_name;
     				temp[layer_name] = new OpenLayers.Layer.WMS(layer_title, geoserverUrl, {Layers: workspace + ":" + layer_name, format: format, tiled: true, transparent: true, tilesOrigin : map.maxExtent.left + ',' + map.maxExtent.bottom}, layers_configurations);
     				map.addLayers([temp[layer_name]]);
     			};
@@ -313,6 +315,7 @@ Ext.define('AM.view.Map', {
     	for (var i=0; i<heights.length; i++) {
     		layer_title = layer_text_prefix + " at " + heights[i] + "m Annual" ;
     		layer_name = layer_prefix + heights[i] + 'm_' + "Annual";
+    		layers_configurations.servername=workspace + ":" +layer_name;
     		temp[layer_name] = new OpenLayers.Layer.WMS(layer_title, geoserverUrl, {Layers: workspace + ":" + layer_name, format: format, tiled: true, transparent: true, tilesOrigin : map.maxExtent.left + ',' + map.maxExtent.bottom}, layers_configurations);
     		map.addLayers([temp[layer_name]]);
     		for (var ii=0; ii<month_numbers.length; ii++) {
@@ -320,6 +323,7 @@ Ext.define('AM.view.Map', {
 
     			layer_title = layer_text_prefix + " at " + heights[i] + "m " + month_name ;
     			layer_name = layer_prefix + heights[i] + 'm_' + month_numbers[ii];
+    			layers_configurations.servername=workspace + ":" +layer_name;
     			temp[layer_name] = new OpenLayers.Layer.WMS(layer_title, geoserverUrl, {Layers: workspace + ":" + layer_name, format: format, tiled: true, transparent: true, tilesOrigin : map.maxExtent.left + ',' + map.maxExtent.bottom}, layers_configurations);
     			map.addLayers([temp[layer_name]]);
     		};

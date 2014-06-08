@@ -6,7 +6,7 @@ Ext.Loader.setConfig({
     disableCaching: false,
     paths: {
         GeoExt: "../lib/geoext2-2.0.1/src/GeoExt",
-        Chart : "../lib/highcharts_sencha-master/Chart",
+        Chart : "../lib/highcharts_sencha-master/Chart"
         // for dev use
 //        Ext: "http://cdn.sencha.com/ext/gpl/4.2.1/src"
         // for build purpose
