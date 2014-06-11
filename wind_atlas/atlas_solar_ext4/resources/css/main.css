@@ -368,7 +368,12 @@ top:150px;
 }
 .icon_info {
   background-image: url(../icons/information.png);
-  background-position:8px 0px;
+  background-position:5px 0px;
+  background-repeat: no-repeat;
+}
+.icon_up {
+  background-image: url(../icons/up.png);
+  background-position:3px 0px;
   background-repeat: no-repeat;
 }
 .icon_legend {

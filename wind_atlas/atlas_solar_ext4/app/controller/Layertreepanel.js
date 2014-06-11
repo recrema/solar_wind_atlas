@@ -245,6 +245,17 @@ Ext.define('AM.controller.Layertreepanel',{
 							});
 				}
 			});
+			var action5 = Ext.create('Ext.Action', {
+				text: '&nbsp;&nbsp;Bring to front',
+				iconCls:"icon_up",
+				handler: function(widget, event) {
+					map.raiseLayer(registo.raw.layer, map.layers.length);
+					//if the marker is present we need to put the marker above the layer!
+					if (typeof markers!='undefined'){
+						map.raiseLayer(markers,map.layers.length);
+					}
+				}
+			});
 			
 
 
@@ -253,10 +264,12 @@ Ext.define('AM.controller.Layertreepanel',{
 				plain: true,
 				border: false,
 				items: [
+						action5,
 				        action1,
 				        action2,
 				        action3,
 				        action4
+				        
 				        ]
 			}); 
 			ContextMenu.showAt(event.getXY());
