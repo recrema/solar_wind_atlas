@@ -228,7 +228,7 @@ Ext.define('AM.view.Map', {
                         ]
             },
             disabled: false,
-            tooltip: "Click to get coordinates"
+            tooltip: "Click to add/remove context layers"
         }));
         
      // Help action

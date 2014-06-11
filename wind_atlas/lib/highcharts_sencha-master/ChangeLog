@@ -1,3 +1,103 @@
+ver 3.0.2
+- Minor fix and improve how series object create 
+
+Desktop Demo
+- Fixed column demo
+
+Mobile Demo
+- Cleanup standalone demo
+
+ver 3.0.1
+- Support Highcharts 4.0
+- Prototype support Highmaps (as a module)
+- Added Pyramid Series
+- Added zField support for Scatter Series 3D 
+
+Desktop Demos
+- Added 3D charts demo (column, pie, scatter)
+- Added Pyramid demo 
+
+ver 2.4.5
+- Fixed initial empty chart display on Sencha Touch
+
+Mobile Demo
+- Fixed full screen issue
+- Added bubble demo with initial empty chart
+- Added column demo for store with embedded data
+- Removed unnecessary files
+
+ver 2.4.4
+- Fixed Javascript errors with Sencha Touch 2.2.1
+
+ver 2.4.3
+- Fixed hidden series update 
+- Refers to Highcharts defaultSeriesType/type option if 
+  series type is not defined
+
+ver 2.4.2
+- Fixed draw method error on hidden series
+
+Desktop Demos
+- Added draw method on hidden series demo 
+
+ver 2.4.1
+- Fixed Javascript error on IE 8
+
+ver 2.4.0
+- Added support for Highcharts 3.0
+  * Bubble series
+  * Error bar series
+  * Box Plot series
+  * Funnel Series
+- Fixed initial loading on irregular data series
+- Moved sencha property into static field
+- Added compatability fix for Sencha Touch 2.1.1
+- Added fixes and enhancements submitted by straccio
+  * Added compatability fixes for Sencha 4.2
+  * Point click event compatibility issue with Highcharts 3.0
+  * Refactor buildInitData method
+
+Desktop Demos
+- Added multiple irregular bubble series demo
+- Added single bubble series demo
+- Added error bar demo
+- Added funnel demo
+- Fixed donut demo
+- Fixed scheduler runner in gauge demo
+
+ver 2.3.3
+Highcharts extension
+- Plot graph for initial animation if data is already loaded
+- Added updateNoRecord option
+- Added loadMaskMsg option
+- Added fixes and enhancements submitted by straccio
+  * Added scope to Highchart Component if not specified
+  * Clone Serie config for scope injection
+  * Added destroy method in Serie class
+  * Fixed LoadMask
+  * Fixed Pie chart update with diff no. of data points
+
+Desktop Demos
+- Added standalone example
+- Added updateNoRecord example
+- Added loadmask example
+- Added pie chart update with diff no. of data points
+
+ver 2.3.2
+Highcharts extension
+- Added support for multiple series with irregular data, dataIndex field can support data array from JsonStore. 
+- Fixed non store support. The extension can be initialised without any store and display series with addSeries method.
+- Fixed the resizable default option
+- Fixed unbind event on destroy
+- Added pointclick event support (contributed by straccio)
+- Massively refactor and clean up a lot of shitake code
+
+Desktop Demos
+- Fixed and improved the demo code
+- Added irregular multiple series demo
+- Added non store demo
+- Added demo to test resizing issue, add/remove data points for series update, pointclick event
+
 ver 2.3.1
 Highcharts extension
 - Fixed compatability issue with Sencha Touch 2.1

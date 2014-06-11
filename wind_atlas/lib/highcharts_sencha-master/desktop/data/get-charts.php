@@ -1,13 +1,11 @@
 <?php
-$result[] = array('text' => 'Spline - Animation (Points update)', 'id' => 'charts/spline', 'leaf' => true, 'icon' => '../images/linechart.png');
-$result[] = array('text' => 'Spline - No animation (Override getData template method)', 'id' => 'charts/splineNoAnim', 'leaf' => true, 'icon' => '../images/linechart.png');
-$result[] = array('text' => 'Spline - Line Shift (Category x-axis)', 'id' => 'charts/splineCatShift', 'leaf' => true, 'icon' => '../images/linechart.png');
+$result[] = array('text' => '3D Column', 'id' => 'charts/column3d', 'leaf' => true, 'icon' => '../images/columnchart.png');
+$result[] = array('text' => '3D Pie', 'id' => 'charts/pie3d', 'leaf' => true, 'icon' => '../images/piechart.png');
+$result[] = array('text' => '3D Scatter', 'id' => 'charts/scatter3d', 'leaf' => true, 'icon' => '../images/scatter.png');
+$result[] = array('text' => 'Spline', 'id' => 'charts/spline', 'leaf' => true, 'icon' => '../images/linechart.png');
 $result[] = array('text' => 'Spline - Line Shift (Numeric x-axis)', 'id' => 'charts/splineNumShift', 'leaf' => true, 'icon' => '../images/linechart.png');
-$result[] = array('text' => 'Spline - ExtJs Popup Menu', 'id' => 'charts/splinePopup', 'leaf' => true, 'icon' => '../images/linechart.png');
-$result[] = array('text' => 'Spline - Add Series (non store data)', 'id' => 'charts/splineAddSeries', 'leaf' => true, 'icon' => '../images/linechart.png');
 $result[] = array('text' => 'Spline - Null data', 'id' => 'charts/splineNullData', 'leaf' => true, 'icon' => '../images/linechart.png');
-$result[] = array('text' => 'Spline - afterChartRendered callback', 'id' => 'charts/splineAfterRenderedCallback', 'leaf' => true, 'icon' => '../images/linechart.png');
-$result[] = array('text' => 'Spline - No initial animation', 'id' => 'charts/splineNoInitAnim', 'leaf' => true, 'icon' => '../images/linechart.png');
+$result[] = array('text' => 'Spline - Irregular data', 'id' => 'charts/splineIrregular', 'leaf' => true, 'icon' => '../images/linechart.png');
 $result[] = array('text' => 'Column', 'id' => 'charts/column', 'leaf' => true, 'icon' => '../images/columnchart.png');
 $result[] = array('text' => 'Column - drill down', 'id' => 'charts/columnDrillDown', 'leaf' => true, 'icon' => '../images/columnchart.png');
 $result[] = array('text' => 'Pie', 'id' => 'charts/pie', 'leaf' => true, 'icon' => '../images/piechart.png');
@@ -19,27 +17,45 @@ $result[] = array('text' => 'Area Spline Range (pre-sorted fields)', 'id' => 'ch
 $result[] = array('text' => 'Columns Range', 'id' => 'charts/columnrange', 'leaf' => true, 'icon' => '../images/color-adjustment-green.png' );
 $result[] = array('text' => 'Polar/Radar', 'id' => 'charts/polar', 'leaf' => true, 'icon' => '../images/radar.png' );
 $result[] = array('text' => 'Star', 'id' => 'charts/star', 'leaf' => true, 'icon' => '../images/asterisk.png' );
+$result[] = array('text' => 'Bubble (Single Series)', 'id' => 'charts/bubblesingle', 'leaf' => true, 'icon' => '../images/bubble.png' );
+$result[] = array('text' => 'Bubble (Multiple Series)', 'id' => 'charts/bubblemulti', 'leaf' => true, 'icon' => '../images/bubble.png' );
+$result[] = array('text' => 'Error Bar', 'id' => 'charts/error', 'leaf' => true, 'icon' => '../images/errorbar.png' );
+$result[] = array('text' => 'Box Plot', 'id' => 'charts/boxplot', 'leaf' => true, 'icon' => '../images/boxplot.png' );
+$result[] = array('text' => 'Waterfall', 'id' => 'charts/waterfall', 'leaf' => true, 'icon' => '../images/waterfall.png' );
+$result[] = array('text' => 'Pyramid', 'id' => 'charts/pyramid', 'leaf' => true, 'icon' => '../images/pyramid.png' );
+$result[] = array('text' => 'Funnel', 'id' => 'charts/funnel', 'leaf' => true, 'icon' => '../images/funnel.png' );
 
-/*
-$result[] = array('text' => 'Testing', 'id' => 'testing', 'leaf' => false, 
+$result[] = array('text' => 'Other Tests', 'id' => 'testing', 'leaf' => false, 'expanded' => true, 
      'children' => array(
-           array('text' => 'refreshOnChange (enabled)', 'id' => 'tests/refreshOnChange_On', 'leaf' => true,
-                 'description' => 'Changing the data editor should trigger refresh'),
-           array('text' => 'refreshOnChange (disabled)', 'id' => 'tests/refreshOnChange_Off','leaf' => true,
-                 'description' => 'Changing the data editor should NOT trigger refresh'),
-           array('text' => 'refreshOnLoad (enabled)', 'id' => 'tests/refreshOnLoad_On', 'leaf' => true,
-                 'description' => 'Reloading the store should trigger refresh'),
-           array('text' => 'refreshOnLoad (disabled)', 'id' => 'tests/refreshOnLoad_Off','leaf' => true,
-                 'description' => 'Reloading the store should NOT trigger refresh'),
-           array('text' => 'ignoreInitAnim (enabled)', 'id' => 'tests/ignoreInitAnim_Off','leaf' => true,
-                 'description' => "Highcharts init animation on and shouldn't show initial animation"),
-           array('text' => '4000 data pts', 'id' => 'tests/4000pts','leaf' => true,
-                 'description' => "Should be able to plot 4000 data points"),
-           array('text' => 'afterChartRender', 'id' => 'tests/afterChartRender','leaf' => true,
-                 'description' => "Dialog box access chart rendered object"),
-
+           array('text' => 'Spline - afterChartRendered callback', 'id' => 'charts/splineAfterRenderedCallback', 
+                 'leaf' => true, 'icon' => '../images/linechart.png'),
+           array('text' => 'Spline - No initial animation', 'id' => 'charts/splineNoInitAnim', 'leaf' => true, 
+                 'icon' => '../images/linechart.png'),
+           array('text' => 'Spline - ExtJs Popup Menu', 'id' => 'charts/splinePopup', 'leaf' => true, 
+                 'icon' => '../images/linechart.png'),
+           array('text' => 'Spline - No store binding', 'id' => 'charts/splineNoStore', 'leaf' => true, 
+                 'icon' => '../images/linechart.png'),
+           array('text' => 'Spline - Add Series (non store data)', 'id' => 'charts/splineAddSeries', 'leaf' => true, 
+                 'icon' => '../images/linechart.png'),
+           array('text' => 'Spline - No animation (Override getData template method)', 'id' => 'charts/splineNoAnim', 
+                 'leaf' => true, 'icon' => '../images/linechart.png'),
+           array('text' => 'Spline - Line Shift (Category x-axis)', 'id' => 'charts/splineCatShift', 'leaf' => true, 
+                 'icon' => '../images/linechart.png'),
+           array('text' => 'Spline - Line Shift (draw hidden series)', 'id' => 'charts/drawHiddenSeries', 'leaf' => true, 
+                 'icon' => '../images/linechart.png'),
+           array('text' => 'Store reload with diff no. of data points', 'id' => 'charts/test1','leaf' => true, 
+                 'icon' => '../images/linechart.png'),
+           array('text' => 'Fix size chart within the component', 'id' => 'charts/test2','leaf' => true, 
+                 'icon' => '../images/piechart.png'),
+           array('text' => 'pointclick event listener', 'id' => 'charts/test3','leaf' => true, 
+                 'icon' => '../images/piechart.png'),
+           array('text' => 'Test updateNoRecord', 'id' => 'charts/test4','leaf' => true, 
+                 'icon' => '../images/columnchart.png'),
+           array('text' => 'Test loadmask', 'id' => 'charts/test5','leaf' => true, 
+                 'icon' => '../images/scatter.png'),
+           array('text' => 'Store reload with diff no. of data points', 'id' => 'charts/test6','leaf' => true, 
+                 'icon' => '../images/piechart.png')
       )    
 );
-*/
 echo json_encode($result);
 ?>

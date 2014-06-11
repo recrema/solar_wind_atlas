@@ -23,13 +23,15 @@ $rangeCharts = array(
 
 $result = array('success' => true, 'children' => array(
      array('icon' => './images/linechart.png', 'text' => 'Spline Examples', 'leaf' => false, 'children' => $splitCharts),
+     array('icon' => './images/columnchart.png', 'text' => 'Column (Embedded Data)', 'leaf' => true, 'id' => 'columnEmbedData'),
      array('icon' => './images/columnchart.png', 'text' => 'Column', 'leaf' => true, 'id' => 'column'),
      array('icon' => './images/scatter.png', 'text' => 'Scatter', 'leaf' => true, 'id' => 'scatter'),
      array('icon' => './images/pie.png', 'text' => 'Pie Charts', 'children' => $pieCharts),
      array('icon' => './images/donut.png', 'text' => 'Polar/Radar Chart', 'leaf' => true, 'id' => 'polar'),
      array('icon' => './images/donut.png', 'text' => 'Star Chart', 'leaf' => true, 'id' => 'star'),
      array('icon' => './images/donut.png', 'text' => 'Range Charts','children' => $rangeCharts),
-     array('icon' => './images/donut.png', 'text' => 'Gauge/Dial Chart', 'id' => 'gauge', 'leaf' => true)
+     array('icon' => './images/donut.png', 'text' => 'Gauge/Dial Chart', 'id' => 'gauge', 'leaf' => true),
+     array('icon' => '', 'text' => 'Bubble Chart', 'id' => 'bubble', 'leaf' => true)
   )
 );
 /*

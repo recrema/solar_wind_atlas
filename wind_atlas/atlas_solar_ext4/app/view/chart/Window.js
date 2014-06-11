@@ -6,28 +6,35 @@ Ext.define('AM.view.chart.Window', {
     extend: 'Ext.window.Window',
     alias : 'widget.chartwindow',
     itemId: 'chartWindow',
-	height: 500,
+	height: 450,
 	width: 500,
-	draggable : false,
+	draggable : true,
 	border: false,
-	hidden: true,
-	modal: true,
+	hidden: false,
+	modal: false,
+	resizable: false,
 	animateTarget : '',//this value will be changed in the mapController.onChartActivate() function dynamically
-	header: false,
+	header: true,
+	listeners: { 
+	    close: function() {
+	    	var chartButton=Ext.ComponentQuery.query('mappanel button[itemId=viewwindinfo]')[0];
+	    	chartButton.toggle(false);
+	    }
+	},
 	initComponent: function() {
-		var me = this;
-		
-        Ext.apply(this, {
-        	  items: [{ xtype: 'button',
-				    style: {
-				        marginTop: '10px',
-				    },
-   	              cls:'buttonwindclose',
-	              handler:  function () {
-	            	  me.hide();
-	              }},
-        	  ]
-        });
+		me = this;
+		me.setPosition(313,167);
+//        Ext.apply(this, {
+//        	  items: [{ xtype: 'button',
+//				    style: {
+//				        marginTop: '10px',
+//				    },
+//   	              cls:'buttonwindclose',
+//	              handler:  function () {
+//	            	  me.hide();
+//	              }},
+//        	  ]
+//        });
 		this.callParent(arguments);
 	}
 

@@ -115,7 +115,7 @@ Ext.define('AM.controller.Layertreepanel',{
 					            autoLoad: true
 					        });
 					       store.on('load', function(records, operation, success) {
-						        var valor=store.findRecord('name', 'masdar:'+registo.raw.layer.name);
+					    	   var valor=store.findRecord('name', registo.raw.layer.servername);
 						        infowindow.add([{html:'<b>'+valor.raw.metadata.title+'</b></br><pre style="white-space: pre-wrap;">'+valor.raw.metadata.abstract+'</pre>'}]);
 						        infowindow.setLoading(false);
 					    	 });
@@ -123,7 +123,7 @@ Ext.define('AM.controller.Layertreepanel',{
 					}else {
 						// if the store exists, no need to load the data again
 						var store=Ext.data.StoreManager.lookup('layersStore');
-						var valor=store.findRecord('name', 'masdar:'+registo.raw.layer.name);
+						var valor=store.findRecord('name', registo.raw.layer.servername);
 				        infowindow.add([{html:'<b>'+valor.raw.metadata.title+'</b></br><pre style="white-space: pre-wrap;">'+valor.raw.metadata.abstract+'</pre>'}]);
 				        infowindow.setLoading(false);
 					}
@@ -310,6 +310,13 @@ Ext.define('AM.controller.Layertreepanel',{
 			store: overallStore,
 			rootVisible: false,
 			lines: false,
+			//to have tha ability to drag and drop the layers in tree
+			viewConfig : {
+		        enableDD : true,
+		        plugins : {
+		            ptype : 'treeviewdragdrop'
+		        }
+		    },
 			scroll: false, //It removes the scroll from the tree panel 
 			border: false,
 			listeners: {
@@ -361,6 +368,13 @@ Ext.define('AM.controller.Layertreepanel',{
 			store: yearStore,
 			rootVisible: false,
 			lines: false,
+			//to have tha ability to drag and drop the layers in tree
+			viewConfig : {
+		        enableDD : true,
+		        plugins : {
+		            ptype : 'treeviewdragdrop'
+		        }
+		    },
 			scroll: false, //It removes the scroll from the tree panel 
 			border: false,
 			listeners: {

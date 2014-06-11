@@ -80,7 +80,7 @@ Ext.define('AM.controller.Layertreepanel',{
 								resizable: false,
 								animateTarget:item,
 								height: 300,
-								width: 400,
+								width: 500,
 								layout: {
 									type: 'fit',
 									align: 'middle'
@@ -251,7 +251,7 @@ Ext.define('AM.controller.Layertreepanel',{
     			};
         		maps_height_month.push(a);
         	};
-        	overall_maps_tree_by_height.push({text: heights[i] + " m", leaf: false, checked: false, children:maps_height_month});
+        	overall_maps_tree_by_height.push({text: heights[i] + " m", leaf: false, children:maps_height_month});
         };
         overall_maps_tree.push({text: "by Height - Wind Speed", leaf: false, children: overall_maps_tree_by_height});
       
@@ -263,6 +263,13 @@ Ext.define('AM.controller.Layertreepanel',{
         var overallLayerTree = new GeoExt.tree.Panel({
     		store: overallStore,
             rootVisible: false,
+			//to have tha ability to drag and drop the layers in tree
+			viewConfig : {
+		        enableDD : true,
+		        plugins : {
+		            ptype : 'treeviewdragdrop'
+		        }
+		    },
             lines: false,
             scroll: false, //It removes the scroll from the tree panel 
             border: false,
@@ -321,6 +328,13 @@ Ext.define('AM.controller.Layertreepanel',{
         var yearLayerTree = new GeoExt.tree.Panel({
     		store: yearStore,
             rootVisible: false,
+			//to have tha ability to drag and drop the layers in tree
+			viewConfig : {
+		        enableDD : true,
+		        plugins : {
+		            ptype : 'treeviewdragdrop'
+		        }
+		    },
             lines: false,
             scroll: false, //It removes the scroll from the tree panel 
             border: false,
@@ -468,6 +482,13 @@ Ext.define('AM.controller.Layertreepanel',{
         var monthLayerTree = new GeoExt.tree.Panel({
     		store: monthStore,
             rootVisible: false,
+			//to have tha ability to drag and drop the layers in tree
+			viewConfig : {
+		        enableDD : true,
+		        plugins : {
+		            ptype : 'treeviewdragdrop'
+		        }
+		    },
             lines: false,
             scroll: false, //It removes the scroll from the tree panel 
             border: false,

@@ -5,10 +5,10 @@
 Ext.define('AM.controller.Map', {
     extend: 'Ext.app.Controller',
     views: ['Windinfo', 'chart.Window', 'genericWindow'],
-    //    requires: ['AM.view.Layertreepanel'],
 
     init: function () {
-
+        num_month = 0;
+        num_year = 0;
 
         mapController = this;
         this.control({
@@ -52,9 +52,7 @@ Ext.define('AM.controller.Map', {
 
 
         var size = new OpenLayers.Size(40, 40);
-        //         var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
         var icon = new OpenLayers.Icon('resources/images/button.gif', size);
-        //         var markerslayer = map.getLayer('markers');
         var marker = new OpenLayers.Marker(position, icon);
 
         // Remove all the markers if there is already any.
@@ -69,174 +67,385 @@ Ext.define('AM.controller.Map', {
         // Changing the latitude and logitude on the form so the data location will change for 
         // all the portlet's available
 
-        mapController.openWinInfoForm(clickLat, clickLon);
+//        mapController.openWinInfoForm(clickLat, clickLon);
+//        console.log('click');
+        
+        
+
+        
+        
     },
 
-    openWinInfoForm: function (clickLat, clickLon) {
-        var windowInfo = Ext.ComponentQuery.query('windinfo')[0];
-        var windowInfoForm = Ext.ComponentQuery.query('windinfoForm')[0];
+//    openWinInfoForm: function (clickLat, clickLon) {
+//        var windowInfo = Ext.ComponentQuery.query('windinfo')[0];
+//        var windowInfoForm = Ext.ComponentQuery.query('windinfoForm')[0];
+//
+//        if (!Ext.ComponentQuery.query('windinfoForm textfield[itemId=f1]')[0]) {
+//
+//           var field1 = Ext.create('Ext.form.field.Text', {
+//                itemId: 'f1',
+//                fieldLabel: 'Latitude',
+//                name: 'latitude',
+//                allowBlank: false
+//            });
+//           var field2 = Ext.create('Ext.form.field.Text', {
+//                itemId: 'f2',
+//                fieldLabel: 'Longitude',
+//                name: 'longitude',
+//                allowBlank: false
+//            });
+//            
+//            var field3= Ext.create('Ext.Panel', {
+//            	border:false,
+//            	anchor: '100%',
+//            	layout: {
+//            		type: 'hbox',
+//            		align: 'stretch'
+//            	},
+//            	items: [
+//            	        {
+//            	        	xtype:'datefield',
+//                            itemId: 'f3',
+//                            id: 'f3',
+//            	        	width : 170,
+//            	        	labelWidth: 60,
+//                            fieldLabel: 'From',
+//                            format: 'Y/m/d',
+//                            name: 'initial_date',
+//                            value: '2003/08/01',
+//                            endDateField: 'f4',
+//                            listeners: {
+//                                'change': function (th, a) {
+//                                    Ext.getCmp('f4').setMinValue(a);
+//                                }
+//                            },
+//                            allowBlank: false
+//            	        },
+//            	        {
+//            	        	xtype:'timefield',
+//                        	width : 60,
+//                        	name: 'initial_time',
+//                        	format: 'H',
+//                            minValue: '00',
+//                            maxValue: '24',
+//                            increment: 60,
+//                            value:'00',
+//                            allowBlank: false
+//                            },
+//                            {
+//                                xtype: 'label',
+//                                text: 'UTC',
+//                                margin: '4 0 0 3'
+//                            }
+//            	        ]
+//            });   
+//
+//            var field4= Ext.create('Ext.Panel', {
+//            	border:false,
+//            	anchor: '100%',
+//            	layout: {
+//            		type: 'hbox',
+//            		align: 'stretch'
+//            	},
+//            	items: [
+//            	        {
+//            	        	xtype:'datefield',
+//            	        	itemId: 'f4',
+//            	        	id: 'f4',
+//            	        	width : 170,
+//            	        	labelWidth: 60,
+//            	        	fieldLabel: 'To',
+//            	        	format: 'Y/m/d',
+//            	        	value: '2003/08/30',
+//            	        	name: 'final_date',
+//            	        	startDateField: 'f3',
+//            	        	listeners: {
+//            	        		'change': function (th, a) {
+//            	        			Ext.getCmp('f3').setMaxValue(a);
+//            	        		}
+//            	        	},
+//            	        	allowBlank: false
+//            	        },
+//            	        {
+//            	        	xtype:'timefield',
+//                        	width : 60,
+//                        	name: 'in',
+//                        	format: 'H',
+//                            minValue: '00',
+//                            maxValue: '24',
+//                            increment: 60,
+//                        	name: 'final_time',
+//                            value:'00',
+//                            allowBlank: false
+//                            },
+//                            {
+//                                xtype: 'label',
+//                                text: 'UTC',
+//                                margin: '4 0 0 3'
+//                            }
+//            	        ]
+//            });
+//         	   
+//            windowInfoForm.add(field1);
+//            /*
+//             * The values are here because if you put them when you
+//             * create the fields, when we do a form reset it will put the first coordinate
+//             * and will not clear the field!!!
+//             *
+//             */
+//            field1.setValue(clickLat);
+//            windowInfoForm.add(field2);
+//            field2.setValue(clickLon);
+//            windowInfoForm.add(field3);
+//            windowInfoForm.add(field4);
+//
+//            var submitbutton = Ext.ComponentQuery.query('windinfoForm button[itemId=windfinfoFormSubmitButton]')[0];
+//            submitbutton.setHandler(function () {
+//                Ext.ComponentQuery.query('windinfoResult')[0].setLoading(true);
+//                loginController.initCheckLogin();
+//                var form = this.up('form').getForm();
+//                if (form.isValid()) {
+//                    form.submit({
+//                        success: function (form, action) {
+//                            Ext.ComponentQuery.query('windinfoResult')[0].setLoading(false);
+//                            mapController.openWinInfo(action.result.msg1, 'windinfoResultTab1', 'Wind roses');
+//                            mapController.openWinInfo(action.result.msg2, 'windinfoResultTab2', 'Wind speed charts');
+//                            mapController.openWinInfo(action.result.msg3, 'windinfoResultTab3', 'Report');
+//                        },
+//                        failure: function (form, action) {
+//                            Ext.ComponentQuery.query('windinfoResult')[0].setLoading(false);
+//                            mapController.openWinInfo(action.result.msg1, 'windinfoResultTab1', 'Error');
+//                            mapController.openWinInfo(action.result.msg2, 'windinfoResultTab2', 'Server Response');
+//                        }
+//                    });
+//                }
+//            });
+//        } else {
+//            var lat = Ext.ComponentQuery.query('windinfoForm textfield[itemId=f1]')[0];
+//            lat.setValue(clickLat);
+//            var long = Ext.ComponentQuery.query('windinfoForm textfield[itemId=f2]')[0];
+//            long.setValue(clickLon);
+//        }
+//        windowInfo.show();
+//        windowInfoForm.show();
+//    },
 
-        if (!Ext.ComponentQuery.query('windinfoForm textfield[itemId=f1]')[0]) {
 
-           var field1 = Ext.create('Ext.form.field.Text', {
-                itemId: 'f1',
-                fieldLabel: 'Latitude',
-                name: 'latitude',
-                allowBlank: false
-            });
-           var field2 = Ext.create('Ext.form.field.Text', {
-                itemId: 'f2',
-                fieldLabel: 'Longitude',
-                name: 'longitude',
-                allowBlank: false
-            });
-            
-            var field3= Ext.create('Ext.Panel', {
-            	border:false,
-            	anchor: '100%',
-            	layout: {
-            		type: 'hbox',
-            		align: 'stretch'
-            	},
-            	items: [
-            	        {
-            	        	xtype:'datefield',
-                            itemId: 'f3',
-                            id: 'f3',
-            	        	width : 170,
-            	        	labelWidth: 60,
-                            fieldLabel: 'From',
-                            format: 'Y/m/d',
-                            name: 'initial_date',
-                            value: '2003/08/01',
-                            endDateField: 'f4',
-                            listeners: {
-                                'change': function (th, a) {
-                                    Ext.getCmp('f4').setMinValue(a);
-                                }
-                            },
-                            allowBlank: false
-            	        },
-            	        {
-            	        	xtype:'timefield',
-                        	width : 60,
-                        	name: 'initial_time',
-                        	format: 'H',
-                            minValue: '00',
-                            maxValue: '24',
-                            increment: 60,
-                            value:'00',
-                            allowBlank: false
-                            },
-                            {
-                                xtype: 'label',
-                                text: 'UTC',
-                                margin: '4 0 0 3'
-                            }
-            	        ]
-            });   
+//    openWinInfo: function (msg, tab, tabTitle) {
+//
+//        var windowResultTab = Ext.getCmp(tab);
+//        windowResultTab.setTitle(tabTitle);
+//        windowResultTab.tab.show();
+//        windowResultTab.update(msg, true);
+//
+//    },
 
-            var field4= Ext.create('Ext.Panel', {
-            	border:false,
-            	anchor: '100%',
-            	layout: {
-            		type: 'hbox',
-            		align: 'stretch'
-            	},
-            	items: [
-            	        {
-            	        	xtype:'datefield',
-            	        	itemId: 'f4',
-            	        	id: 'f4',
-            	        	width : 170,
-            	        	labelWidth: 60,
-            	        	fieldLabel: 'To',
-            	        	format: 'Y/m/d',
-            	        	value: '2003/08/30',
-            	        	name: 'final_date',
-            	        	startDateField: 'f3',
-            	        	listeners: {
-            	        		'change': function (th, a) {
-            	        			Ext.getCmp('f3').setMaxValue(a);
-            	        		}
-            	        	},
-            	        	allowBlank: false
-            	        },
-            	        {
-            	        	xtype:'timefield',
-                        	width : 60,
-                        	name: 'in',
-                        	format: 'H',
-                            minValue: '00',
-                            maxValue: '24',
-                            increment: 60,
-                        	name: 'final_time',
-                            value:'00',
-                            allowBlank: false
-                            },
-                            {
-                                xtype: 'label',
-                                text: 'UTC',
-                                margin: '4 0 0 3'
-                            }
-            	        ]
-            });
-         	   
-            windowInfoForm.add(field1);
-            /*
-             * The values are here because if you put them when you
-             * create the fields, when we do a form reset it will put the first coordinate
-             * and will not clear the field!!!
-             *
-             */
-            field1.setValue(clickLat);
-            windowInfoForm.add(field2);
-            field2.setValue(clickLon);
-            windowInfoForm.add(field3);
-            windowInfoForm.add(field4);
 
-            var submitbutton = Ext.ComponentQuery.query('windinfoForm button[itemId=windfinfoFormSubmitButton]')[0];
-            submitbutton.setHandler(function () {
-                Ext.ComponentQuery.query('windinfoResult')[0].setLoading(true);
-                loginController.initCheckLogin();
-                var form = this.up('form').getForm();
-                if (form.isValid()) {
-                    form.submit({
-                        success: function (form, action) {
-                            Ext.ComponentQuery.query('windinfoResult')[0].setLoading(false);
-                            mapController.openWinInfo(action.result.msg1, 'windinfoResultTab1', 'Wind roses');
-                            mapController.openWinInfo(action.result.msg2, 'windinfoResultTab2', 'Wind speed charts');
-                            mapController.openWinInfo(action.result.msg3, 'windinfoResultTab3', 'Report');
-                        },
-                        failure: function (form, action) {
-                            Ext.ComponentQuery.query('windinfoResult')[0].setLoading(false);
-                            mapController.openWinInfo(action.result.msg1, 'windinfoResultTab1', 'Error');
-                            mapController.openWinInfo(action.result.msg2, 'windinfoResultTab2', 'Server Response');
-                        }
-                    });
-                }
-            });
-        } else {
-            var lat = Ext.ComponentQuery.query('windinfoForm textfield[itemId=f1]')[0];
-            lat.setValue(clickLat);
-            var long = Ext.ComponentQuery.query('windinfoForm textfield[itemId=f2]')[0];
-            long.setValue(clickLon);
-        }
-        windowInfo.show();
-        windowInfoForm.show();
+    type: function (typeText) {
+
+    	var z = "";
+    	
+    	switch (typeText) {
+    	case "dhi":
+    		z = "DHI";
+    		break;
+    	case "dni":
+    		z = "DNI";
+    		break;
+    	case "ghi":
+    		z = "GHI";
+    		break;
+    	}
+    	
+    	return z;
     },
 
+    month: function (monthText) {
+    	
+    	switch (monthText) {
+    	case "jan":
+    		m = "January";
+    		break;
+    	case "feb":
+    		m = "February";
+    		break;
+    	case "mar":
+    		m = "March";
+    		break;
+    	case "apr":
+    		m = "April";
+    		break;
+    	case "may":
+    		m = "May";
+    		break;
+    	case "jun":
+    		m = "June";
+    		break;
+    	case "jul":
+    		m = "July";
+    		break;
+    	case "aug":
+    		m = "August";
+    		break;
+    	case "sep":
+    		m = "September";
+    		break;
+    	case "oct":
+    		m = "October";
+    		break;
+    	case "nov":
+    		m = "November";
+    		break;
+    	case "dec":
+    		m = "December";
+    		break;
+    	}
+    	return m;
+    	
+    },
+    verifyChartLayers: function (layerChart) {
+    	
+    	if (layerChart.indexOf("yearly") != -1 )
+    		num_year = num_year + 1;
+    	else if (layerChart.indexOf("yearly") == -1 )
+    		num_month = num_month + 1;
+    },
 
-    openWinInfo: function (msg, tab, tabTitle) {
+    chartDate: function (labelText) {
+    	var text = labelText;
+    	var c;
+    	year = text.substring(0,4);
+    	if(text.indexOf("yearly") != -1){
+    		typeSubstring = text.substring((text.length - 3), text.length);
+    		c = mapController.type(typeSubstring)  + " - " + year;
+    	}
+    	else {
+    		typeSubstring = text.substring(5, 8);
+    		monthSubstring = text.substring((text.length - 3), text.length);
+    		c = mapController.type(typeSubstring) + " - " + year + " - " + mapController.month(monthSubstring);
+    	}
+    	
+    	return c;
+    },
 
-        var windowResultTab = Ext.getCmp(tab);
-        windowResultTab.setTitle(tabTitle);
-        windowResultTab.tab.show();
-        windowResultTab.update(msg, true);
-
+    formatChartNumber: function (number2) {
+    	number = parseFloat(number2);
+    	finalNumber = Math.round(10*number)/10;
+    	return finalNumber;
     },
     onClickActive: function () {
+        var panelviewport = Ext.ComponentQuery.query('viewport panel[itemId=p1]')[0];
+        var chartWindow = mapController.getView('chart.Window').create();
+        chartWindow.animateTarget = 'viewwindinfo';
+        chartWindow.html='<br><br><br><br><center><b>To view the chart:</b><br><br><br>Click on the desired pixel on the map to view the data value of the checked layer or layers in format of a chart.</center><br><br><b> Note:</b> the chart is built on the fly and only one location at a time can be shown.';
+        chartWindow.show();
+        panelviewport.add(chartWindow);
+        Ext.WindowManager.register(chartWindow);
+        Ext.WindowManager.bringToFront(chartWindow);
+        
+        
+        
+    	if (map.getControlsBy('type','WMSGetFeatureInfo')[0]){
+            var existingControl=map.getControlsBy('type','WMSGetFeatureInfo')[0];
+            existingControl.activate();
+    	}else{
+            info = new OpenLayers.Control.WMSGetFeatureInfo({
+                url: 'http://atlas.masdar.ac.ae:8080/geoserver/wms',
+                title: 'Identify features by clicking',
+                queryVisible: true,
+                infoFormat: "text/html",
+                maxFeatures: 12,
+                eventListeners: {
+                    getfeatureinfo: function(event) {
+    	            	var dom = $('<table>').html(event.text);
+    	            	var afeatureInfo = {};
+    	            	var data = [];            	
+    	            	$('table:has(.dataLayer)', dom).each(function(){          		
+    	            	    var $tbl = $(this);
+    	            	    var section = $tbl.find('.dataLayer').text();
+    	            	    var obj = [];
+    	            	    var $structure = $tbl.find('.dataHeaders');
+    	            	    var structure = $structure.find('th').map(function(){return $(this).text().toLowerCase();});
+    	            	    var $datarows= $structure.nextAll('tr');
+    	            	    var flag = 0;
+    	            	    $datarows.each(function(i){
+    	            	        obj[i] = {};
+    	            	        $(this).find('td').each(function(index,element){
+    	            	        		obj[i][structure[index]] = $(element).text();            	            
+    		            	            id=structure[index];
+    		            	            id2=mapController.chartDate(id);
+    		            	            x = mapController.verifyChartLayers(structure[index]);
+    		            	            value=mapController.formatChartNumber($(element).text());
+    		            	            data.push([id2, value]);
+    	            	        });
+    	            	    });
+    	            	    afeatureInfo[section] = obj;
+    	            	});
+    	            	var json={
+    	                        chart: {
+    	                            type: 'column'
+    	                        },
+    	                        title: {
+    	                            text: 'Irradiation Values Chart'
+    	                        },
+    	                        subtitle: {
+    	                            text: 'Source: <a href="http://recrema.masdar.ac.ae" target="_blank">Recrema</a><br>(max allowed columns: 12)'
+    	                        },
+    	                        xAxis: {
+    	                            type: 'category',
+    	                            labels: {
+    	                                rotation: -50,
+    	                                style: {
+    	                                    fontSize: '11px',
+    	                                    fontFamily: 'Verdana, sans-serif'
+    	                                }
+    	                            }
+    	                        },
+    	                        yAxis: {
+    	                            min: 0,
+    	                            title: {
+    	                                text: '<p>Irradiation kWh/m<sup>2</sup></p>'
+    	                            }
+    	                        },
+    							credits: {
+    					  		    enabled: false
+    						  	},
+    	                        legend: {
+    	                            enabled: false
+    	                        },
+    	                        tooltip: {
+    	                            pointFormat: '<b>{point.y:.1f} kWh/m<sup>2</sup></b>',
+    	                        },
+    	                        series: [{
+    	                            name: 'Population',
+    	                            data:data.reverse(),
+    	                            dataLabels: {
+    	                                enabled: true,
+    	                                rotation: -90,
+    	                                color: '#FFFFFF',
+    	                                align: 'right',
+    	                                x: 4,
+    	                                y: 10,
+    	                                style: {
+    	                                    fontSize: '13px',
+    	                                    fontFamily: 'Verdana, sans-serif',
+    	                                    textShadow: '0 0 3px black'
+    	                                }
+    	                            }
+    	                        }]
+    	                    };
+    	            	mapController.onChartActivate(json,'panel-1078-innerCt');
+                    }
+                }
+            });
+            info.type='WMSGetFeatureInfo';
+            map.addControl(info);
+            
+            info.activate();
+    	}
+
         if (typeof markers == "undefined") {
+            
             markers = new OpenLayers.Layer.Markers('Markers'); // warning this variable should not be global see line 35
             map.addLayer(markers);
             map.events.register('click', map, mapController.handleMapClick);
@@ -248,34 +457,54 @@ Ext.define('AM.controller.Map', {
             map.events.register('click', map, mapController.handleMapClick);
         }
 
-        mapController.openWinInfoForm(clickLat, clickLon);
+//        mapController.openWinInfoForm(clickLat, clickLon);
+        //Here i can put something to tell the user to click in the map!
     },
 
     onClickDeactivate: function () {
+    	if(Ext.ComponentQuery.query('[itemId=chartWindow]')[0]){
+    		var chartWindow=Ext.ComponentQuery.query('[itemId=chartWindow]')[0];
+    		chartWindow.close();
+    	}
         var windowInfo = Ext.ComponentQuery.query('windinfo')[0];
         windowInfo.hide();
         markers.setVisibility(false);
         map.events.unregister('click', map, mapController.handleMapClick);
+        var existingControl=map.getControlsBy('type','WMSGetFeatureInfo')[0];
+        existingControl.deactivate();
     },
     onChartActivate: function (json, targetId) {
 
-        var panelviewport = Ext.ComponentQuery.query('viewport panel[itemId=p1]')[0];
-        var chartWindow = mapController.getView('chart.Window').create();
-        chartWindow.animateTarget = targetId;
-        chartWindow.show();
-        panelviewport.add(chartWindow);
-        Ext.WindowManager.register(chartWindow);
-        Ext.WindowManager.bringToFront(chartWindow);
+//        var panelviewport = Ext.ComponentQuery.query('viewport panel[itemId=p1]')[0];
+//        var chartWindow = mapController.getView('chart.Window').create();
+//        chartWindow.animateTarget = targetId;
+//        chartWindow.show();
+//        panelviewport.add(chartWindow);
+//        Ext.WindowManager.register(chartWindow);
+//        Ext.WindowManager.bringToFront(chartWindow);
+    	var chartWindow=Ext.ComponentQuery.query('[itemId=chartWindow]')[0];
+    	chartWindow.update('');
+    	//no caso de ja la estar um grafico tenho de remover o que ja existe
+    	if (Ext.ComponentQuery.query('[itemId=chart1]')[0]){
+    		var existingChart=Ext.ComponentQuery.query('[itemId=chart1]')[0];
+    		existingChart.destroy();
+    	}
         chartWindow.add([{
             xtype: 'highchart',
             itemId: 'chart1',
             initAnimAfterLoad: false,
             chartConfig: json
         }]);
+        chartWindow.on("move",function() { 
+        	if (Ext.ComponentQuery.query('[itemId=chart1]')[0]){
+        		var existingChart=Ext.ComponentQuery.query('[itemId=chart1]')[0];
+        		existingChart.draw();
+        	}
+        	}, this);
+        
 
     },
     handleMeasurements: function (event) {
-    	a=event;
         var geometry = event.geometry;
         var units = event.units;
         var order = event.order;
@@ -522,98 +751,6 @@ Ext.define('AM.controller.Map', {
     },
 
     onLaunch: function () {
-        //    	var size=map.getSize();
-        //    	mapwidth=size.w;
-        //        map.addControl(
-        //                new OpenLayers.Control.MousePosition({
-        //                    prefix: '<div style=\"color: black; font-size: 12px;padding-left: 40%; width:'+mapwidth+'px; align: center;\">Coordinates: ',
-        //                    suffix: '</div>',
-        //                    separator: ' | ',
-        //                    numDigits: 3,
-        //                    emptyString: 'Mouse is not over map.'
-        //                })
-        //            );
-        //    	console.log(Ext.get('tabpanel0'));
-        //Code to upload layers to the map (try to do this from a json string)
-
-        //        map.addControl(new OpenLayers.Control.LayerSwitcher());
-
-
-        //        
-        //        /**
-        //         * Adding all the wind layers to the map
-        //         */
-        //        
-        //        var geoserverUrl="http://atlas.masdar.ac.ae:8080/geoserver/wind/wms";
-        //        var format = 'image/png';
-        //    	var heights = ["10", "50", "80", "100", "120"];
-        //    	var month_numbers = ["01", "02" , "03" , "04" , "05" , "06" , "07" , "08" , "09" , "10" , "11" , "12"];
-        //    	var year_start = 2003, year_end = 2012;
-        //    	var layer_prefix = "uaewindmap_moswindspeed_";//to use in the WMS request due to the layer name in the geoserver
-        //    	var layer_text_prefix = "Wind Speed";
-        //    	var workspace = "wind";
-        //    	var temp = {};
-        //    	var layers_configurations = {buffer: 0, displayOutsideMaxExtent: true, ratio: 1, opacity: 1, visibility: false};
-        //        
-        //        function get_month_name(month){
-        //    		month_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-        //    		return month_names[parseInt(month)-1];
-        //    	};
-        //
-        //    	//routine to create month and year maps' variables, add them to the temp array along with the respective WMS requests
-        //    	for (var i=0; i<heights.length; i++){
-        //    		for (year = year_start; year <= year_end; year++){
-        //    			layer_title = layer_text_prefix + " " + year + " at " + heights[i] + "m " + " - Masdar Institute";
-        //    			layer_name = layer_prefix + heights[i] + 'm_' + year;
-        //    			temp[layer_name] = new OpenLayers.Layer.WMS(layer_title, geoserverUrl, {Layers: workspace + ":" + layer_name, format: format, tiled: true, transparent: true, tilesOrigin : map.maxExtent.left + ',' + map.maxExtent.bottom}, layers_configurations);
-        //    			map.addLayers([temp[layer_name]]);
-        ////    			chartLayers.push(temp[layer_name]);
-        //    			for (var ii=0; ii<month_numbers.length; ii++){
-        //    				month_name = get_month_name(month_numbers[ii]);
-        //    				layer_title = layer_text_prefix + " " + month_name + " " + year + " at " + heights[i] + "m " + " - Masdar Institute";
-        //    				layer_name = layer_prefix + heights[i] + 'm_' + year + month_numbers[ii];
-        //    				temp[layer_name] = new OpenLayers.Layer.WMS(layer_title, geoserverUrl, {Layers: workspace + ":" + layer_name, format: format, tiled: true, transparent: true, tilesOrigin : map.maxExtent.left + ',' + map.maxExtent.bottom}, layers_configurations);
-        //    				map.addLayers([temp[layer_name]]);
-        ////    				chartLayers.push(temp[layer_name]);
-        //    			};
-        //    		};
-        //    	};
-        //    	
-        //    	//routine to create overall maps' variables, add them to the temp array along with the respective WMS requests
-        //    	for (var i=0; i<heights.length; i++) {
-        //    		layer_title = layer_text_prefix + " at " + heights[i] + "m Annual" + " - Masdar Institute";
-        //    		layer_name = layer_prefix + heights[i] + 'm_' + "Annual";
-        //    		temp[layer_name] = new OpenLayers.Layer.WMS(layer_title, geoserverUrl, {Layers: workspace + ":" + layer_name, format: format, tiled: true, transparent: true, tilesOrigin : map.maxExtent.left + ',' + map.maxExtent.bottom}, layers_configurations);
-        //    		map.addLayers([temp[layer_name]]);
-        ////    		chartLayers.push(temp[layer_name]);
-        //    		for (var ii=0; ii<month_numbers.length; ii++) {
-        //    			month_name = get_month_name(month_numbers[ii]);
-        //    			layer_title = layer_text_prefix + " at " + heights[i] + "m " + month_name + " - Masdar Institute";
-        //    			layer_name = layer_prefix + heights[i] + 'm_' + month_numbers[ii];
-        //    			temp[layer_name] = new OpenLayers.Layer.WMS(layer_title, geoserverUrl, {Layers: workspace + ":" + layer_name, format: format, tiled: true, transparent: true, tilesOrigin : map.maxExtent.left + ',' + map.maxExtent.bottom}, layers_configurations);
-        //    			map.addLayers([temp[layer_name]]);
-        ////    			chartLayers.push(temp[layer_name]);
-        //    		};
-        //    	};
-
-
-        ////        console.log(Ext.ComponentQuery.query('#layertreepanel'));
-        //        Ext.ComponentQuery.query('#layertreepanel > #tabpanel0').items = yearLayerTree;//[{
-        ////	        	title: "Overall Maps",
-        //////	        	id: 'tabpanel0'
-        ////	        	items: yearLayerTree
-        //////	        },{
-        //////	        	title: "Year Maps",
-        ////////	        	id: 'tabpanel1'
-        ////////	        	items: monthLayerTree
-        //////	        },{
-        //////	        	title: "Month Maps",
-        ////////	        	id: 'tabpanel2'
-        ////////	        	items: heightLayerTree
-        ////	        }];
-        //        Ext.ComponentQuery.query('#layertreepanel > #tabpanel0').doLayout;
-
-        // for dev purpose
         ctrl = this;
     }
 });

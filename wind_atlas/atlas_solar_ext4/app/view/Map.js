@@ -48,6 +48,7 @@ Ext.define('AM.view.Map', {
     	    zoom: 7
     	});
 
+    	
     	map.events.register("updatesize", map, function() { 
         	var controlMouse = map.getControlsBy("CLASS_NAME", "OpenLayers.Control.MousePosition")[0];
         	map.removeControl(controlMouse);
@@ -70,6 +71,7 @@ Ext.define('AM.view.Map', {
         tbarItems.push(Ext.create('Ext.button.Button', {
             toggleGroup: "info",
             itemId:'viewwindinfo',
+            id:'viewwindinfo',
             enableToggle: true,
         	cls:'wind_info',
         	pressedCls: 'wind_info_pressed',
@@ -85,7 +87,7 @@ Ext.define('AM.view.Map', {
             	}
             },
             disabled: false,
-            tooltip: "Click to get coordinates"
+            tooltip: "Click to get statistics chart"
         }));
         tbarItems.push(
                 Ext.create('Ext.button.Button', {
@@ -240,7 +242,7 @@ Ext.define('AM.view.Map', {
                         ]
             },
             disabled: false,
-            tooltip: "Click to get coordinates"
+            tooltip: "Click to add/remove context layers"
         }));
         
      // Help action
@@ -304,6 +306,7 @@ Ext.define('AM.view.Map', {
     		for (var e=0; e<anualMapyears.length; e++){
     			var layer_title = paramsDescription[i]+' '+anualMapyears[e];
     			var layer_name = anualMapyears[e] + yearly_prefix + params2[i];
+    			layers_configurations.servername=workspace + ":" +layer_name;
     			temp[layer_name] = new OpenLayers.Layer.WMS(layer_title, geoserverUrl, {Layers: workspace + ":" + layer_name, format: format, tiled: true, transparent: true, tilesOrigin : map.maxExtent.left + ',' + map.maxExtent.bottom}, layers_configurations);
     			map.addLayers([temp[layer_name]]);
     		};
@@ -315,6 +318,7 @@ Ext.define('AM.view.Map', {
     			for (var ii=0; ii<month_names2.length; ii++){
     				var layer_title = anualMapyears[e] + "_"+ params22[i]+'_'+ month_names2[ii] ;
     				var layer_name = anualMapyears[e] + "_"+ params22[i]+'_'+ month_names2[ii];
+    				layers_configurations.servername=workspace + ":" +layer_name;
     				temp[layer_name] = new OpenLayers.Layer.WMS(layer_title, geoserverUrl, {Layers: workspace + ":" + layer_name, format: format, tiled: true, transparent: true, tilesOrigin : map.maxExtent.left + ',' + map.maxExtent.bottom}, layers_configurations);
     				map.addLayers([temp[layer_name]]);
     			};

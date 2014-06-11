@@ -83,7 +83,7 @@
  *       <tr> <td>Product B</td> <td>4,325,321</td> <td>Asia</td> <td></td> </tr>
  *    </tbody>
  * </table>
-The series definition for the donut chart should look like this:
+ The series definition for the donut chart should look like this:
  *     series: [{
  *        // Inner pie series
  *        type: 'pie',
@@ -109,161 +109,193 @@ The series definition for the donut chart should look like this:
  * *colorField* option to map the field.
  */
 Ext.define('Chart.ux.Highcharts.PieSerie', {
-	extend : 'Chart.ux.Highcharts.Serie',
-	alternateClassName: [ 'highcharts.pie' ],
-	type : 'pie',
+    extend : 'Chart.ux.Highcharts.Serie',
+    alternateClassName: [ 'highcharts.pie' ],
+    type : 'pie',
 
-  /***
-   * @cfg xField
-   * @hide
-   */
+    /***
+     * @cfg xField
+     * @hide
+     */
 
-  /***
-   * @cfg yField
-   * @hide
-   */
+    /***
+     * @cfg yField
+     * @hide
+     */
 
-  /***
-   * @cfg dataIndex
-   * @hide
-   */
+    /***
+     * @cfg dataIndex
+     * @hide
+     */
 
-	/**
-	 * @cfg {String} categorieField
-   * the field name mapping to store records for pie category data 
-	 */
-	categorieField : null,
+    /**
+     * @cfg {String} categorieField
+     * the field name mapping to store records for pie category data 
+     */
+    categorieField : null,
 
-	/**
-	 * @cfg {Boolean} totalDataField
-   * See above. This is used for producing donut chart. Bascially informs
-   * getData method to take the total sum of dataField as the data point value
-   * for those records with the same matching string in the categorieField.
-	 */
-	totalDataField : false,
+    /**
+     * @cfg {Boolean} totalDataField
+     * See above. This is used for producing donut chart. Bascially informs
+     * getData method to take the total sum of dataField as the data point value
+     * for those records with the same matching string in the categorieField.
+     */
+    totalDataField : false,
 
-	/**
-	 * @cfg {String} dataField
-   * the field name mapping to store records for value data 
-	 */
-	dataField : null,
+    /**
+     * @cfg {String} dataField
+     * the field name mapping to store records for value data 
+     */
+    dataField : null,
 
-	/***
-	 * @cfg {Boolean} useTotals
-   * use the total value of a categorie of all the records as a data point
-	 */
-	useTotals : false,
+    /***
+     * @cfg {Boolean} useTotals
+     * use the total value of a categorie of all the records as a data point
+     */
+    useTotals : false,
 
-  /***
-   * @cfg {Array} columns
-   * a list of category names that match the record fields
-   */
-	columns : [],
+    /***
+     * @cfg {Array} columns
+     * a list of category names that match the record fields
+     */
+    columns : [],
 
-	constructor : function(config) {
-		this.callParent(arguments);
-		if(this.useTotals) {
-			this.columnData = {};
-			var length = this.columns.length;
-			for(var i = 0; i < length; i++) {
-				this.columnData[this.columns[i]] = 100 / length;
-			}
-		}
-	},
+    constructor : function(config) {
+        this.callParent(arguments);
+        if(this.useTotals) {
+            this.columnData = {};
+            var length = this.columns.length;
+            for(var i = 0; i < length; i++) {
+                this.columnData[this.columns[i]] = 100 / length;
+            }
+        }
+    },
 
-	//private
-	addData : function(record) {
-		for(var i = 0; i < this.columns.length; i++) {
-			var c = this.columns[i];
-			this.columnData[c] = this.columnData[c] + record.data[c];
-		}
-	},
+    //private
+    addData : function(record) {
+        for(var i = 0; i < this.columns.length; i++) {
+            var c = this.columns[i];
+            this.columnData[c] = this.columnData[c] + record.data[c];
+        }
+    },
 
-	//private
-	update : function(record) {
-		for(var i = 0; i < this.columns.length; i++) {
-			var c = this.columns[i];
-			if(record.modified[c])
-				this.columnData[c] = this.columnData[c] + record.data[c] - record.modified[c];
-		}
-	},
+    //private
+    update : function(record) {
+        for(var i = 0; i < this.columns.length; i++) {
+            var c = this.columns[i];
+            if(record.modified[c])
+                this.columnData[c] = this.columnData[c] + record.data[c] - record.modified[c];
+        }
+    },
 
-	//private
-	removeData : function(record, index) {
-		for(var i = 0; i < this.columns.length; i++) {
-			var c = this.columns[i];
-			this.columnData[c] = this.columnData[c] - record.data[c];
-		}
-	},
+    //private
+    removeData : function(record, index) {
+        for(var i = 0; i < this.columns.length; i++) {
+            var c = this.columns[i];
+            this.columnData[c] = this.columnData[c] - record.data[c];
+        }
+    },
 
-	//private
-	clear : function() {
-		for(var i = 0; i < this.columns.length; i++) {
-			var c = this.columns[i];
-			this.columnData[c] = 0;
-		}
-	},
+    //private
+    clear : function() {
+        for(var i = 0; i < this.columns.length; i++) {
+            var c = this.columns[i];
+            this.columnData[c] = 0;
+        }
+    },
 
-	/***
-   * As the implementation of pie series is quite different to other series types,
-   * it is not recommended to override this method
-   */
-	getData : function(record, seriesData) {
+    /***
+     * As the implementation of pie series is quite different to other series types,
+     * it is not recommended to override this method
+     */
+    getData : function(record, seriesData) {
 
-		// Summed up the category among the series data
-		if(this.totalDataField) {
-			var found = null;
-			for(var i = 0; i < seriesData.length; i++) {
-				if(seriesData[i].name == record.data[this.categorieField]) {
-					found = i;
-					seriesData[i].y += record.data[this.dataField];
-					break;
-				}
-			}
-			if(found === null) {
-				if (this.colorField && record.data[this.colorField]) {
-					seriesData.push({
-						name: record.data[this.categorieField],
-						y: record.data[this.dataField],
-						color: record.data[this.colorField]
-					});
-				} else {
-					seriesData.push({
-						name: record.data[this.categorieField],
-						y: record.data[this.dataField]
-					});
-				}
-				i = seriesData.length - 1;
-			}
-			return seriesData[i];
-		}
+        var _this = (Chart.ux.Highcharts.sencha.product == 't') ? this.config : this;
 
-		if(this.useTotals) {
-			this.addData(record);
-			return [];
-		}
+        // Summed up the category among the series data
+        if(this.totalDataField) {
+            var found = null;
+            for(var i = 0; i < seriesData.length; i++) {
+                if(seriesData[i].name == record.data[_this.categorieField]) {
+                    found = i;
+                    seriesData[i].y += record.data[_this.dataField];
+                    break;
+                }
+            }
+            if(found === null) {
+                if (this.colorField && record.data[_this.colorField]) {
+                    seriesData.push({
+                        name: record.data[_this.categorieField],
+                        y: record.data[_this.dataField],
+                        color: record.data[_this.colorField],
+                        record: this.bindRecord ? record : null,
+                        events: this.dataEvents
+                    });
+                } else {
+                    seriesData.push({
+                        name: record.data[_this.categorieField],
+                        y: record.data[_this.dataField],
+                        record: this.bindRecord ? record : null,
+                        events: this.dataEvents
+                    });
+                }
+                i = seriesData.length - 1;
+            }
+            return seriesData[i];
+        }
 
-		if (this.colorField && record.data[this.colorField]) {
-			return {
-				name: record.data[this.categorieField],
-				y: record.data[this.dataField],
-				color: record.data[this.colorField]
-			};
-		} else {
-			return {
-				name: record.data[this.categorieField],
-				y: record.data[this.dataField]
-			};
-		}
-	},
+        if(this.useTotals) {
+            this.addData(record);
+            return [];
+        }
 
-	getTotals : function() {
-		var a = new Array();
-		for(var i = 0; i < this.columns.length; i++) {
-			var c = this.columns[i];
-			a.push([c, this.columnData[c]]);
-		}
-		return a;
-	}
+        if (this.colorField && record.data[this.colorField]) {
+            return {
+                name: record.data[_this.categorieField],
+                y: record.data[_this.dataField],
+                color: record.data[_this.colorField],
+                record: this.bindRecord ? record : null,
+                events: this.dataEvents
+            };
+        } else {
+            return {
+                name: record.data[_this.categorieField],
+                y: record.data[_this.dataField],
+                record: this.bindRecord ? record : null,
+                events: this.dataEvents
+            };
+        }
+    },
+
+    getTotals : function() {
+        var a = new Array();
+        for(var i = 0; i < this.columns.length; i++) {
+            var c = this.columns[i];
+            a.push([c, this.columnData[c]]);
+        }
+        return a;
+    },
+
+    /***
+     *  @private
+     *  Build the initial data set if there are data already
+     *  inside the store.
+     */
+    buildInitData:function(items, data) {
+        // Summed up the category among the series data
+        var record;
+        var data = this.config.data = [];
+        if (this.config.totalDataField) {
+            for (var x = 0; x < items.length; x++) {
+                record = items[x];
+                this.getData(record,data);
+            }
+        } else {
+            for (var x = 0; x < items.length; x++) {
+                record = items[x];
+                data.push(this.getData(record));
+            }
+        }
+    }
 
 });
