@@ -1,0 +1,50 @@
+a={
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'Irradiation Values Chart'
+            },
+            subtitle: {
+                text: 'Source: <a href="http://recrema.masdar.ac.ae" target="_blank">Recrema</a>'
+            },
+            xAxis: {
+                type: 'category',
+                labels: {
+                    rotation: -45,
+                    style: {
+                        fontSize: '13px',
+                        fontFamily: 'Verdana, sans-serif'
+                    }
+                }
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: '<p>Irradiation kWh/m<sup>2</sup></p>'
+                }
+            },
+            legend: {
+                enabled: false
+            },
+            tooltip: {
+                pointFormat: '<b>{point.y:.1f} kWh/m<sup>2</sup></b>',
+            },
+            series: [{
+                name: 'Population',
+                data:[["DHI - 2012 - March",92.3],["DHI - 2012 - February",62.2],["DHI - 2012 - January",39.6]],
+                dataLabels: {
+                    enabled: true,
+                    rotation: -90,
+                    color: '#FFFFFF',
+                    align: 'right',
+                    x: 4,
+                    y: 10,
+                    style: {
+                        fontSize: '13px',
+                        fontFamily: 'Verdana, sans-serif',
+                        textShadow: '0 0 3px black'
+                    }
+                }
+            }]
+        }

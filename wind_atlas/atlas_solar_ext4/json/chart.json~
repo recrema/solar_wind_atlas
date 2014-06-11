@@ -1,0 +1,63 @@
+a={
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'Irradiation Values Chart'
+            },
+            subtitle: {
+                text: 'Source: <a href="http://recrema.masdar.ac.ae" target="_blank">Recrema</a>'
+            },
+            xAxis: {
+                type: 'category',
+                labels: {
+                    rotation: -45,
+                    style: {
+                        fontSize: '13px',
+                        fontFamily: 'Verdana, sans-serif'
+                    }
+                }
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: '<p>Irradiation kWh/m<sup>2</sup></p>'
+                }
+            },
+            legend: {
+                enabled: false
+            },
+            tooltip: {
+                pointFormat: '<b>{point.y:.1f} kWh/m<sup>2</sup></b>',
+            },
+            series: [{
+                name: 'Population',
+                data: [
+                    ['Shanghai', 23.7],
+                    ['Lagos', 16,1],
+                    ['Instanbul', 14.2],
+                    ['Karachi', 14.0],
+                    ['Mumbai', 12.5],
+                    ['Moscow', 12.1],
+                    ['São Paulo', 11.8],
+                    ['Beijing', 11.7],
+                    ['Guangzhou', 11.1],
+                    ['Delhi', 11.1],
+                    ['Shenzhen', 10.5],
+                    ['Seoul', 10.4]
+                ],
+                dataLabels: {
+                    enabled: true,
+                    rotation: -90,
+                    color: '#FFFFFF',
+                    align: 'right',
+                    x: 4,
+                    y: 10,
+                    style: {
+                        fontSize: '13px',
+                        fontFamily: 'Verdana, sans-serif',
+                        textShadow: '0 0 3px black'
+                    }
+                }
+            }]
+        }
