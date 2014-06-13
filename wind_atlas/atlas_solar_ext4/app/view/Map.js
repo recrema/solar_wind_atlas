@@ -326,6 +326,7 @@ Ext.define('AM.view.Map', {
     	};
     	
     	//Add the  Context layers
+    	layers_configurations.auxMaps=true;
     	var uae_emirates = new OpenLayers.Layer.WMS("United Arab Emirates Border", geoserverUrl, {Layers: "masdar:uae_emirates",transparent: true, format: format}, layers_configurations);
     	var qatar = new OpenLayers.Layer.WMS("Qatar Border", geoserverUrl, {Layers: "masdar:qatar",transparent: true, format: format}, layers_configurations);
     	var uae_main_roads_from_osm = new OpenLayers.Layer.WMS("UAE main roads", geoserverUrl, {Layers: "wind:uae_main_roads_from_osm", format: format, transparent: true}, layers_configurations);

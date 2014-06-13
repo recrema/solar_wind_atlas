@@ -158,7 +158,7 @@ Ext.define('AM.controller.Layertreepanel',{
 	               handler: function(widget, event) {
 	            	   map.layers.forEach(function(entry) 
 	            		{ 
-	            		   if(entry.visibility && entry.url=='http://atlas.masdar.ac.ae:8080/geoserver/wind/wms') {
+	            		   if(entry.visibility && entry.url=='http://atlas.masdar.ac.ae:8080/geoserver/wind/wms'&& entry.auxMaps!=true) {
 	            			   entry.setVisibility(false);
 	            		   }
 	            	    
@@ -169,7 +169,14 @@ Ext.define('AM.controller.Layertreepanel',{
 					text: '&nbsp;&nbsp;Bring to front',
 					iconCls:"icon_up",
 					handler: function(widget, event) {
+						//raise the layer
 						map.raiseLayer(registo.raw.layer, map.layers.length);
+						//now we need to raise the aux maps like borders and roads above the previous layer
+						var index;
+						var auxmapsnum=map.getLayersBy('auxMaps',true);
+						for (index = 0; index < auxmapsnum.length; ++index) {
+							map.raiseLayer(auxmapsnum[index],map.layers.length);
+						}
 						//if the marker is present we need to put the marker above the layer!
 						if (typeof markers!='undefined'){
 							map.raiseLayer(markers,map.layers.length);

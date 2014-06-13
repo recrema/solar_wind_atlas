@@ -236,10 +236,26 @@ Ext.define('AM.controller.Layertreepanel',{
 				text: '&nbsp;&nbsp;Uncheck All',
 				iconCls:"icon_cross",
 				handler: function(widget, event) {
-					map.layers.forEach(function(entry) 
-							{ 
-						if(entry.visibility && entry.url=='http://atlas.masdar.ac.ae:8080/geoserver/wms') {
+					map.layers.forEach(function(entry){ 
+						if(entry.visibility && entry.url=='http://atlas.masdar.ac.ae:8080/geoserver/wms'&& entry.auxMaps!=true) {
 							entry.setVisibility(false);
+							//Now we need to unchek the the active group nodes because geoext does not do it automaticly
+							var monthlyTree=Ext.ComponentQuery.query('[itemId=overallLayerTree]')[0];
+							monthlyTree.view.store.treeStore.tree.root.childNodes.forEach(function(entry) {
+								entry.childNodes.forEach(function(entry) {
+									if(entry.data.checked){
+										entry.set('checked',false)
+									}
+								});
+							});
+							var yearlyTree=Ext.ComponentQuery.query('[itemId=yearLayerTree]')[0];
+							yearlyTree.view.store.treeStore.tree.root.childNodes.forEach(function(entry) {
+
+									if(entry.data.checked){
+										entry.set('checked',false)
+									}
+
+							});
 						}
 
 							});
@@ -249,8 +265,15 @@ Ext.define('AM.controller.Layertreepanel',{
 				text: '&nbsp;&nbsp;Bring to front',
 				iconCls:"icon_up",
 				handler: function(widget, event) {
+					//raise the layer
 					map.raiseLayer(registo.raw.layer, map.layers.length);
-					//if the marker is present we need to put the marker above the layer!
+					//now we need to raise the aux maps like borders and roads above the previous layer
+					var index;
+					var auxmapsnum=map.getLayersBy('auxMaps',true);
+					for (index = 0; index < auxmapsnum.length; ++index) {
+						map.raiseLayer(auxmapsnum[index],map.layers.length);
+					}
+					//if the marker is present we need to put the marker above all!
 					if (typeof markers!='undefined'){
 						map.raiseLayer(markers,map.layers.length);
 					}
@@ -309,7 +332,7 @@ Ext.define('AM.controller.Layertreepanel',{
 					};
 					maps_month.push(a);
 				};
-				params_by_year.push({text: params22[ii], leaf: false, children: maps_month});
+				params_by_year.push({text: params22[ii],checked: false, leaf: false, children: maps_month});
 			};
 			year_maps_tree.push({text: anualMapyears[i], leaf: false, children: params_by_year});
 		};
@@ -323,6 +346,7 @@ Ext.define('AM.controller.Layertreepanel',{
 			store: overallStore,
 			rootVisible: false,
 			lines: false,
+			itemId:'overallLayerTree',
 			//to have tha ability to drag and drop the layers in tree
 			viewConfig : {
 		        enableDD : true,
@@ -334,12 +358,36 @@ Ext.define('AM.controller.Layertreepanel',{
 			border: false,
 			listeners: {
 				checkchange:function(node, checked){
+					
 					if(!checked){
 						Ext.WindowManager.each(function(w) { 
 							if(w.itemID=='legendWindow') {
 								w.close();}
 						});
 					}
+////////////////////In case of the group can be checked/unchecked the layers nedd to check/uncheck automaticly			
+					node.cascadeBy(function(n){n.set('checked', checked);} );
+					if(checked){
+						if (!node.parentNode.parentNode.isLast()){
+							node.parentNode.set('checked', checked);
+						}
+					}
+					if(!checked){
+						if (!node.parentNode.parentNode.isLast()){
+//							console.log(node.parentNode.childNodes);
+							var hasActiveChilds=false;
+							node.parentNode.childNodes.forEach(function(entry) {
+								if(entry.data.checked){
+									hasActiveChilds=true
+								}
+							});
+							if(!hasActiveChilds){
+								node.parentNode.set('checked', checked);
+							}
+						}
+					}
+					
+///////////////////////////////////////////////////////////////////////
 
 				}
 			}
@@ -369,7 +417,7 @@ Ext.define('AM.controller.Layertreepanel',{
 				};
 				maps_year_height.push(a);
 			};
-			year_maps_tree_by_year.push({text: mapyear.toString(), leaf: false, children: maps_year_height});
+			year_maps_tree_by_year.push({text: mapyear.toString(),checked: false, leaf: false, children: maps_year_height});
 		};
 
 		var yearStore = Ext.create('Ext.data.TreeStore', {
@@ -381,6 +429,7 @@ Ext.define('AM.controller.Layertreepanel',{
 			store: yearStore,
 			rootVisible: false,
 			lines: false,
+			itemId:'yearLayerTree',
 			//to have tha ability to drag and drop the layers in tree
 			viewConfig : {
 		        enableDD : true,
@@ -398,7 +447,25 @@ Ext.define('AM.controller.Layertreepanel',{
 								w.close();}
 						});
 					}
-
+////////////////////In case of the group can be checked/unchecked the layers nedd to check/uncheck automaticly			
+					node.cascadeBy(function(n){n.set('checked', checked);} );
+					if(checked){
+							node.parentNode.set('checked', checked);
+					}
+					if(!checked){
+						if (!node.parentNode.isLast()){
+							var hasActiveChilds=false;
+							node.parentNode.childNodes.forEach(function(entry) {
+								if(entry.data.checked){
+									hasActiveChilds=true
+								}
+							});
+							if(!hasActiveChilds){
+								node.parentNode.set('checked', checked);
+							}
+						}
+					}
+///////////////////////////////////////////////////////////////////////
 				}
 			}
 		});
