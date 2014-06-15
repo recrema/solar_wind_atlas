@@ -225,7 +225,7 @@ Ext.define('AM.controller.Map', {
     	                            text: 'Irradiation Values Chart'
     	                        },
     	                        subtitle: {
-    	                            text: 'Source: <a href="http://recrema.masdar.ac.ae" target="_blank">Recrema</a><br>(max allowed columns: 12)'
+    	                            text: 'Source: <a href="http://recrema.masdar.ac.ae" target="_blank">Recrema - Masdar Institute</a><br>(max allowed columns: 12)'
     	                        },
     	                        xAxis: {
     	                            type: 'category',

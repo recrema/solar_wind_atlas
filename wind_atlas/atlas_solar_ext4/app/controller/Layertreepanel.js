@@ -328,7 +328,8 @@ Ext.define('AM.controller.Layertreepanel',{
 					var a = {
 							plugins: [{ptype: 'gx_layer'}], 
 							layer: map2.getLayersByName(layer_title)[0],
-							text: layer_title2
+							text: layer_title2,
+							qtip: "Right click for context menu"
 					};
 					maps_month.push(a);
 				};
@@ -413,7 +414,8 @@ Ext.define('AM.controller.Layertreepanel',{
 				a = {
 						plugins: [{ptype: 'gx_layer'}], 
 						layer: map2.getLayersByName(layer_title)[0],
-						text: layer_title2
+						text: layer_title2,
+						qtip: "Right click for context menu"
 				};
 				maps_year_height.push(a);
 			};

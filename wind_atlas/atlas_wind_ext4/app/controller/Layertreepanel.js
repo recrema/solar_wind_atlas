@@ -235,7 +235,8 @@ Ext.define('AM.controller.Layertreepanel',{
     			var a = {
     					plugins: [{ptype: 'gx_layer'}], 
     					layer: map2.getLayersByName(layer_title)[0],
-    					text: layer_title2
+    					text: layer_title2,
+    					qtip: "Right click for context menu"
     			};
     			maps_month_height.push(a);
     		};
@@ -252,7 +253,8 @@ Ext.define('AM.controller.Layertreepanel',{
 			a = {
 					plugins: [{ptype: 'gx_layer'}], 
 					layer: map2.getLayersByName(layer_title)[0],
-					text: layer_title2
+					text: layer_title2,
+					qtip: "Right click for context menu"
 			};
         	overall_maps_tree_by_height.push(a);
         	v = a
@@ -266,7 +268,8 @@ Ext.define('AM.controller.Layertreepanel',{
     			a = {
     					plugins: [{ptype: 'gx_layer'}], 
     					layer: map2.getLayersByName(layer_title)[0],
-    					text: layer_title2
+    					text: layer_title2,
+    					qtip: "Right click for context menu"
     			};
         		maps_height_month.push(a);
         	};
@@ -314,7 +317,8 @@ Ext.define('AM.controller.Layertreepanel',{
     			a = {
     					plugins: [{ptype: 'gx_layer'}], 
     					layer: map2.getLayersByName(layer_title)[0],
-    					text: layer_title2
+    					text: layer_title2,
+    					qtip: "Right click for context menu"
     			};
     			maps_year_height.push(a);
     		};
@@ -331,7 +335,8 @@ Ext.define('AM.controller.Layertreepanel',{
     			a = {
     					plugins: [{ptype: 'gx_layer'}], 
     					layer: map2.getLayersByName(layer_title)[0],
-    					text: layer_title2
+    					text: layer_title2,
+    					qtip: "Right click for context menu"
     			};
     			maps_height_year.push(a);
         	};
@@ -383,7 +388,8 @@ Ext.define('AM.controller.Layertreepanel',{
         			a = {
         					plugins: [{ptype: 'gx_layer'}], 
         					layer: map2.getLayersByName(layer_title)[0],
-        					text:layer_title2
+        					text:layer_title2,
+        					qtip: "Right click for context menu"
         			};
     				maps_year_by_month_height.push(a);
         		};
@@ -399,7 +405,8 @@ Ext.define('AM.controller.Layertreepanel',{
         			a = {
         					plugins: [{ptype: 'gx_layer'}], 
         					layer: map2.getLayersByName(layer_title)[0],
-        					text: layer_title2
+        					text: layer_title2,
+        					qtip: "Right click for context menu"
         			};
     				maps_year_by_height_month.push(a);
         		};
@@ -424,7 +431,8 @@ Ext.define('AM.controller.Layertreepanel',{
         			a = {
         					plugins: [{ptype: 'gx_layer'}], 
         					layer: map2.getLayersByName(layer_title)[0],
-        					text: layer_title2
+        					text: layer_title2,
+        					qtip: "Right click for context menu"
         			};
     				maps_month_by_year_height.push(a);
         		};
@@ -439,7 +447,8 @@ Ext.define('AM.controller.Layertreepanel',{
         			a = {
         					plugins: [{ptype: 'gx_layer'}], 
         					layer: map2.getLayersByName(layer_title)[0],
-        					text: layer_title2
+        					text: layer_title2,
+        					qtip: "Right click for context menu"
         			};
     				maps_month_by_height_year.push(a);
         		};
@@ -464,7 +473,8 @@ Ext.define('AM.controller.Layertreepanel',{
         			a = {
         					plugins: [{ptype: 'gx_layer'}], 
         					layer: map2.getLayersByName(layer_title)[0],
-        					text: layer_title2
+        					text: layer_title2,
+        					qtip: "Right click for context menu"
         			};
     				maps_month_by_year_height.push(a);
         		};
@@ -480,7 +490,8 @@ Ext.define('AM.controller.Layertreepanel',{
         			a = {
         					plugins: [{ptype: 'gx_layer'}], 
         					layer: map2.getLayersByName(layer_title)[0],
-        					text: layer_title2
+        					text: layer_title2,
+        					qtip: "Right click for context menu"
         			};
     				maps_height_by_month_year.push(a);
         		};
