@@ -78,6 +78,8 @@ Ext.define('AM.view.Map', {
         	cls:'wind_info',
         	pressedCls: 'wind_info_pressed',
             group: "info",
+            tooltip: "Data statistics, analysis and report",
+            disabled: false,
             toggleHandler: function(button, state) {
             	if (state) {
             		mapView.fireEvent('initCheckLogin');
@@ -87,10 +89,9 @@ Ext.define('AM.view.Map', {
             	else {
             		mapView.fireEvent('onClickDeactivate');
             	}
-            },
-            disabled: false,
-            tooltip: "Click to get coordinates"
-        }));
+            }
+            }
+        ));
         tbarItems.push(
                 Ext.create('Ext.button.Button', {
                 	cls:'toolbox_button',
@@ -180,6 +181,19 @@ Ext.define('AM.view.Map', {
                                         	}
                                         	else{
                                             	var layer=map.getLayersByName('UAE power plants')[0];
+                                            	layer.setVisibility(false);
+                                        	}
+                                           }
+                                    }, {
+                                        text: 'UAE OSM Transmission Network',
+                                        checked: false,
+                                        checkHandler: function (checked) {
+                                        	if (checked.checked){
+                                            	var layer=map.getLayersByName('UAE OSM transmission network')[0];
+                                            	layer.setVisibility(true);
+                                        	}
+                                        	else{
+                                            	var layer=map.getLayersByName('UAE OSM transmission network')[0];
                                             	layer.setVisibility(false);
                                         	}
                                            }
@@ -336,7 +350,8 @@ Ext.define('AM.view.Map', {
     	var uae_main_roads_from_osm = new OpenLayers.Layer.WMS("UAE main roads", geoserverUrl, {Layers: "wind:uae_main_roads_from_osm", format: format, transparent: true}, layers_configurations);
     	var uae_main_transmission_network = new OpenLayers.Layer.WMS("UAE transmission network", geoserverUrl, {Layers: "wind:uae_main_transmission_network", format: format, transparent: true}, layers_configurations);
     	var uae_power_plants = new OpenLayers.Layer.WMS("UAE power plants", geoserverUrl, {Layers: "wind:uae_power_plants", format: format, transparent: true}, layers_configurations);
-    	map.addLayers([uae_emirates,uae_main_roads_from_osm,uae_main_transmission_network,uae_power_plants]);
+    	var uae_osm_transmission_network = new OpenLayers.Layer.WMS("UAE OSM transmission network", geoserverUrl, {Layers: "uae_osm_power", format: format, transparent: true}, layers_configurations);
+    	map.addLayers([uae_emirates,uae_main_roads_from_osm,uae_main_transmission_network,uae_power_plants,uae_osm_transmission_network]);
         
         Ext.apply(this, {
             map: map,

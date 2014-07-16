@@ -83,7 +83,7 @@ Ext.define('AM.controller.Layertreepanel',{
 						modal:false,
 						resizable: false,
 						animateTarget:item,
-						height: 400,
+						height: 600,
 						width: 1100,
 						layout: {
 							type: 'fit',
@@ -111,12 +111,12 @@ Ext.define('AM.controller.Layertreepanel',{
 					if (typeof Ext.data.StoreManager.lookup('layersStore')=='undefined'){
 					       var store = Ext.create('GeoExt.data.WmsCapabilitiesStore', {
 					            storeId: 'layersStore',
-					            url:'http://localhost/cgi-bin/proxy.cgi?url=http%3A%2F%2Fatlas.masdar.ac.ae%3A8080%2Fgeoserver%2Fwms%3Fservice%3Dwms%26request%3DGetCapabilities%26namespace%3Dmasdar',
+					            url:'../../../cgi-bin/proxy.cgi?url=http%3A%2F%2Fatlas.masdar.ac.ae%3A8080%2Fgeoserver%2Fwms%3Fservice%3Dwms%26request%3DGetCapabilities%26namespace%3Dmasdar',
 					            autoLoad: true
 					        });
 					       store.on('load', function(records, operation, success) {
 					    	   var valor=store.findRecord('name', registo.raw.layer.servername);
-						        infowindow.add([{html:'<b>'+valor.raw.metadata.title+'</b></br><pre style="white-space: pre-wrap;">'+valor.raw.metadata.abstract+'</pre>'}]);
+						        infowindow.add([{html:'<pre style="white-space: pre-wrap;"><b>Layer Title: </br></br></b>'+valor.raw.metadata.title+'</br></br></br><b>Layer abstract: </b></br></br>'+valor.raw.metadata.abstract+'</br></br></br><b>To access this layers from a desktop GIS as a WMS:</b></br></br>WMS URL: <b>http://atlas.masdar.ac.ae:8080/geoserver/wind/wms</b></br></br>This layer name:<b> '+valor.raw.metadata.name.split(":")[1]+'</pre>'}]);
 						        infowindow.setLoading(false);
 					    	 });
 						
@@ -124,7 +124,7 @@ Ext.define('AM.controller.Layertreepanel',{
 						// if the store exists, no need to load the data again
 						var store=Ext.data.StoreManager.lookup('layersStore');
 						var valor=store.findRecord('name', registo.raw.layer.servername);
-				        infowindow.add([{html:'<b>'+valor.raw.metadata.title+'</b></br><pre style="white-space: pre-wrap;">'+valor.raw.metadata.abstract+'</pre>'}]);
+				        infowindow.add([{html:'<pre style="white-space: pre-wrap;"><b>Layer Title: </br></br></b>'+valor.raw.metadata.title+'</br></br></br><b>Layer abstract: </b></br></br>'+valor.raw.metadata.abstract+'</br></br></br><b>To access this layers from a desktop GIS as a WMS:</b></br></br>WMS URL: <b>http://atlas.masdar.ac.ae:8080/geoserver/wind/wms</b></br></br>This layer name:<b> '+valor.raw.metadata.name.split(":")[1]+'</pre>'}]);
 				        infowindow.setLoading(false);
 					}
 				}
@@ -313,29 +313,64 @@ Ext.define('AM.controller.Layertreepanel',{
 		var params22 = ["DHI", "GHI", "DNI"];
 		var paramsDescription = ["Diffuse Horizontal Irradiation", "Global Horizontal Irradiation", "Direct Normal Irradiation"];
 		var anualMapyears = ["2012", "2011" , "2010" , "2009" , "2008" , "2006"];
+		var anualMapyears2 = ["2012", "2011" , "2010" , "2009" , "2008" , "2006", "2005" , "2004"];//this is because the year 2004 and 2005 that it starts on april
 		var month_names2 = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+		var month_names2004 = ["apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];//this is because the year 2004 that it starts on april
 		var month_names22 = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-
+		var month_names22004 = ["April", "May", "June", "July", "August", "September", "October", "November", "December"];//this is because the year 2004 that it starts on april
+		
+		var month_names2005 = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep"];//this is because the year 2004 that it starts on april
+		var month_names22005 = ["January", "February", "March", "April", "May", "June", "July", "August", "September"];//this is because the year 2005
 		//Monthly Maps Tree
 		var year_maps_tree = [];
-		for (var i=0; i<anualMapyears.length; i++){
+		for (var i=0; i<anualMapyears2.length; i++){
 			var params_by_year = [];
 			for (var ii=0; ii<params22.length; ii++){
 				var maps_month = [];
-				for (var iii=0; iii<month_names2.length; iii++) {
-					var layer_title = anualMapyears[i]+'_'+params22[ii]+'_'+month_names2[iii];
-					var layer_title2 =month_names22[iii];
-					var a = {
-							plugins: [{ptype: 'gx_layer'}], 
-							layer: map2.getLayersByName(layer_title)[0],
-							text: layer_title2,
-							qtip: "Right click for context menu"
+				if(i==7){ //this if is because the year 2004 that it starts on april
+					for (var iii=0; iii<month_names2004.length; iii++) {
+						var layer_title = anualMapyears2[i]+'_'+params22[ii]+'_'+month_names2004[iii];
+						var layer_title2 =month_names22004[iii];
+						var a = {
+								plugins: [{ptype: 'gx_layer'}], 
+								layer: map2.getLayersByName(layer_title)[0],
+								text: layer_title2,
+								qtip: "Right click for context menu"
+						};
+						maps_month.push(a);
 					};
-					maps_month.push(a);
-				};
-				params_by_year.push({text: params22[ii],checked: false, leaf: false, children: maps_month});
+					params_by_year.push({text: params22[ii],checked: false, leaf: false, children: maps_month});
+				}else if(i==6){
+					for (var iii=0; iii<month_names2005.length; iii++) {
+						var layer_title = anualMapyears2[i]+'_'+params22[ii]+'_'+month_names2005[iii];
+						var layer_title2 =month_names22005[iii];
+						var a = {
+								plugins: [{ptype: 'gx_layer'}], 
+								layer: map2.getLayersByName(layer_title)[0],
+								text: layer_title2,
+								qtip: "Right click for context menu"
+						};
+						maps_month.push(a);
+					};
+					params_by_year.push({text: params22[ii],checked: false, leaf: false, children: maps_month});
+					
+				}else{
+					for (var iii=0; iii<month_names2.length; iii++) {
+						var layer_title = anualMapyears2[i]+'_'+params22[ii]+'_'+month_names2[iii];
+						var layer_title2 =month_names22[iii];
+						var a = {
+								plugins: [{ptype: 'gx_layer'}], 
+								layer: map2.getLayersByName(layer_title)[0],
+								text: layer_title2,
+								qtip: "Right click for context menu"
+						};
+						maps_month.push(a);
+					};
+					params_by_year.push({text: params22[ii],checked: false, leaf: false, children: maps_month});
+				}
+
 			};
-			year_maps_tree.push({text: anualMapyears[i], leaf: false, children: params_by_year});
+			year_maps_tree.push({text: anualMapyears2[i], leaf: false, children: params_by_year});
 		};
 
 		var overallStore = Ext.create('Ext.data.TreeStore', {
@@ -369,12 +404,15 @@ Ext.define('AM.controller.Layertreepanel',{
 ////////////////////In case of the group can be checked/unchecked the layers nedd to check/uncheck automaticly			
 					node.cascadeBy(function(n){n.set('checked', checked);} );
 					if(checked){
-						if (!node.parentNode.parentNode.isLast()){
+						if(node.isExpandable()){
+							node.expand();
+						}
+						if (!node.parentNode.parentNode.isLast() || !node.parentNode.parentNode.isFirst() ){
 							node.parentNode.set('checked', checked);
 						}
 					}
 					if(!checked){
-						if (!node.parentNode.parentNode.isLast()){
+						if (!node.parentNode.parentNode.isLast() || !node.parentNode.parentNode.isFirst() ){
 //							console.log(node.parentNode.childNodes);
 							var hasActiveChilds=false;
 							node.parentNode.childNodes.forEach(function(entry) {
@@ -387,7 +425,6 @@ Ext.define('AM.controller.Layertreepanel',{
 							}
 						}
 					}
-					
 ///////////////////////////////////////////////////////////////////////
 
 				}
@@ -452,10 +489,13 @@ Ext.define('AM.controller.Layertreepanel',{
 ////////////////////In case of the group can be checked/unchecked the layers nedd to check/uncheck automaticly			
 					node.cascadeBy(function(n){n.set('checked', checked);} );
 					if(checked){
+						if(node.isExpandable()){
+							node.expand();
+						}
 							node.parentNode.set('checked', checked);
 					}
 					if(!checked){
-						if (!node.parentNode.isLast()){
+						if (!node.parentNode.isLast() || !node.parentNode.isFirst()){
 							var hasActiveChilds=false;
 							node.parentNode.childNodes.forEach(function(entry) {
 								if(entry.data.checked){

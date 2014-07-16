@@ -85,6 +85,12 @@ Ext.define('AM.controller.LoginController', {
 	                }
 	        		
 	        );
+	        
+	        statInfo=Ext.ComponentQuery.query('headerMain [itemId=statInfoFlash]')[0];
+	        if(statInfo){
+	        	statInfo.destroy();
+	        }
+
         }
     },
 

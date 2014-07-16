@@ -122,6 +122,7 @@ padding-right:50px;
 }
 .solarAtlas{
     color: grey;
+    position: relative;
     border-color: rgba(0,0,0,0);
     background-color: rgba(0,0,0,0);
     font-size: 13px;
@@ -325,6 +326,38 @@ top:150px;
 	border-color:#ffffff;
 	width:25px
 }
+
+.windAtlas{
+    color: #7D7D7D;
+    background-image: url(../icons/arrow.png);
+	background-repeat: no-repeat;
+	background-position:0px 15px;
+    border-color: rgba(0,0,0,0);
+    background-color: rgba(0,0,0,0);
+    text-shadow: 0px 0px 2px #FFFFFF, 0px 5px 10px #FFFFFF;
+    font-size: 15px;
+    font-weight: bold;
+    padding-top: 3px;
+    padding-left: 22px;
+
+}
+
+.windAtlas2{
+    color: #7D7D7D;
+    background-image: url(../icons/arrow.png);
+	background-repeat: no-repeat;
+	background-position:-50px 15px;
+    border-color: rgba(0,0,0,0);
+    background-color: rgba(0,0,0,0);
+    text-shadow: 0px 0px 2px #FFFFFF, 0px 5px 10px #FFFFFF;
+    font-size: 15px;
+    font-weight: bold;
+    padding-top: 3px;
+    padding-left: 22px;
+
+}
+
+
 .x-customOverStyle {
     background-color: rgba(0, 255, 0, 0.2);
     background-image: none;

@@ -32,21 +32,31 @@ Ext.define('AM.view.HeaderMain', {
                             itemId:'solarAtlas',
                             height: 25,
                         	border: true,
-                        	margin: '60 0 0 0',
+                        	margin: '40 0 0 0',
                         	baseCls: "solarAtlas"
                     	});
-                      var a=Ext.ComponentQuery.query('headerMain')[0];
+                      var a=Ext.ComponentQuery.query('headerMain [itemId=middlePanel]')[0];
                        a.add(solar);
                 },
 			    mouseout: function(a,e) {
-			    	var panel=Ext.ComponentQuery.query('headerMain')[0];
+			    	var panel=Ext.ComponentQuery.query('headerMain [itemId=middlePanel]')[0];
 			    	var solar=Ext.ComponentQuery.query('headerMain [itemId=solarAtlas]')[0];
 			    	panel.remove(solar);
 			    	
 			    	
 			 }
             }
+    },{
+        width: 560,
+        height: 126,
+        layout: {
+            type: 'absolute'
+        },
+        itemId:'middlePanel',
+    	margin: '5 0 0 5',
+    	baseCls: "solarAtlas"
     }
+    
     ],
     
     initComponent: function() {

@@ -107,20 +107,20 @@ Ext.define('AM.controller.Layertreepanel',{
 							if (typeof Ext.data.StoreManager.lookup('layersStore')=='undefined'){
 							       var store = Ext.create('GeoExt.data.WmsCapabilitiesStore', {
 							            storeId: 'layersStore',
-							            url:'http://localhost/cgi-bin/proxy.cgi?url=http%3A%2F%2Fatlas.masdar.ac.ae%3A8080%2Fgeoserver%2Fwms%3Fservice%3Dwms%26request%3DGetCapabilities%26namespace%3Dwind',
+							            url:'../../../cgi-bin/proxy.cgi?url=http%3A%2F%2Fatlas.masdar.ac.ae%3A8080%2Fgeoserver%2Fwms%3Fservice%3Dwms%26request%3DGetCapabilities%26namespace%3Dwind',
 							            autoLoad: true
 							        });
 							       store.on('load', function(records, operation, success) {
-								        var valor=store.findRecord('name', registo.raw.layer.servername);
-								        infowindow.add([{html:'<b> Layer Title: </br></br></b>'+valor.raw.metadata.title+'</br><pre style="white-space: pre-wrap;">'+valor.raw.metadata.abstract+'</pre>'}]);
+								        valor=store.findRecord('name', registo.raw.layer.servername);
+								        infowindow.add([{html:'<pre style="white-space: pre-wrap;"><b>Layer Title: </br></br></b>'+valor.raw.metadata.title+'</br>'+valor.raw.metadata.abstract+'</br></br><b>To access this layers from a desktop GIS as a WMS:</b></br></br>WMS URL: <b>http://atlas.masdar.ac.ae:8080/geoserver/wind/wms</b></br></br>This layer name:<b> '+valor.raw.metadata.name.split(":")[1]+'</pre>'}]);
 								        infowindow.setLoading(false);
 							    	 });
 								
 							}else {
 								// if the store exists, no need to load the data again
 								var store=Ext.data.StoreManager.lookup('layersStore');
-								var valor=store.findRecord('name', registo.raw.layer.servername);
-						        infowindow.add([{html:'<b> Layer Title: </br></br></b>'+valor.raw.metadata.title+'</br><pre style="white-space: pre-wrap;">'+valor.raw.metadata.abstract+'</pre>'}]);
+								valor=store.findRecord('name', registo.raw.layer.servername);
+						        infowindow.add([{html:'<pre style="white-space: pre-wrap;"><b>Layer Title: </br></br></b>'+valor.raw.metadata.title+'</br>'+valor.raw.metadata.abstract+'</br></br><b>To access this layers from a desktop GIS as a WMS:</b></br></br>WMS URL: <b>http://atlas.masdar.ac.ae:8080/geoserver/wind/wms</b></br></br>This layer name:<b> '+valor.raw.metadata.name.split(":")[1]+'</pre>'}]);
 						        infowindow.setLoading(false);
 							}
 		               }

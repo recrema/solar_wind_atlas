@@ -12,7 +12,7 @@ Ext.define('AM.view.WindinfoResult', {
         	  items: [
        {
 			id:'windinfoResultTab1',
-            title: 'Warning',
+            title: 'Info',
             autoScroll: true,
 //            html : 'A message or html with images to help the user how to use the form.',
             contentEl:'windinfoform',

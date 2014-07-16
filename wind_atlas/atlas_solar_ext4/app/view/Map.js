@@ -182,6 +182,19 @@ Ext.define('AM.view.Map', {
                                         	}
                                            }
                                     }, {
+                                        text: 'UAE OSM Transmission Network',
+                                        checked: false,
+                                        checkHandler: function (checked) {
+                                        	if (checked.checked){
+                                            	var layer=map.getLayersByName('UAE OSM transmission network')[0];
+                                            	layer.setVisibility(true);
+                                        	}
+                                        	else{
+                                            	var layer=map.getLayersByName('UAE OSM transmission network')[0];
+                                            	layer.setVisibility(false);
+                                        	}
+                                           }
+                                    }, {
                                         text: 'Qatar Border',
                                         checked: false,
                                         cls: 'layermenu_tool',
@@ -295,8 +308,11 @@ Ext.define('AM.view.Map', {
         var params22 = ["DHI", "GHI", "DNI"];
         var paramsDescription = ["Diffuse Horizontal Irradiation", "Global Horizontal Irradiation", "Direct Normal Irradiation"];
         var anualMapyears = ["2006", "2008" , "2009" , "2010" , "2011" , "2012"];
+        var anualMapyears2 = ["2004", "2005" ,"2006", "2008" , "2009" , "2010" , "2011" , "2012"];
         var workspace = "masdar";
         var month_names2 = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+        var month_names2004 = ["apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];//this is because the year 2004 that it starts on april
+        var month_names2005 = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep"];//this is because the year 2004 that it starts on april
     	var temp = {};
     	var layers_configurations = {buffer: 0, displayOutsideMaxExtent: true, ratio: 1, opacity: 1, visibility: false};
         
@@ -313,15 +329,35 @@ Ext.define('AM.view.Map', {
     	};
     	
     	//routine to create solar month maps' variables, add them to the temp array along with the respective WMS requests
-    	for (var e=0; e<anualMapyears.length; e++){
+    	for (var e=0; e<anualMapyears2.length; e++){
     		for (var i=0; i<params22.length; i++){
-    			for (var ii=0; ii<month_names2.length; ii++){
-    				var layer_title = anualMapyears[e] + "_"+ params22[i]+'_'+ month_names2[ii] ;
-    				var layer_name = anualMapyears[e] + "_"+ params22[i]+'_'+ month_names2[ii];
-    				layers_configurations.servername=workspace + ":" +layer_name;
-    				temp[layer_name] = new OpenLayers.Layer.WMS(layer_title, geoserverUrl, {Layers: workspace + ":" + layer_name, format: format, tiled: true, transparent: true, tilesOrigin : map.maxExtent.left + ',' + map.maxExtent.bottom}, layers_configurations);
-    				map.addLayers([temp[layer_name]]);
-    			};
+    			if(e==0){//this is because the year 2004 that it starts on april
+        			for (var ii=0; ii<month_names2004.length; ii++){
+        				var layer_title = anualMapyears2[e] + "_"+ params22[i]+'_'+ month_names2004[ii] ;
+        				var layer_name = anualMapyears2[e] + "_"+ params22[i]+'_'+ month_names2004[ii];
+        				layers_configurations.servername=workspace + ":" +layer_name;
+        				temp[layer_name] = new OpenLayers.Layer.WMS(layer_title, geoserverUrl, {Layers: workspace + ":" + layer_name, format: format, tiled: true, transparent: true, tilesOrigin : map.maxExtent.left + ',' + map.maxExtent.bottom}, layers_configurations);
+        				map.addLayers([temp[layer_name]]);
+        			};
+    			} else if(e==1){//this is because the year 2004 that it starts on april
+        			for (var ii=0; ii<month_names2005.length; ii++){
+        				var layer_title = anualMapyears2[e] + "_"+ params22[i]+'_'+ month_names2005[ii] ;
+        				var layer_name = anualMapyears2[e] + "_"+ params22[i]+'_'+ month_names2005[ii];
+        				layers_configurations.servername=workspace + ":" +layer_name;
+        				temp[layer_name] = new OpenLayers.Layer.WMS(layer_title, geoserverUrl, {Layers: workspace + ":" + layer_name, format: format, tiled: true, transparent: true, tilesOrigin : map.maxExtent.left + ',' + map.maxExtent.bottom}, layers_configurations);
+        				map.addLayers([temp[layer_name]]);
+        			};
+    			} else{
+        			for (var ii=0; ii<month_names2.length; ii++){
+        				var layer_title = anualMapyears2[e] + "_"+ params22[i]+'_'+ month_names2[ii] ;
+        				var layer_name = anualMapyears2[e] + "_"+ params22[i]+'_'+ month_names2[ii];
+        				layers_configurations.servername=workspace + ":" +layer_name;
+        				temp[layer_name] = new OpenLayers.Layer.WMS(layer_title, geoserverUrl, {Layers: workspace + ":" + layer_name, format: format, tiled: true, transparent: true, tilesOrigin : map.maxExtent.left + ',' + map.maxExtent.bottom}, layers_configurations);
+        				map.addLayers([temp[layer_name]]);
+        			};
+
+    			}
+
     		};
     	};
     	
@@ -332,7 +368,8 @@ Ext.define('AM.view.Map', {
     	var uae_main_roads_from_osm = new OpenLayers.Layer.WMS("UAE main roads", geoserverUrl, {Layers: "wind:uae_main_roads_from_osm", format: format, transparent: true}, layers_configurations);
     	var uae_main_transmission_network = new OpenLayers.Layer.WMS("UAE transmission network", geoserverUrl, {Layers: "wind:uae_main_transmission_network", format: format, transparent: true}, layers_configurations);
     	var uae_power_plants = new OpenLayers.Layer.WMS("UAE power plants", geoserverUrl, {Layers: "wind:uae_power_plants", format: format, transparent: true}, layers_configurations);
-    	map.addLayers([uae_emirates,uae_main_roads_from_osm,uae_main_transmission_network,uae_power_plants,qatar]);
+    	var uae_osm_transmission_network = new OpenLayers.Layer.WMS("UAE OSM transmission network", geoserverUrl, {Layers: "uae_osm_power", format: format, transparent: true}, layers_configurations);
+    	map.addLayers([uae_emirates,uae_main_roads_from_osm,uae_main_transmission_network,uae_power_plants,qatar,uae_osm_transmission_network]);
         
         Ext.apply(this, {
             map: map,

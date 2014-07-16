@@ -13,6 +13,7 @@ Ext.define('AM.controller.Map', {
         mapController = this;
         this.control({
             'mappanel': {
+            	'afterlayout':this.onMapPanelAfterLayout,
                 'beforerender': this.onMapPanelBeforeRender,
                 'onClickActive': this.onClickActive,
                 'onClickDeactivate': this.onClickDeactivate,
@@ -39,6 +40,48 @@ Ext.define('AM.controller.Map', {
         // for dev purpose
         map = mapPanel.map;
     },
+    
+    onMapPanelAfterLayout: function (mapPanel, options) {
+    	
+    	//add the flashing statistics panel
+    	mapController.statisticsFlashPanel();
+   },
+   
+   statisticsFlashPanel: function () {
+ 
+	   		if(Ext.ComponentQuery.query('[itemId=statInfoFlash]')[0]){
+	   			var statInfo=Ext.ComponentQuery.query('[itemId=statInfoFlash]')[0];
+	    	   	     var a=Ext.ComponentQuery.query('headerMain [itemId=middlePanel]')[0];
+	    	   	     var windButton=Ext.ComponentQuery.query('[itemId=viewwindinfo]')[0];
+	    	   	     var x=windButton.getX();
+	    	   	      statInfo.setX(x+15);
+	    	   	      statInfo.setY(90);
+	   		}else {
+	   	       var statInfo=Ext.create('Ext.panel.Panel', {
+	   	   	    html: 'Data statistics, analysis and report',
+	   	        width: 350,
+	   	        itemId:'statInfoFlash',
+	   	        height: 40,
+	   	       	border: true,
+	   	       	baseCls: "windAtlas"
+	   	   	});
+	   	     var a=Ext.ComponentQuery.query('headerMain [itemId=middlePanel]')[0];
+	   	     var windButton=Ext.ComponentQuery.query('[itemId=viewwindinfo]')[0];
+	   	     var x=windButton.getX();
+	   	      a.add(statInfo);
+	   	      statInfo.setX(x+15);
+	   	      statInfo.setY(90);
+	   	      setTimeout(function(){statInfo.setVisible(false)},2000);
+	   	      setTimeout(function(){statInfo.setVisible(true)},2500);
+	   	      setTimeout(function(){statInfo.setVisible(false)},3000);
+	   	      setTimeout(function(){statInfo.setVisible(true)},3500);
+	   	      setTimeout(function(){
+	   		    	var panel=Ext.ComponentQuery.query('headerMain [itemId=middlePanel]')[0];
+	   		    	var statInfo=Ext.ComponentQuery.query('headerMain [itemId=statInfoFlash]')[0];
+	   		    	panel.remove(statInfo);
+	   	      }, 10000);
+	   		}
+  },
 
     handleMapClick: function (e) {
 
@@ -49,7 +92,6 @@ Ext.define('AM.controller.Map', {
         // get the latitude and longitude after a click
         clickLon = Math.round(lonlat.lon * 100000) / 100000;
         clickLat = Math.round(lonlat.lat * 100000) / 100000;
-
 
         var size = new OpenLayers.Size(40, 40);
         //         var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
@@ -77,7 +119,10 @@ Ext.define('AM.controller.Map', {
         var windowInfoForm = Ext.ComponentQuery.query('windinfoForm')[0];
 
         if (!Ext.ComponentQuery.query('windinfoForm textfield[itemId=f1]')[0]) {
-
+            if (clickLat && clickLon){
+            	clickLat=clickLat.toFixed(3);
+            	clickLon=clickLon.toFixed(3);
+            }
            var field1 = Ext.create('Ext.form.field.Text', {
                 itemId: 'f1',
                 fieldLabel: 'Latitude',
@@ -217,6 +262,10 @@ Ext.define('AM.controller.Map', {
                 }
             });
         } else {
+            if (clickLat && clickLon){
+            	clickLat=clickLat.toFixed(3);
+            	clickLon=clickLon.toFixed(3);
+            }
             var lat = Ext.ComponentQuery.query('windinfoForm textfield[itemId=f1]')[0];
             lat.setValue(clickLat);
             var long = Ext.ComponentQuery.query('windinfoForm textfield[itemId=f2]')[0];
