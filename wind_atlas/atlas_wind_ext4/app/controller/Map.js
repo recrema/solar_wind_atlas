@@ -32,19 +32,47 @@ Ext.define('AM.controller.Map', {
     },
 
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  	onstar: function() {
+ 
+  		mapController.loading = 0;
+		var layer=new OpenLayers.Layer.Vector("imgLayer2", {visibility:false,
+    	    attribution: "<img src='resources/images/loading.gif' style='position: fixed;z-index: 20000;right: "+map.getSize().w/2+"px; top: "+map.getSize().h/2+"px'/>" //  ajustar a imagem em funcao do ecra!
+    	});
+		map.addLayer(layer);
+		for (var src in map.layers) {
+			var lyr = map.layers[src];
+			lyr.events.register('loadstart', lyr, function(){mapController.onup( 1)});
+			lyr.events.register('loadend',   lyr, function(){mapController.onup(-1)});
+		}
+	},
 
+        onup: function(num) {
+        	mapController.loading += num;
+        	var waitLayer=map.getLayersByName('imgLayer2')[0];
+		if (mapController.loading > 0) {
+			map.setLayerIndex(waitLayer,map.getNumLayers());
+			waitLayer.setVisibility(true);
 
+		} else {
+			mapController.loading = 0;
+			waitLayer.setVisibility(false);
+		}
+	},
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     onMapPanelBeforeRender: function (mapPanel, options) {
 
 
         // for dev purpose
         map = mapPanel.map;
+
     },
     
     onMapPanelAfterLayout: function (mapPanel, options) {
     	
     	//add the flashing statistics panel
     	mapController.statisticsFlashPanel();
+//    	mapController.onstar();
    },
    
    statisticsFlashPanel: function () {
@@ -664,5 +692,6 @@ Ext.define('AM.controller.Map', {
 
         // for dev purpose
         ctrl = this;
+        mapController.onstar();
     }
 });
