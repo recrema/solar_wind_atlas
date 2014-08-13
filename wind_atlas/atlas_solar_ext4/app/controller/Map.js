@@ -220,6 +220,23 @@ Ext.define('AM.controller.Map', {
                 maxFeatures: 12,
                 eventListeners: {
                     getfeatureinfo: function(event) {
+                    	
+                    	var layerTree= Ext.ComponentQuery.query('[itemId=overallLayerTree]')[0];
+                    	var count=0;
+                    	layerTree.getRootNode().cascadeBy(function(){
+    						if ((typeof this.data.checked=='boolean') && this.data.checked && this.data.layer!="" ){
+    							count++;
+    						}
+    			            });
+                    	if (count > 12) {
+                    		var chartWindow = Ext.ComponentQuery.query('[itemId=chartWindow]')[0];
+                    		var existingChart=Ext.ComponentQuery.query('[itemId=chart1]')[0];
+                    		if(existingChart){
+                        		existingChart.destroy();
+                    		}
+                    		chartWindow.update('<div style="font-family:verdana;color:grey;"><center><h2>Warning</h2><h3><br>You have more than 12 active layers.</h3><br>Please deactivate some layers and then click on the location again! This chart can only be activated with a maximum of 12 active layers</center><br><br><b></div>');
+                    		return;
+                    	}
     	            	var dom = $('<table>').html(event.text);
     	            	var afeatureInfo = {};
     	            	var data = [];            	
@@ -252,7 +269,7 @@ Ext.define('AM.controller.Map', {
     	                            text: 'Irradiation Values Chart'
     	                        },
     	                        subtitle: {
-    	                            text: 'Source: <a href="http://recrema.masdar.ac.ae" target="_blank">Recrema - Masdar Institute</a><br>(max allowed columns: 12)'
+    	                            text: 'Source: <a href="http://recrema.masdar.ac.ae" target="_blank">Recrema - Masdar Institute</a>'
     	                        },
     	                        xAxis: {
     	                            type: 'category',
@@ -302,6 +319,7 @@ Ext.define('AM.controller.Map', {
                 }
             });
             info.type='WMSGetFeatureInfo';
+            
             map.addControl(info);
             
             info.activate();

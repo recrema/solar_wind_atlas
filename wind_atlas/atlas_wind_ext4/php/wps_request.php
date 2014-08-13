@@ -20,6 +20,90 @@ function delOldFiles() // delete all the files older that 1 day
 // 	return $a;
 }
 
+function generateMap($pointLatitude,$pointLongitude,$xSize,$ySize,$dpiFactor)
+{
+	$oMap = ms_newMapObj("");
+	$oMap->setSize($xSize*$dpiFactor,$ySize*$dpiFactor);
+	$oMap->setExtent(51,23,57,26);
+
+	// Create a map symbol, used as a brush pattern
+	// for drawing map features (lines, points, etc.)
+	$nSymbolId = ms_newSymbolObj($oMap, "circle");
+	$oSymbol = $oMap->getsymbolobjectbyid($nSymbolId);
+	$oSymbol->set("type", MS_SYMBOL_ELLIPSE);
+	$oSymbol->set("filled", MS_TRUE);
+	$aPoints[0] = 1;
+	$aPoints[1] = 1;
+	$oSymbol->setpoints($aPoints);
+
+	// Create a ICON map symbol, used as a brush patter2n
+	// for drawing map features (lines, points, etc.)
+	$nSymbolId2 = ms_newSymbolObj($oMap, "icon");
+	$oSymbol2 = $oMap->getsymbolobjectbyid($nSymbolId2);
+	$oSymbol2->set("type", MS_SYMBOL_SVG);
+	$oSymbol2->setImagePath("../resources/icons/icon1.svg");
+
+
+	// Create a data layer and associate it with the map.
+	// This is the raster layer from wms
+	$oLayerClouds = ms_newLayerObj($oMap);
+	$oLayerClouds->set( "name", "clouds");
+	$oLayerClouds->set( "type", MS_LAYER_RASTER);
+	$oLayerClouds->set( "status", MS_DEFAULT);
+	$oLayerClouds->set( "connection", "http://atlas.masdar.ac.ae:8080/geoserver/wind/wms");
+	$oLayerClouds->setConnectionType(MS_WMS);
+	$oLayerClouds->setMetaData("wms_srs","epsg:4326");
+	$oLayerClouds->setMetaData("wms_name","wind:uae_borders_changed");
+	$oLayerClouds->setMetaData("wms_server_version","1.1.1");
+	$oLayerClouds->setMetaData("wms_format","image/png");
+
+	// Create another layer to hold point locations
+	$oLayerPoints = ms_newLayerObj($oMap);
+	$oLayerPoints->set( "name", "custom_points");
+	$oLayerPoints->set( "type", MS_LAYER_POINT);
+	$oLayerPoints->set( "status", MS_DEFAULT);
+
+	// Open file with coordinates and label text (x,y,label)
+	// :TRICKY: Although we are creating points
+	// we are required to use a line object (newLineObj)
+	// with only one point. I call it a CoordList object
+	// for simplicity since we aren't really drawing a line.
+	$oCoordList = ms_newLineObj();
+	$oPointShape = ms_newShapeObj(MS_SHAPE_POINT);
+	$oCoordList->addXY($pointLongitude,$pointLatitude);
+	$oPointShape->add($oCoordList);
+	$oPointShape->set( "text", chop("Coordinate: ".$pointLatitude.",".$pointLongitude));
+	$oLayerPoints->addFeature($oPointShape);
+
+	// Create a class object to set feature drawing styles.
+	$oMapClass = ms_newClassObj($oLayerPoints);
+
+	// Create a style object defining how to draw features
+	$pointSize=20*$dpiFactor;
+	$offsety=-14*$dpiFactor;
+	$oPointStyle = ms_newStyleObj($oMapClass);
+	$oPointStyle->color->setRGB(250,0,0);
+	$oPointStyle->outlinecolor->setRGB(255,255,255);
+	$oPointStyle->set( "symbolname", "icon");
+	$oPointStyle->set( "size", $pointSize);
+	// add off because of the format of the icon! otherwise the real location will be in the center of the icon
+ 	$oPointStyle->set( "offsety", '-20');
+
+	// 	// Create label settings for drawing text labels
+	// 	$oMap->setFontSet('fonts/fontset.list');
+	// 	$label=new labelObj();
+	// 	$label->set("position", MS_AUTO);
+	// 	$label->set('font', "arial");
+	// 	$label->set('type', MS_TRUETYPE);
+	// 	$label->set('size', 8);
+	// 	$label->color->setRGB(255,0,0);
+	// 	$label->outlinecolor->setRGB(255,255,255);
+	// 	$oMapClass->addlabel( $label);
+
+	// Render the map into an image object
+	$oMapImage = $oMap->draw();
+	return $oMapImage;
+}
 
 require_once('../../lib/fpdf17/fpdf.php');
 require_once('../../lib/FPDI-1.5.1/fpdi.php');
@@ -364,15 +448,15 @@ else {
 	$json3="{
 	        		        chart: {
 	        		            renderTo: 'container',
-	        		            type: 'column'
+	        		            type: 'bar'
 	        		        },
 	
 	        		        title: {
-	        		            text: 'Chart Title',
+	        		            text: 'Mean wind speed at diferent heights',
 								style: {'color': 'grey', 'fontSize': '16px','font-weight':'bold'},
 								margin: 20,
 								align: 'left',
-								x: 155
+								x: 100
 	        		        },
 							credits: {
 					  		    enabled: false
@@ -383,6 +467,7 @@ else {
 	        		        },
 	
 	        		       legend: {
+	        		       enabled: false,
 	        			    	reversed: true,
 	        			    	align: 'right',
 	        			    	verticalAlign: 'top',
@@ -391,8 +476,9 @@ else {
 	        			    },
 	
 	        		        xAxis: {
-	        		          tickmarkPlacement: 'on',
-	        		          categories: ['10m', '50m', '80m','100m','120m']
+                                tickPositions: [1, 3, 5, 8, 12],
+                                tickmarkPlacement: 'on',
+	        		          categories: ['130 m','120 m', '110 m', '100 m','90 m', '80 m','70 m','60 m','50 m','40 m','30 m','20 m','10 m','0 m']
 	        		        },
 	
 	        		        yAxis: {
@@ -405,12 +491,12 @@ else {
 	
 	        			        labels: {
 	        			        	formatter: function () {
-	        			        		return this.value + '%';
+	        			        		return this.value + ' m/s';
 	        			        	}
 	        			        }
 	        		        },
 	        		        tooltip: {
-	        			    	valueSuffix: '%',
+	        			    	valueSuffix: ' m/s',
 	        			    	followPointer: true
 	        			    },
 	
@@ -427,7 +513,7 @@ else {
 	$json3_2="{
 	chart: {
 	renderTo: 'container',
-	type: 'column'
+	type: 'bar'
 	},
 	
 	title: {
@@ -446,8 +532,9 @@ else {
 	},
 	
 	xAxis: {
-	tickmarkPlacement: 'on',
-	categories: ['10m', '50m', '80m','100m','120m'],
+                                tickPositions: [1, 3, 5, 8, 12],
+                                tickmarkPlacement: 'on',
+	        		          categories: ['130 m','120 m', '110 m', '100 m','90 m', '80 m','70 m','60 m','50 m','40 m','30 m','20 m','10 m','0 m'],
 								labels: {
 									style: {
 										color: '#000000'
@@ -468,12 +555,12 @@ else {
 										color: '#000000',
 									},
 	        			        	formatter: function () {
-	        			        		return this.value + '%';
+	        			        		return this.value + ' m/s';
 	        			        	}
 	        			        }
 	},
 	tooltip: {
-	valueSuffix: '%',
+	valueSuffix: ' m/s',
 	followPointer: true
 	},
 	
@@ -544,13 +631,15 @@ else {
 	
 	$output2 = '
 			<br>
+			<textatlas style="color:grey;margin-left:50px;"><b> Mean wind speed at diferent heights</b></textatlas>
 			<br>
-			<a href="javascript:void(0)"><img id="windChart2" src="tmp/chart3'.$uniqueId.'.png" width="160" height="100" onmouseover="bigImg2(this)" onmouseout="normalImg2(this)" onClick="mapController.onChartActivate('.$json3.',\'windChart2\');"></a>';
+			<br>
+			<a href="javascript:void(0)" style="margin-left:90px;"><img id="windChart2" src="tmp/chart3'.$uniqueId.'.png" width="130" height="100" onmouseover="bigImg2(this)" onmouseout="normalImg2(this)" onClick="mapController.onChartActivate('.$json3.',\'windChart2\');"></a>';
 
 	
 	# Open the PDF Template
 	$pdf = new FPDI();
-	$pagecount=$pdf->setSourceFile('../silah.pdf');
+	$pagecount=$pdf->setSourceFile('../silah2.pdf');
 	
 	for ($loop = 1; $loop <= $pagecount; $loop++) {
 		$tplidx = $pdf->importPage($loop);
@@ -565,24 +654,37 @@ else {
 		 * 			PAGE 1
 		* ****************************************/
 		if ($loop == 1){
-			
+					$dpiFactor=3;
+ 					$oMapImage=generateMap($_POST["latitude"],$_POST["longitude"],230,145,$dpiFactor);
+ 					sleep(5); # to give time for the pdf to be written in disk
+ 					$oMapImage->saveImage("../tmp/.$uniqueId.contextMap.png");
+ 					$pdf->Image("../tmp/.$uniqueId.contextMap.png", 0.95*72, 1.85*72, 230, 145);
 					
-					$pdf->Image('../tmp/chart'.$uniqueId.'.png', 0.1*72, 1.9*72, 230, 153);
+					$pdf->Image('../tmp/chart'.$uniqueId.'.png', 0.1*72, 4.5*72, 230, 153);
 					
-					$pdf->Image('../tmp/chart2'.$uniqueId.'.png', 5.3*72, 1.9*72, 230, 153);
-					$pdf->Image('../tmp/chart2'.$uniqueId.'.png', 2.68*72, 1.9*72, 230, 153);
+					$pdf->Image('../tmp/chart2'.$uniqueId.'.png', 5.3*72, 4.5*72, 230, 153);
+					$pdf->Image('../tmp/chart2'.$uniqueId.'.png', 2.68*72, 4.5*72, 230, 153);
 					
-					$pdf->Image('../tmp/chart2'.$uniqueId.'.png', 0.2*72, 4.7*72, 230, 153);
-					$pdf->Image('../tmp/chart2'.$uniqueId.'.png', 2.7*72, 4.7*72, 230, 153);
+					$pdf->Image('../tmp/chart2'.$uniqueId.'.png', 0.2*72, 7.3*72, 230, 153);
+					$pdf->Image('../tmp/chart2'.$uniqueId.'.png', 2.7*72, 7.3*72, 230, 153);
 					
 					$pdf->SetTextColor(0,0,0);
 					$pdf->SetFont('Arial', '', 20);
 					
-					$pdf->SetXY(3.8*72,0.81*72);
+					$pdf->SetXY(5.5*72,1.88*72);
 					$pdf->Cell(1,10,'Lat: '.$_POST["latitude"].' Long: '.$_POST["longitude"]);
 					
-					$pdf->SetXY(3.8*72,1.05*72);
+					$pdf->SetXY(5.5*72,2.23*72);
 					$pdf->Cell(1,10,$_POST["initial_date"].' to '.$_POST["final_date"]);
+					
+					$pdf->SetXY(6.25*72,2.56*72);
+					$pdf->Cell(1,10,date("F j, Y"));
+		}
+		if ($loop == 2){
+				
+				
+			$pdf->Image('../tmp/chart3'.$uniqueId.'.png', 0.8*72, 2.0*72, 230, 153);
+
 		}
 
 	}

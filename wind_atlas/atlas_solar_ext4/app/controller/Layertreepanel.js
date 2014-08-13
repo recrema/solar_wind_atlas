@@ -524,13 +524,31 @@ Ext.define('AM.controller.Layertreepanel',{
 			items: overallLayerTree,
 			overflowY: 'auto',
 			overflowX: false,
-			border: false
+			border: false,
+			listeners: {
+				activate: function() {
+					yearLayerTree.getRootNode().cascadeBy(function(){
+						if (typeof this.data.checked=='boolean'){
+							this.set( 'checked', false );
+						}
+			            });
+				}
+			}
 		},{
 			title: 'Yearly Maps',
 			items: yearLayerTree,
 			overflowY: 'auto',
 			overflowX: false,
-			border: false
+			border: false,
+			listeners: {
+				activate: function() {
+					overallLayerTree.getRootNode().cascadeBy(function(){
+						if (typeof this.data.checked=='boolean'){
+							this.set( 'checked', false );
+						}
+			            });
+				}
+			}
 		}];
 
 		Ext.ComponentQuery.query('layertreepanel')[0].add(layerTree);
