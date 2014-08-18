@@ -80,7 +80,6 @@ Ext.define('AM.view.Map', {
             	if (state) {
             		mapView.fireEvent('initCheckLogin');
             		mapView.fireEvent('onClickActive');
-            		
             	}
             	else {
             		mapView.fireEvent('onClickDeactivate');

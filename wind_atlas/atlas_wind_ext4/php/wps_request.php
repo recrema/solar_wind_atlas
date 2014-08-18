@@ -1,5 +1,6 @@
 <?php
 error_reporting(E_ERROR); // to change here the error reporting E_ALL for all E_ERROR just for errors!
+// set_time_limit (60);
 
 $baseTempFolder='/var/www/recrema_wind_atlas/wind_atlas/atlas_wind_ext4/tmp/'; // full path to temp folder, the same inside the project
 $phantomjsFolder='/var/www/recrema_wind_atlas/wind_atlas/lib/phantomjs/'; // full path to the phantomjs folder, the same inside the project

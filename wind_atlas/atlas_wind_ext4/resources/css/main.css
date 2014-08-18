@@ -296,6 +296,28 @@ top:150px;
 	padding: 0px;
 }
 
+
+.pixelinfo_button .x-btn-inner {
+	background-image: url(../icons/information.png);
+	background-repeat: no-repeat;
+	background-position:7px 0px;
+	border-color:white;
+	background-color:white;
+	color:grey;
+	text-indent: 10px;
+}
+.pixelinfo_button:hover .x-btn-inner {
+	border-color:grey;
+	background-color:grey;
+	color:white;
+}
+.pixelinfo_button{
+	border-color:white;
+	padding: 0px;
+	text-indent: 10px;
+}
+
+
 .login_button {
 	background-image: url(../icons/login.png);
 	background-repeat: no-repeat;

@@ -19,6 +19,7 @@ Ext.define('AM.view.chart.Window', {
 		
         Ext.apply(this, {
         	  items: [{ xtype: 'button',
+        		  itemId: 'chartWindowClose',
 				    style: {
 				        marginTop: '10px',
 				    },

@@ -18,9 +18,8 @@ Ext.define('AM.controller.Map', {
                 'onClickActive': this.onClickActive,
                 'onClickDeactivate': this.onClickDeactivate,
                 'onClickDraw': this.onClickDraw,
-                'offClickDraw': this.offClickDraw
-
-
+                'offClickDraw': this.offClickDraw,
+                'onClickPixel': this.onClickPixel
             },
             'windinfoResult': {
                 'onChartActivate': this.onChartActivate
@@ -30,8 +29,266 @@ Ext.define('AM.controller.Map', {
             }
         }, this);
     },
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    pixelChartGetNames: function (id) {
+        function get_month_name(month){
+    		var month_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    		return month_names[parseInt(month)-1];
+    	};
+    	var arrayId = id.split('_');
+    	var name='';
+    	if (arrayId[3].length==2){
+    		console.log(get_month_name(arrayId[3])+' at '+arrayId[2].split('m')[0]+' m');
+    		name=get_month_name(arrayId[3])+' at '+arrayId[2].split('m')[0]+' m';
+    	}
+    	else if (arrayId[3].length==4){
+    		console.log(arrayId[3]+' at '+arrayId[2].split('m')[0]+' m');
+    		name=arrayId[3]+' at '+arrayId[2].split('m')[0]+' m';
+    	}
+    	else if (arrayId[3].length==6 && !(arrayId[3]=='annual')){
+    		console.log(get_month_name(arrayId[3].substr(4, 2))+ ' '+arrayId[3].substr(0, 4)+' at '+arrayId[2].split('m')[0]+' m');
+    		name=get_month_name(arrayId[3].substr(4, 2))+ ' '+arrayId[3].substr(0, 4)+' at '+arrayId[2].split('m')[0]+' m';
+    	}
+    	else if (arrayId[3]=='annual'){
+    		console.log(arrayId[2].split('m')[0]+' m'+' Annual');
+    		name=arrayId[2].split('m')[0]+' m'+' Annual';
+    	}
+    	
+    	return name;
+    },
+
+    onClickPixel: function () {
+        var panelviewport = Ext.ComponentQuery.query('viewport panel[itemId=p1]')[0];
+        var chartWindow = mapController.getView('chart.Window').create();
+        chartWindow.animateTarget = 'viewwindinfo';
+        chartWindow.html='<div style="font-family:verdana;color:grey;"><center><h3>Wind Speed Values Chart</h3><h4>To view the chart:</h4><br>Click on the desired pixel on the map to view the data value of the checked layer or layers in format of a chart.</center><br><br><b> Note:</b> the chart is built on the fly and only one location at a time can be shown.</div>';
+        chartWindow.modal=false;
+        chartWindow.itemId='pixelChartWindow';
+        chartWindow.remove(Ext.ComponentQuery.query('[itemId=chartWindowClose]')[0]);
+        chartWindow.header=true;
+        chartWindow.draggable=true;
+        chartWindow.on({
+    	    close: mapController.onClickPixelDeactivate
+        });
+        chartWindow.show();
+        panelviewport.add(chartWindow);
+        Ext.WindowManager.register(chartWindow);
+        Ext.WindowManager.bringToFront(chartWindow);
+        
+        
+        
+    	if (map.getControlsBy('type','WMSGetFeatureInfo')[0]){
+            var existingControl=map.getControlsBy('type','WMSGetFeatureInfo')[0];
+            existingControl.activate();
+    	}else{
+    		var layersGetInfo = [];
+    		var layersWMS=map.getLayersByClass("OpenLayers.Layer.WMS");
+    		var index;
+    		for (index = 0; index < layersWMS.length; ++index) {
+    		    if (!layersWMS[index].auxMaps)
+    		    {
+    		    	layersGetInfo.push(layersWMS[index]);
+    		    	}
+    		}
+    		
+            info = new OpenLayers.Control.WMSGetFeatureInfo({
+                url: 'http://atlas.masdar.ac.ae:8080/geoserver/wind/wms',
+                title: 'Identify features by clicking',
+                layers: layersGetInfo,
+                queryVisible: true,
+                infoFormat: "text/html",
+                maxFeatures: 12,
+                eventListeners: {
+                    getfeatureinfo: function(event) {
+                    	var count=0;
+                    	var layersWMS=map.getLayersByClass("OpenLayers.Layer.WMS");
+                    	for(var i=0;i<layersWMS.length;i++)
+                    	{
+                    		if (layersWMS[i].visibility && !layersWMS[i].auxMaps ) {
+                    			count++;
+                    		}
+                    	}
+                    	if (count > 12) {
+                    		var chartWindow = Ext.ComponentQuery.query('[itemId=pixelChartWindow]')[0];
+                    		var existingChart=Ext.ComponentQuery.query('[itemId=chart1]')[0];
+                    		if(existingChart){
+                        		existingChart.destroy();
+                    		}
+                    		chartWindow.update('<div style="font-family:verdana;color:grey;"><center><h2>Warning</h2><h3><br>You have more than 12 active layers.</h3><br>Please deactivate some layers and then click on the location again! This chart can only be activated with a maximum of 12 active layers</center><br><br><b></div>');
+                    		return;
+                    	}
+    	            	var dom = $('<table>').html(event.text);
+    	            	var afeatureInfo = {};
+    	            	var data = [];            	
+    	            	$('table:has(.dataLayer)', dom).each(function(){          		
+    	            	    var $tbl = $(this);
+    	            	    var section = $tbl.find('.dataLayer').text();
+    	            	    var obj = [];
+    	            	    var $structure = $tbl.find('.dataHeaders');
+    	            	    var structure = $structure.find('th').map(function(){return $(this).text().toLowerCase();});
+    	            	    var $datarows= $structure.nextAll('tr');
+    	            	    var flag = 0;
+    	            	    $datarows.each(function(i){
+    	            	        obj[i] = {};
+    	            	        $(this).find('td').each(function(index,element){
+    	            	        		obj[i][structure[index]] = $(element).text();            	            
+    		            	            id=structure[index];
+    		            	            value=mapController.formatChartNumber($(element).text());
+    		            	            data.push([mapController.pixelChartGetNames(id), value]);
+//    		            	            console.log(id);
+//    		            	            mapController.pixelChartGetNames(id);
+    	            	        });
+    	            	    });
+    	            	    afeatureInfo[section] = obj;
+    	            	});
+    	            	var json={
+    	                        chart: {
+    	                            type: 'column'
+    	                        },
+    	                        title: {
+    	                            text: 'Wind Speed Values Chart'
+    	                        },
+    	                        subtitle: {
+    	                            text: 'Source: <a href="http://recrema.masdar.ac.ae" target="_blank">Recrema - Masdar Institute</a>'
+    	                        },
+    	                        xAxis: {
+    	                            type: 'category',
+    	                            labels: {
+    	                                rotation: -50,
+    	                                style: {
+    	                                    fontSize: '11px',
+    	                                    fontFamily: 'Verdana, sans-serif'
+    	                                }
+    	                            }
+    	                        },
+    	                        yAxis: {
+    	                            min: 0,
+    	                            title: {
+    	                                text: '<p> m/s</p>'
+    	                            }
+    	                        },
+    							credits: {
+    					  		    enabled: false
+    						  	},
+    	                        legend: {
+    	                            enabled: false
+    	                        },
+    	                        tooltip: {
+    	                            pointFormat: '<b>{point.y:.1f} m/s</b>',
+    	                        },
+    	                        series: [{
+    	                            name: 'Population',
+    	                            data:data.reverse(),
+    	                            dataLabels: {
+    	                                enabled: true,
+    	                                rotation: -90,
+    	                                color: '#FFFFFF',
+    	                                align: 'right',
+    	                                x: 4,
+    	                                y: 10,
+    	                                style: {
+    	                                    fontSize: '13px',
+    	                                    fontFamily: 'Verdana, sans-serif',
+    	                                    textShadow: '0 0 3px black'
+    	                                }
+    	                            }
+    	                        }]
+    	                    };
+    	            	mapController.onChartPixelActivate(json,'panel-1078-innerCt');
+                    }
+                }
+            });
+            info.type='WMSGetFeatureInfo';
+            
+            map.addControl(info);
+            
+            info.activate();
+    	}
+
+        if (typeof markers == "undefined") {
+            
+            markers = new OpenLayers.Layer.Markers('Markers'); // warning this variable should not be global see line 35
+            map.addLayer(markers);
+            map.events.register('click', map, mapController.handlePixelMapClick);
+            clickLat = null;
+            clickLon = null;
+
+        } else {
+            markers.setVisibility(true);
+            map.events.register('click', map, mapController.handlePixelMapClick);
+        }
+
+//        mapController.openWinInfoForm(clickLat, clickLon);
+        //Here i can put something to tell the user to click in the map!
+    },
+    formatChartNumber: function (number2) {
+    	number = parseFloat(number2);
+    	finalNumber = Math.round(10*number)/10;
+    	return finalNumber;
+    },
+    handlePixelMapClick: function (e) {
+
+        var lonlat = map.getLonLatFromViewPortPx(e.xy);
+        var position = map.getLonLatFromPixel(e.xy);
+        lonlat.transform('EPSG:3857', 'EPSG:4326');
+
+        // get the latitude and longitude after a click
+        clickLon = Math.round(lonlat.lon * 100000) / 100000;
+        clickLat = Math.round(lonlat.lat * 100000) / 100000;
 
 
+        var size = new OpenLayers.Size(40, 40);
+        var icon = new OpenLayers.Icon('resources/images/button.gif', size);
+        var marker = new OpenLayers.Marker(position, icon);
+
+        // Remove all the markers if there is already any.
+        // At the end this will only allow one marker each time.
+        if (markers) {
+            markers.clearMarkers(); // Clear all the existing markers
+            markers.addMarker(marker); // Add the new marker
+        } else {
+            markers.addMarker(marker); // Add a new marker
+        }; 
+    },
+    onClickPixelDeactivate: function () {
+    	var viewwindinfo= Ext.ComponentQuery.query('[itemId=viewwindinfo]')[0];
+    	if (!viewwindinfo.pressed) {
+    		markers.setVisibility(false);
+    	}
+//        markers.setVisibility(false);
+        map.events.unregister('click', map, mapController.handlePixelMapClick);
+        var existingControl=map.getControlsBy('type','WMSGetFeatureInfo')[0];
+        existingControl.deactivate();
+    },
+    onChartPixelActivate: function (json, targetId) {
+
+  	var chartWindow=Ext.ComponentQuery.query('[itemId=pixelChartWindow]')[0];
+  	chartWindow.update('');
+  	//no caso de ja la estar um grafico tenho de remover o que ja existe
+  	if (Ext.ComponentQuery.query('[itemId=chart1]')[0]){
+  		var existingCharts=Ext.ComponentQuery.query('[itemId=chart1]');
+  		existingCharts.forEach(function(entry) {
+  			var existingChart=entry;
+  			existingChart.destroy();
+  		});
+  	}
+      chartWindow.add([{
+          xtype: 'highchart',
+          itemId: 'chart1',
+          initAnimAfterLoad: false,
+          chartConfig: json
+      }]);
+      chartWindow.on("move",function() { 
+      	if (Ext.ComponentQuery.query('[itemId=chart1]')[0]){
+      		var existingChart=Ext.ComponentQuery.query('[itemId=chart1]')[0];
+      		existingChart.draw();
+      	}
+      	}, this);
+      
+
+  },
+    
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   	onstar: function() {
  
@@ -139,7 +396,8 @@ Ext.define('AM.controller.Map', {
         // Changing the latitude and logitude on the form so the data location will change for 
         // all the portlet's available
 
-        mapController.openWinInfoForm(clickLat, clickLon);
+        	mapController.openWinInfoForm(clickLat, clickLon);
+
     },
 
     openWinInfoForm: function (clickLat, clickLon) {
@@ -331,7 +589,10 @@ Ext.define('AM.controller.Map', {
     onClickDeactivate: function () {
         var windowInfo = Ext.ComponentQuery.query('windinfo')[0];
         windowInfo.hide();
-        markers.setVisibility(false);
+        var chartWindow= Ext.ComponentQuery.query('[itemId=pixelChartWindow]')[0];
+        if (typeof chartWindow == "undefined"){
+        	markers.setVisibility(false);
+        }
         map.events.unregister('click', map, mapController.handleMapClick);
     },
     onChartActivate: function (json, targetId) {

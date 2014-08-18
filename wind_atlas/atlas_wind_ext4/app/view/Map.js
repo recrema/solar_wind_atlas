@@ -111,6 +111,18 @@ Ext.define('AM.view.Map', {
                                     },
                                     disabled: false,
                                     tooltip: "Click to measure"
+                                },
+                                {
+                                	xtype:'button',
+                                    text: "Get pixel info",
+                                    id: 'pixelinfoButton',
+
+                                    cls:'pixelinfo_button',
+                                    handler: function(state) {
+                                    	mapView.fireEvent('onClickPixel');
+                                    },
+                                    disabled: false,
+                                    tooltip: "Click to measure"
                                 }
                                 ]
                     	}
@@ -317,10 +329,13 @@ Ext.define('AM.view.Map', {
     			for (var ii=0; ii<month_numbers.length; ii++){
     				var month_name = get_month_name(month_numbers[ii]);
     				layer_title = layer_text_prefix + " " + month_name + " " + year + " at " + heights[i] + "m" ;
+
     				layer_name = layer_prefix + heights[i] + 'm_' + year + month_numbers[ii];
+
     				layers_configurations.servername=workspace + ":" +layer_name;
     				temp[layer_name] = new OpenLayers.Layer.WMS(layer_title, geoserverUrl, {Layers: workspace + ":" + layer_name, format: format, tiled: true, transparent: true, tilesOrigin : map.maxExtent.left + ',' + map.maxExtent.bottom}, layers_configurations);
     				map.addLayers([temp[layer_name]]);
+
     			};
     		};
     	};

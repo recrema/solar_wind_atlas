@@ -231,7 +231,7 @@ Ext.define('AM.controller.Layertreepanel',{
         	for (var ii=0; ii<heights.length; ii++) {
         		
         		var layer_title = layer_text_prefix + " at " + heights[ii] + "m " + month_name;
-        		var layer_title2 = month_name + " at " + heights[ii] + "m ";
+        		var layer_title2 = month_name + " at " + heights[ii] + " m ";
     			var a = {
     					plugins: [{ptype: 'gx_layer'}], 
     					layer: map2.getLayersByName(layer_title)[0],
@@ -249,7 +249,7 @@ Ext.define('AM.controller.Layertreepanel',{
         var overall_maps_tree_by_height_Annual = []; //Special case of Overall annual maps
         for (var i=0; i<heights.length; i++) {
         	layer_title = layer_text_prefix + " at " + heights[i] + "m Annual";
-        	layer_title2 = heights[i] + "m Annual";
+        	layer_title2 = heights[i] + " m Annual";
 			a = {
 					plugins: [{ptype: 'gx_layer'}], 
 					layer: map2.getLayersByName(layer_title)[0],
@@ -264,7 +264,7 @@ Ext.define('AM.controller.Layertreepanel',{
         	for (var ii=0; ii<month_numbers.length; ii++) {
         		month_name = get_month_name(month_numbers[ii]);
         		layer_title = layer_text_prefix + " at " + heights[i] + "m " + month_name;
-        		layer_title2 = month_name + " at " + heights[i] + "m ";
+        		layer_title2 = month_name + " at " + heights[i] + " m ";
     			a = {
     					plugins: [{ptype: 'gx_layer'}], 
     					layer: map2.getLayersByName(layer_title)[0],
@@ -384,7 +384,7 @@ Ext.define('AM.controller.Layertreepanel',{
         		month_name = get_month_name(month_numbers[i]);
         		for (var ii=0; ii<heights.length; ii++) {
         			layer_title=layer_text_prefix+' '+month_name+' '+year+' at '+ heights[ii] + 'm';
-        			layer_title2=month_name+' '+year+' at '+ heights[ii] + 'm';
+        			layer_title2=month_name+' '+year+' at '+ heights[ii] + ' m';
         			a = {
         					plugins: [{ptype: 'gx_layer'}], 
         					layer: map2.getLayersByName(layer_title)[0],
@@ -401,7 +401,7 @@ Ext.define('AM.controller.Layertreepanel',{
         		for (var ii=0; ii<month_numbers.length; ii++) {
         			month_name = get_month_name(month_numbers[ii]);
         			layer_title=layer_text_prefix+' '+month_name+' '+year+' at '+ heights[i] + 'm';
-        			layer_title2=month_name+' '+year+' at '+ heights[i] + 'm';
+        			layer_title2=month_name+' '+year+' at '+ heights[i] + ' m';
         			a = {
         					plugins: [{ptype: 'gx_layer'}], 
         					layer: map2.getLayersByName(layer_title)[0],
@@ -427,7 +427,7 @@ Ext.define('AM.controller.Layertreepanel',{
         		var maps_month_by_year_height = [];
         		for (var ii=0; ii<heights.length; ii++) {
         			layer_title=layer_text_prefix+' '+month_name+' '+year+' at '+ heights[ii] + 'm';
-        			layer_title2=month_name+' '+year+' at '+ heights[ii] + 'm';
+        			layer_title2=month_name+' '+year+' at '+ heights[ii] + ' m';
         			a = {
         					plugins: [{ptype: 'gx_layer'}], 
         					layer: map2.getLayersByName(layer_title)[0],
@@ -443,7 +443,7 @@ Ext.define('AM.controller.Layertreepanel',{
         		var maps_month_by_height_year = [];
         		for (year = year_start; year <= year_end; year++) {
         			layer_title=layer_text_prefix+' '+month_name+' '+year+' at '+ heights[ii] + 'm';
-        			layer_title2=month_name+' '+year+' at '+ heights[ii] + 'm';
+        			layer_title2=month_name+' '+year+' at '+ heights[ii] + ' m';
         			a = {
         					plugins: [{ptype: 'gx_layer'}], 
         					layer: map2.getLayersByName(layer_title)[0],
@@ -469,7 +469,7 @@ Ext.define('AM.controller.Layertreepanel',{
         		for (var ii=0; ii<month_numbers.length; ii++) {
         			month_name = get_month_name(month_numbers[ii]);
         			layer_title=layer_text_prefix+' '+month_name+' '+year+' at '+ heights[i] + 'm';
-        			layer_title2=month_name+' '+year+' at '+ heights[i] + 'm';
+        			layer_title2=month_name+' '+year+' at '+ heights[i] + ' m';
         			a = {
         					plugins: [{ptype: 'gx_layer'}], 
         					layer: map2.getLayersByName(layer_title)[0],
@@ -486,7 +486,7 @@ Ext.define('AM.controller.Layertreepanel',{
         		var maps_height_by_month_year = [];
         		for (year = year_start; year <= year_end; year++) {
         			layer_title=layer_text_prefix+' '+month_name+' '+year+' at '+ heights[i] + 'm';
-        			layer_title2=month_name+' '+year+' at '+ heights[i] + 'm';
+        			layer_title2=month_name+' '+year+' at '+ heights[i] + ' m';
         			a = {
         					plugins: [{ptype: 'gx_layer'}], 
         					layer: map2.getLayersByName(layer_title)[0],
@@ -502,8 +502,7 @@ Ext.define('AM.controller.Layertreepanel',{
     		month_maps_tree_by_height.push({text: heights[i] + " m", leaf: false, children: maps_height_month_year});
         };
         month_maps_tree.push({text: "by Height - Wind Speed", leaf: false, children: month_maps_tree_by_height});
-        
-        
+
         var monthStore = Ext.create('Ext.data.TreeStore', {
         	model: 'GeoExt.data.LayerTreeModel',
         	root: {children: (month_maps_tree)}
@@ -524,7 +523,6 @@ Ext.define('AM.controller.Layertreepanel',{
             border: false,
     	});
 
-        
         // Add Right click contex menu action
         monthLayerTree.on('itemcontextmenu', function(view, record, item, index, event){
 
