@@ -19,6 +19,14 @@ Ext.define('AM.view.Footer', {
         xtype: 'button',
         border: false,
         height: 45,
+        width: 256,
+        cls: "masdar",
+        
+        href : "http://www.masdar.ac.ae/"
+    },{
+        xtype: 'button',
+        border: false,
+        height: 45,
         width: 171,
         cls: "agedi",
         

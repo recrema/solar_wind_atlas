@@ -50,6 +50,7 @@ Ext.define('AM.controller.LoginController', {
         }
         else {
 	        var itemsToolbar=Ext.ComponentQuery.query('mappanel #itemsToolbar')[0];
+	        console.log('meter os butoes!');
 	        itemsToolbar.add(
 	        		{
 	        			xtype:"label",

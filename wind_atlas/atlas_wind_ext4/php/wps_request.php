@@ -1,5 +1,5 @@
 <?php
-error_reporting(E_ERROR); // to change here the error reporting E_ALL for all E_ERROR just for errors!
+error_reporting(E_ALL); // to change here the error reporting E_ALL for all E_ERROR just for errors!
 // set_time_limit (60);
 
 $baseTempFolder='/var/www/recrema_wind_atlas/wind_atlas/atlas_wind_ext4/tmp/'; // full path to temp folder, the same inside the project
@@ -163,11 +163,12 @@ curl_setopt($ch, CURLOPT_POSTFIELDS, "$xml_data");
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 $output = curl_exec($ch); #esta vai ser a linha da resposta do wps que vai traser o json para fazer os graficos
 curl_close($ch);
-//  echo $output;
+
 
 $rawjson=(json_decode($output,true));
 $series1=$rawjson['series1'];
 $series6=$rawjson['series6'];
+$series7=str_replace('None','null',$rawjson['series7']);
 
 if ($series1=== NULL) {
 	$arr = array ('success'=>FALSE,'msg1'=>'An error as occurred in the server! Please come back later.','msg2'=> $output);
@@ -581,6 +582,140 @@ else {
 	exec('phantomjs '.$phantomjsFolder.'highcharts-convert.js -infile '.$baseTempFolder.'chart3'.$uniqueId.'.json -outfile '.$baseTempFolder.'chart3'.$uniqueId.'.png -scale 4 -width 600 -constr Chart', $output1, $return1);
 	unlink('../tmp/chart3'.$uniqueId.'.json');
 	
+	############################################################################################################
+	############################## Last Chart ################################################################
+	$json4="{
+	chart: {
+	renderTo: 'container',
+	type: 'spline'
+	},
+	
+	title: {
+	text: 'Monthly wind speed average values',
+	style: {'color': 'grey', 'fontSize': '16px','font-weight':'bold'},
+	margin: 20,
+	align: 'left',
+	x: 100
+	},
+	credits: {
+	enabled: false
+	},
+	
+	pane: {
+	size: '85%'
+	},
+	
+	legend: {
+	enabled: true,
+	reversed: true,
+	align: 'right',
+	verticalAlign: 'top',
+	y: 100,
+	layout: 'vertical'
+	},
+	
+	xAxis: {
+	categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun','Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+	labels: {
+	               rotation: -45,
+					style: {
+					color: '#808080'
+				}
+	        }
+	},
+	
+	yAxis: {
+            title: {
+                text: 'Wind Speed m/s'
+            },
+            plotLines: [{
+                value: 0,
+                width: 1,
+                color: '#808080'
+            }]
+	},
+	tooltip: {
+	valueSuffix: ' m/s',
+	followPointer: true
+	},
+	
+	series:$series7
+	}";
+	$json4_2="{
+	chart: {
+	renderTo: 'container',
+	type: 'spline'
+	},
+	
+	title: {
+	text: '',
+	style: {'color': 'grey', 'fontSize': '16px','font-weight':'bold'},
+	margin: 20,
+	align: 'left',
+	x: 100
+	},
+	credits: {
+	enabled: false
+	},
+	
+	pane: {
+	size: '85%'
+	},
+	
+	legend: {
+	enabled: false,
+	reversed: true,
+	align: 'right',
+	verticalAlign: 'top',
+	y: 100,
+	layout: 'vertical'
+	},
+	
+	xAxis: {
+	categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun','Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+		labels: {
+					rotation: -45,
+					style: {
+					color: '#000000'
+				}
+	        }
+	},
+	
+	yAxis: {
+            title: {
+                text: 'Wind Speed m/s',
+                style: {
+
+								color: '#000000'
+							},
+            },
+            labels: {
+							style: {
+									color: '#000000',
+							},
+	        			      formatter: function () {
+	        			      return this.value + ' m/s';
+	        			  }
+	        			},
+            plotLines: [{
+                value: 0,
+                width: 1,
+                color: '#000000'
+            }]
+	},
+	tooltip: {
+	valueSuffix: ' m/s',
+	followPointer: true
+	},
+	
+	series:$series7
+	}";
+	
+	
+	file_put_contents('../tmp/chart4'.$uniqueId.'.json',$json4_2);
+	exec('phantomjs '.$phantomjsFolder.'highcharts-convert.js -infile '.$baseTempFolder.'chart4'.$uniqueId.'.json -outfile '.$baseTempFolder.'chart4'.$uniqueId.'.png -scale 4 -width 600 -constr Chart', $output1, $return1);
+	unlink('../tmp/chart4'.$uniqueId.'.json');
+	
 	$script = '
 				<script>
 					function bigImg1(x)
@@ -633,9 +768,12 @@ else {
 	$output2 = '
 			<br>
 			<textatlas style="color:grey;margin-left:50px;"><b> Mean wind speed at diferent heights</b></textatlas>
+			<textatlas style="color:grey;margin-left:50px;"><b> Monthly wind speed average values</b></textatlas>
 			<br>
 			<br>
-			<a href="javascript:void(0)" style="margin-left:90px;"><img id="windChart2" src="tmp/chart3'.$uniqueId.'.png" width="130" height="100" onmouseover="bigImg2(this)" onmouseout="normalImg2(this)" onClick="mapController.onChartActivate('.$json3.',\'windChart2\');"></a>';
+			<a href="javascript:void(0)" style="margin-left:90px;"><img id="windChart2" src="tmp/chart3'.$uniqueId.'.png" width="130" height="100" onmouseover="bigImg2(this)" onmouseout="normalImg2(this)" onClick="mapController.onChartActivate('.$json3.',\'windChart2\');"></a>
+			<a href="javascript:void(0)" style="margin-left:150px;"><img id="windChart4" src="tmp/chart4'.$uniqueId.'.png" width="130" height="100" onmouseover="bigImg2(this)" onmouseout="normalImg2(this)" onClick="mapController.onChartActivate('.$json4.',\'windChart4\');"></a>';
+	
 
 	
 	# Open the PDF Template
@@ -685,6 +823,7 @@ else {
 				
 				
 			$pdf->Image('../tmp/chart3'.$uniqueId.'.png', 0.8*72, 2.0*72, 230, 153);
+			$pdf->Image('../tmp/chart4'.$uniqueId.'.png', 0.8*72, 5.0*72, 270, 173);
 
 		}
 

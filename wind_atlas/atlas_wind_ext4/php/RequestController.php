@@ -35,11 +35,11 @@ if (!$resp->is_valid)
 	$mail->From = $_POST["email"];
 	$mail->FromName = $_POST["name"];
 	$mail->AddAddress('lcalisto@masdar.ac.ae');
-	$mail->AddAddress('jestima@masdar.ac.ae');
+// 	$mail->AddAddress('jestima@masdar.ac.ae');
 	$mail->IsHTML(true);
-	$mail->Subject = 'Recrema Wind Atlas Feedback- ';
+	$mail->Subject = 'Recrema Wind Atlas Request- ';
 	$mail->Subject .= $_POST["summary"];
-	$mail->Body = utf8_decode($_POST["feedback"]);
+	$mail->Body = utf8_decode($_POST["request"]);
 	if (isset($isauth)){
 		$mail->Body .= utf8_decode("<p>&nbsp;</p><p>&nbsp;</p><p>This User is registered in the Atlas, the username is: <b>$user</b> &nbsp;and the group is: <b>$group</b> &nbsp;</p>");
 	}
@@ -52,7 +52,7 @@ if (!$resp->is_valid)
 	$mail->ClearAttachments();
 	if ($sentmail)
 		{
-		$message['msg'] = 'Thank you for your feedback. Your opinion is very important for us.';
+		$message['msg'] = 'Thank you for your request. We will contact you if we need more information or as soon as the report is ready.';
 		$message['success'] = true;
 		}
 	  else

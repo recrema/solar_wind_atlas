@@ -532,17 +532,32 @@ Ext.define('AM.controller.Map', {
                 loginController.initCheckLogin();
                 var form = this.up('form').getForm();
                 if (form.isValid()) {
+                	submitbutton.setDisabled(true);
                     form.submit({
                         success: function (form, action) {
                             Ext.ComponentQuery.query('windinfoResult')[0].setLoading(false);
                             mapController.openWinInfo(action.result.msg1, 'windinfoResultTab1', 'Wind roses');
                             mapController.openWinInfo(action.result.msg2, 'windinfoResultTab2', 'Wind speed charts');
                             mapController.openWinInfo(action.result.msg3, 'windinfoResultTab3', 'Report');
+                            Ext.ComponentQuery.query('windinfoForm button[itemId=windfinfoFormSubmitButton]')[0].setDisabled(false);
                         },
                         failure: function (form, action) {
                             Ext.ComponentQuery.query('windinfoResult')[0].setLoading(false);
-                            mapController.openWinInfo(action.result.msg1, 'windinfoResultTab1', 'Error');
-                            mapController.openWinInfo(action.result.msg2, 'windinfoResultTab2', 'Server Response');
+                            Ext.ComponentQuery.query('windinfoForm button[itemId=windfinfoFormSubmitButton]')[0].setDisabled(false);
+                            if(typeof(action.result)!='undefined'){
+                                mapController.openWinInfo(action.result.msg1, 'windinfoResultTab1', 'Error');
+                                mapController.openWinInfo(action.result.msg2, 'windinfoResultTab2', 'Server Response');
+                                mapController.openWinInfo('', 'windinfoResultTab3', '',true); // hide this tab
+                                if(!action.result.msg2){
+                                	mapController.openWinInfo('', 'windinfoResultTab2', '',true); // hide this tab
+                                }
+                            }
+                            else{
+                                mapController.openWinInfo('No server response! Please try again later!', 'windinfoResultTab1', 'Error');
+                                mapController.openWinInfo('', 'windinfoResultTab2', '',true); // hide this tab
+                                mapController.openWinInfo('', 'windinfoResultTab3', '',true); // hide this tab
+                            }
+                            
                         }
                     });
                 }
@@ -562,12 +577,15 @@ Ext.define('AM.controller.Map', {
     },
 
 
-    openWinInfo: function (msg, tab, tabTitle) {
+    openWinInfo: function (msg, tab, tabTitle,hide) {
 
         var windowResultTab = Ext.getCmp(tab);
         windowResultTab.setTitle(tabTitle);
         windowResultTab.tab.show();
         windowResultTab.update(msg, true);
+    	if(hide){
+    	windowResultTab.tab.hide();
+    	}
 
     },
     onClickActive: function () {
@@ -604,6 +622,7 @@ Ext.define('AM.controller.Map', {
         panelviewport.add(chartWindow);
         Ext.WindowManager.register(chartWindow);
         Ext.WindowManager.bringToFront(chartWindow);
+        testejson=json;
         chartWindow.add([{
             xtype: 'highchart',
             itemId: 'chart1',
