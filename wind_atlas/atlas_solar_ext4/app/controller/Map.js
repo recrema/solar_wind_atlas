@@ -284,6 +284,7 @@ Ext.define('AM.controller.Map', {
     	                        yAxis: {
     	                            min: 0,
     	                            title: {
+    	                            	useHTML: true,
     	                                text: '<p>Irradiation kWh/m<sup>2</sup></p>'
     	                            }
     	                        },
@@ -294,6 +295,7 @@ Ext.define('AM.controller.Map', {
     	                            enabled: false
     	                        },
     	                        tooltip: {
+    	                        	useHTML: true,
     	                            pointFormat: '<b>{point.y:.1f} kWh/m<sup>2</sup></b>',
     	                        },
     	                        series: [{
