@@ -2,6 +2,9 @@
 error_reporting(E_ALL); // to change here the error reporting E_ALL for all E_ERROR just for errors!
 // set_time_limit (60);
 
+$notalowedchars = array("'", '"', "--", ";", "/", "%", ">","<","!");
+
+
 $baseTempFolder='/var/www/recrema_wind_atlas/wind_atlas/atlas_wind_ext4/tmp/'; // full path to temp folder, the same inside the project
 $phantomjsFolder='/var/www/recrema_wind_atlas/wind_atlas/lib/phantomjs/'; // full path to the phantomjs folder, the same inside the project
 
@@ -134,13 +137,13 @@ $xml_data ='<?xml version="1.0" encoding="UTF-8"?>
     <wps:Input>
       <ows:Identifier>latitude</ows:Identifier>
       <wps:Data>
-        <wps:LiteralData>'.$_POST["latitude"].'</wps:LiteralData>
+        <wps:LiteralData>'.str_replace($notalowedchars, "", $_POST["latitude"]).'</wps:LiteralData>
       </wps:Data>
     </wps:Input>
     <wps:Input>
       <ows:Identifier>longitude</ows:Identifier>
       <wps:Data>
-        <wps:LiteralData>'.$_POST["longitude"].'</wps:LiteralData>
+        <wps:LiteralData>'.str_replace($notalowedchars, "", $_POST["longitude"]).'</wps:LiteralData>
       </wps:Data>
     </wps:Input>
   </wps:DataInputs>
@@ -167,12 +170,37 @@ curl_close($ch);
 
 $rawjson=(json_decode($output,true));
 $series1=$rawjson['series1'];
+$series2=$rawjson['series1'];
+$series3=$rawjson['series1'];
+$series4=$rawjson['series1'];
+$series5=$rawjson['series1'];
 $series6=$rawjson['series6'];
 $series7=str_replace('None','null',$rawjson['series7']);
 
 if ($series1=== NULL) {
 	$arr = array ('success'=>FALSE,'msg1'=>'An error as occurred in the server! Please come back later.','msg2'=> $output);
 	print_r(json_encode($arr));
+	exit();
+}
+elseif ($series2=== NULL) {
+	$arr = array ('success'=>FALSE,'msg1'=>'An error as occurred in the server! Please come back later.','msg2'=> $output);
+	print_r(json_encode($arr));
+	exit();
+}
+elseif ($series3=== NULL) {
+	$arr = array ('success'=>FALSE,'msg1'=>'An error as occurred in the server! Please come back later.','msg2'=> $output);
+	print_r(json_encode($arr));
+	exit();
+}
+elseif ($series4=== NULL) {
+	$arr = array ('success'=>FALSE,'msg1'=>'An error as occurred in the server! Please come back later.','msg2'=> $output);
+	print_r(json_encode($arr));
+	exit();
+}
+elseif ($series5=== NULL) {
+	$arr = array ('success'=>FALSE,'msg1'=>'An error as occurred in the server! Please come back later.','msg2'=> $output);
+	print_r(json_encode($arr));
+	exit();
 }
 else {
 	$json="{
@@ -320,7 +348,7 @@ else {
 	        		        },
 	
 	        		        title: {
-	        		            text: 'Mean wind speed at 50 meters',
+	        		            text: 'Mean wind speed at 10 meters',
 								style: {'color': 'grey', 'fontSize': '16px','font-weight':'bold'},
 								margin: 20,
 								align: 'left',
@@ -345,6 +373,7 @@ else {
 	        		        xAxis: {
 	        		          tickmarkPlacement: 'on',
 	        		          categories: ['N', 'NNE', 'NE','ENE','E', 'ESE', 'SE','SSE','S', 'SSW', 'SW','WSW','W', 'WNW', 'NW','NNW']
+
 	        		        },
 	
 	        		        yAxis: {
@@ -374,8 +403,7 @@ else {
 	        			        	pointPlacement: 'on'
 	        			        }
 	        			    },
-	series:[{                name: '>12',                legendIndex: 7,                color: '#7f0000',                data: [0.0, 0.04, 0.0, 0.0, 0.0, 0.0, 0.02, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.02, 0.0]                },{                name: '10-12',                legendIndex: 6,                color: '#ff0000',                data: [0.51, 0.36, 0.02, 0.02, 0.0, 0.0, 0.0, 0.0, 0.06, 0.14, 0.08, 0.0, 0.0, 0.02, 0.0, 0.06]                },{                name: '8-10',                legendIndex: 5,                color: '#ff4900',                data: [2.35, 1.11, 1.03, 0.02, 0.02, 0.04, 0.08, 0.36, 0.59, 0.16, 0.28, 0.08, 0.02, 0.0, 0.02, 0.49]                },{                name: '6-8',                legendIndex: 4,                color: '#ebff13',                data: [3.1, 2.78, 2.69, 0.34, 0.08, 0.12, 0.45, 0.83, 0.71, 0.18, 0.3, 0.08, 0.04, 0.02, 0.36, 0.93]                },{                name: '4-6',                legendIndex: 3,                color: '#23ffdb',                data: [3.95, 4.34, 5.51, 1.88, 0.59, 0.45, 1.38, 1.56, 1.46, 0.79, 0.51, 0.22, 0.32, 0.32, 0.53, 1.97]                },{                name: '2-4',                legendIndex: 2,                color: '#0059ff',                data: [4.4, 4.54, 6.02, 3.93, 1.84, 2.07, 1.86, 1.92, 1.09, 0.67, 0.41, 0.85, 0.65, 1.18, 1.48, 2.59]                },{                name: '0-2',                legendIndex: 1,                color: '#00008f',                data: [1.6, 1.76, 2.03, 2.01, 1.38, 1.4, 0.91, 1.01, 0.63, 0.43, 0.67, 0.83, 0.81, 0.83, 0.57, 0.85]                }]
-			        		    }";
+	series:".$series2."}";
 	
 	$json2_2="{
 	        		        chart: {
@@ -402,7 +430,8 @@ else {
 	        		        xAxis: {
 	        		          tickmarkPlacement: 'on',
 	        		          categories: ['N', 'NNE', 'NE','ENE','E', 'ESE', 'SE','SSE','S', 'SSW', 'SW','WSW','W', 'WNW', 'NW','NNW'],
-										labels: {
+
+							labels: {
 									style: {
 										color: '#000000'
 									}
@@ -416,7 +445,7 @@ else {
 	        			        title: {
 	        			        	text: ''
 	        			        },
-	
+								offset:0,
 	        			        labels: {
 									style: {
 										color: '#000000',
@@ -439,15 +468,431 @@ else {
 	        			        	pointPlacement: 'on'
 	        			        }
 	        			    },
-	series:[{                name: '>12',                legendIndex: 7,                color: '#7f0000',                data: [0.0, 0.04, 0.0, 0.0, 0.0, 0.0, 0.02, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.02, 0.0]                },{                name: '10-12',                legendIndex: 6,                color: '#ff0000',                data: [0.51, 0.36, 0.02, 0.02, 0.0, 0.0, 0.0, 0.0, 0.06, 0.14, 0.08, 0.0, 0.0, 0.02, 0.0, 0.06]                },{                name: '8-10',                legendIndex: 5,                color: '#ff4900',                data: [2.35, 1.11, 1.03, 0.02, 0.02, 0.04, 0.08, 0.36, 0.59, 0.16, 0.28, 0.08, 0.02, 0.0, 0.02, 0.49]                },{                name: '6-8',                legendIndex: 4,                color: '#ebff13',                data: [3.1, 2.78, 2.69, 0.34, 0.08, 0.12, 0.45, 0.83, 0.71, 0.18, 0.3, 0.08, 0.04, 0.02, 0.36, 0.93]                },{                name: '4-6',                legendIndex: 3,                color: '#23ffdb',                data: [3.95, 4.34, 5.51, 1.88, 0.59, 0.45, 1.38, 1.56, 1.46, 0.79, 0.51, 0.22, 0.32, 0.32, 0.53, 1.97]                },{                name: '2-4',                legendIndex: 2,                color: '#0059ff',                data: [4.4, 4.54, 6.02, 3.93, 1.84, 2.07, 1.86, 1.92, 1.09, 0.67, 0.41, 0.85, 0.65, 1.18, 1.48, 2.59]                },{                name: '0-2',                legendIndex: 1,                color: '#00008f',                data: [1.6, 1.76, 2.03, 2.01, 1.38, 1.4, 0.91, 1.01, 0.63, 0.43, 0.67, 0.83, 0.81, 0.83, 0.57, 0.85]                }]
-			        		    }";
+	series:".$series2."}";
+	
+	
+	
 	file_put_contents('../tmp/chart2'.$uniqueId.'.json',$json2_2);
 	exec('phantomjs '.$phantomjsFolder.'highcharts-convert.js -infile '.$baseTempFolder.'chart2'.$uniqueId.'.json -outfile '.$baseTempFolder.'chart2'.$uniqueId.'.png -scale 4 -width 600 -constr Chart', $output1, $return1);
 	unlink('../tmp/chart2'.$uniqueId.'.json');
 	
 	############################################################################################################
-	############################## 3 chart ################################################################
+	############################## third chart ################################################################
 	$json3="{
+	        		        chart: {
+	        		            renderTo: 'container',
+	        		            polar: true,
+	        		            type: 'column'
+	        		        },
+	
+	        		        title: {
+	        		            text: 'Mean wind speed at 10 meters',
+								style: {'color': 'grey', 'fontSize': '16px','font-weight':'bold'},
+								margin: 20,
+								align: 'left',
+								x: 85
+	        		        },
+							credits: {
+					  		    enabled: false
+						  	},
+	
+	        		        pane: {
+	        		            size: '85%'
+	        		        },
+	
+	        		       legend: {
+	        			    	reversed: true,
+	        			    	align: 'right',
+	        			    	verticalAlign: 'top',
+	        			    	y: 100,
+	        			    	layout: 'vertical'
+	        			    },
+	
+	        		        xAxis: {
+	        		          tickmarkPlacement: 'on',
+	        		          categories: ['N', 'NNE', 'NE','ENE','E', 'ESE', 'SE','SSE','S', 'SSW', 'SW','WSW','W', 'WNW', 'NW','NNW']
+	
+	        		        },
+	
+	        		        yAxis: {
+	        		            min: 0,
+	        			        endOnTick: true,
+	        			        showLastLabel: true,
+	        			        title: {
+	        			        	text: ''
+	        			        },
+	
+	        			        labels: {
+	        			        	formatter: function () {
+	        			        		return this.value + '%';
+	        			        	}
+	        			        }
+	        		        },
+	        		        tooltip: {
+	        			    	valueSuffix: '%',
+	        			    	followPointer: true
+	        			    },
+	
+	        		       plotOptions: {
+	        			        series: {
+	        			        	stacking: 'normal',
+	        			        	shadow: false,
+	        			        	groupPadding: 0,
+	        			        	pointPlacement: 'on'
+	        			        }
+	        			    },
+	series:".$series3."}";
+	
+	$json3_2="{
+	        		        chart: {
+	        		            renderTo: 'container',
+	        		            polar: true,
+	        		            type: 'column'
+	        		        },
+	
+	        		        title: {
+	        		            text: ''
+	        		        },
+							credits: {
+					  		    enabled: false
+						  	},
+	
+	        		        pane: {
+	        		            size: '85%'
+	        		        },
+	
+	        		       legend: {
+								enabled: false
+	        			    },
+	
+	        		        xAxis: {
+	        		          tickmarkPlacement: 'on',
+	        		          categories: ['N', 'NNE', 'NE','ENE','E', 'ESE', 'SE','SSE','S', 'SSW', 'SW','WSW','W', 'WNW', 'NW','NNW'],
+	
+							labels: {
+									style: {
+										color: '#000000'
+									}
+	        			        }
+	        		        },
+	
+	        		        yAxis: {
+	        		            min: 0,
+	        			        endOnTick: true,
+	        			        showLastLabel: true,
+	        			        title: {
+	        			        	text: ''
+	        			        },
+								offset:0,
+	        			        labels: {
+									style: {
+										color: '#000000',
+									},
+	        			        	formatter: function () {
+	        			        		return this.value + '%';
+	        			        	}
+	        			        }
+	        		        },
+	        		        tooltip: {
+	        			    	valueSuffix: '%',
+	        			    	followPointer: true
+	        			    },
+	
+	        		       plotOptions: {
+	        			        series: {
+	        			        	stacking: 'normal',
+	        			        	shadow: false,
+	        			        	groupPadding: 0,
+	        			        	pointPlacement: 'on'
+	        			        }
+	        			    },
+	series:".$series3."}";
+	
+	
+	
+	file_put_contents('../tmp/chart3'.$uniqueId.'.json',$json3_2);
+	exec('phantomjs '.$phantomjsFolder.'highcharts-convert.js -infile '.$baseTempFolder.'chart3'.$uniqueId.'.json -outfile '.$baseTempFolder.'chart3'.$uniqueId.'.png -scale 4 -width 600 -constr Chart', $output1, $return1);
+	unlink('../tmp/chart3'.$uniqueId.'.json');
+	
+	############################################################################################################
+	############################## 4 chart ################################################################
+	$json4="{
+	        		        chart: {
+	        		            renderTo: 'container',
+	        		            polar: true,
+	        		            type: 'column'
+	        		        },
+	
+	        		        title: {
+	        		            text: 'Mean wind speed at 10 meters',
+								style: {'color': 'grey', 'fontSize': '16px','font-weight':'bold'},
+								margin: 20,
+								align: 'left',
+								x: 85
+	        		        },
+							credits: {
+					  		    enabled: false
+						  	},
+	
+	        		        pane: {
+	        		            size: '85%'
+	        		        },
+	
+	        		       legend: {
+	        			    	reversed: true,
+	        			    	align: 'right',
+	        			    	verticalAlign: 'top',
+	        			    	y: 100,
+	        			    	layout: 'vertical'
+	        			    },
+	
+	        		        xAxis: {
+	        		          tickmarkPlacement: 'on',
+	        		          categories: ['N', 'NNE', 'NE','ENE','E', 'ESE', 'SE','SSE','S', 'SSW', 'SW','WSW','W', 'WNW', 'NW','NNW']
+	
+	        		        },
+	
+	        		        yAxis: {
+	        		            min: 0,
+	        			        endOnTick: true,
+	        			        showLastLabel: true,
+	        			        title: {
+	        			        	text: ''
+	        			        },
+	
+	        			        labels: {
+	        			        	formatter: function () {
+	        			        		return this.value + '%';
+	        			        	}
+	        			        }
+	        		        },
+	        		        tooltip: {
+	        			    	valueSuffix: '%',
+	        			    	followPointer: true
+	        			    },
+	
+	        		       plotOptions: {
+	        			        series: {
+	        			        	stacking: 'normal',
+	        			        	shadow: false,
+	        			        	groupPadding: 0,
+	        			        	pointPlacement: 'on'
+	        			        }
+	        			    },
+	series:".$series4."}";
+	
+	$json4_2="{
+	        		        chart: {
+	        		            renderTo: 'container',
+	        		            polar: true,
+	        		            type: 'column'
+	        		        },
+	
+	        		        title: {
+	        		            text: ''
+	        		        },
+							credits: {
+					  		    enabled: false
+						  	},
+	
+	        		        pane: {
+	        		            size: '85%'
+	        		        },
+	
+	        		       legend: {
+								enabled: false
+	        			    },
+	
+	        		        xAxis: {
+	        		          tickmarkPlacement: 'on',
+	        		          categories: ['N', 'NNE', 'NE','ENE','E', 'ESE', 'SE','SSE','S', 'SSW', 'SW','WSW','W', 'WNW', 'NW','NNW'],
+	
+							labels: {
+									style: {
+										color: '#000000'
+									}
+	        			        }
+	        		        },
+	
+	        		        yAxis: {
+	        		            min: 0,
+	        			        endOnTick: true,
+	        			        showLastLabel: true,
+	        			        title: {
+	        			        	text: ''
+	        			        },
+								offset:0,
+	        			        labels: {
+									style: {
+										color: '#000000',
+									},
+	        			        	formatter: function () {
+	        			        		return this.value + '%';
+	        			        	}
+	        			        }
+	        		        },
+	        		        tooltip: {
+	        			    	valueSuffix: '%',
+	        			    	followPointer: true
+	        			    },
+	
+	        		       plotOptions: {
+	        			        series: {
+	        			        	stacking: 'normal',
+	        			        	shadow: false,
+	        			        	groupPadding: 0,
+	        			        	pointPlacement: 'on'
+	        			        }
+	        			    },
+	series:".$series4."}";
+	
+	
+	
+	file_put_contents('../tmp/chart4'.$uniqueId.'.json',$json4_2);
+	exec('phantomjs '.$phantomjsFolder.'highcharts-convert.js -infile '.$baseTempFolder.'chart4'.$uniqueId.'.json -outfile '.$baseTempFolder.'chart4'.$uniqueId.'.png -scale 4 -width 600 -constr Chart', $output1, $return1);
+	unlink('../tmp/chart4'.$uniqueId.'.json');
+	
+	############################################################################################################
+	############################## 5 chart ################################################################
+	$json5="{
+	        		        chart: {
+	        		            renderTo: 'container',
+	        		            polar: true,
+	        		            type: 'column'
+	        		        },
+	
+	        		        title: {
+	        		            text: 'Mean wind speed at 10 meters',
+								style: {'color': 'grey', 'fontSize': '16px','font-weight':'bold'},
+								margin: 20,
+								align: 'left',
+								x: 85
+	        		        },
+							credits: {
+					  		    enabled: false
+						  	},
+	
+	        		        pane: {
+	        		            size: '85%'
+	        		        },
+	
+	        		       legend: {
+	        			    	reversed: true,
+	        			    	align: 'right',
+	        			    	verticalAlign: 'top',
+	        			    	y: 100,
+	        			    	layout: 'vertical'
+	        			    },
+	
+	        		        xAxis: {
+	        		          tickmarkPlacement: 'on',
+	        		          categories: ['N', 'NNE', 'NE','ENE','E', 'ESE', 'SE','SSE','S', 'SSW', 'SW','WSW','W', 'WNW', 'NW','NNW']
+	
+	        		        },
+	
+	        		        yAxis: {
+	        		            min: 0,
+	        			        endOnTick: true,
+	        			        showLastLabel: true,
+	        			        title: {
+	        			        	text: ''
+	        			        },
+	
+	        			        labels: {
+	        			        	formatter: function () {
+	        			        		return this.value + '%';
+	        			        	}
+	        			        }
+	        		        },
+	        		        tooltip: {
+	        			    	valueSuffix: '%',
+	        			    	followPointer: true
+	        			    },
+	
+	        		       plotOptions: {
+	        			        series: {
+	        			        	stacking: 'normal',
+	        			        	shadow: false,
+	        			        	groupPadding: 0,
+	        			        	pointPlacement: 'on'
+	        			        }
+	        			    },
+	series:".$series5."}";
+	
+	$json5_2="{
+	        		        chart: {
+	        		            renderTo: 'container',
+	        		            polar: true,
+	        		            type: 'column'
+	        		        },
+	
+	        		        title: {
+	        		            text: ''
+	        		        },
+							credits: {
+					  		    enabled: false
+						  	},
+	
+	        		        pane: {
+	        		            size: '85%'
+	        		        },
+	
+	        		       legend: {
+								enabled: false
+	        			    },
+	
+	        		        xAxis: {
+	        		          tickmarkPlacement: 'on',
+	        		          categories: ['N', 'NNE', 'NE','ENE','E', 'ESE', 'SE','SSE','S', 'SSW', 'SW','WSW','W', 'WNW', 'NW','NNW'],
+	
+							labels: {
+									style: {
+										color: '#000000'
+									}
+	        			        }
+	        		        },
+	
+	        		        yAxis: {
+	        		            min: 0,
+	        			        endOnTick: true,
+	        			        showLastLabel: true,
+	        			        title: {
+	        			        	text: ''
+	        			        },
+								offset:0,
+	        			        labels: {
+									style: {
+										color: '#000000',
+									},
+	        			        	formatter: function () {
+	        			        		return this.value + '%';
+	        			        	}
+	        			        }
+	        		        },
+	        		        tooltip: {
+	        			    	valueSuffix: '%',
+	        			    	followPointer: true
+	        			    },
+	
+	        		       plotOptions: {
+	        			        series: {
+	        			        	stacking: 'normal',
+	        			        	shadow: false,
+	        			        	groupPadding: 0,
+	        			        	pointPlacement: 'on'
+	        			        }
+	        			    },
+	series:".$series5."}";
+	
+	
+	
+	file_put_contents('../tmp/chart5'.$uniqueId.'.json',$json5_2);
+	exec('phantomjs '.$phantomjsFolder.'highcharts-convert.js -infile '.$baseTempFolder.'chart5'.$uniqueId.'.json -outfile '.$baseTempFolder.'chart5'.$uniqueId.'.png -scale 4 -width 600 -constr Chart', $output1, $return1);
+	unlink('../tmp/chart5'.$uniqueId.'.json');
+	
+	############################################################################################################
+	############################## 6 chart ################################################################
+	$json6="{
 	        		        chart: {
 	        		            renderTo: 'container',
 	        		            type: 'bar'
@@ -512,7 +957,7 @@ else {
 	
 	        			    series:$series6
 	        		    }";
-	$json3_2="{
+	$json6_2="{
 	chart: {
 	renderTo: 'container',
 	type: 'bar'
@@ -578,13 +1023,13 @@ else {
 	}";
 	
 	
-	file_put_contents('../tmp/chart3'.$uniqueId.'.json',$json3_2);
-	exec('phantomjs '.$phantomjsFolder.'highcharts-convert.js -infile '.$baseTempFolder.'chart3'.$uniqueId.'.json -outfile '.$baseTempFolder.'chart3'.$uniqueId.'.png -scale 4 -width 600 -constr Chart', $output1, $return1);
-	unlink('../tmp/chart3'.$uniqueId.'.json');
+	file_put_contents('../tmp/chart6'.$uniqueId.'.json',$json6_2);
+	exec('phantomjs '.$phantomjsFolder.'highcharts-convert.js -infile '.$baseTempFolder.'chart6'.$uniqueId.'.json -outfile '.$baseTempFolder.'chart6'.$uniqueId.'.png -scale 4 -width 600 -constr Chart', $output1, $return1);
+	unlink('../tmp/chart6'.$uniqueId.'.json');
 	
 	############################################################################################################
 	############################## Last Chart ################################################################
-	$json4="{
+	$json7="{
 	chart: {
 	renderTo: 'container',
 	type: 'spline'
@@ -641,7 +1086,7 @@ else {
 	
 	series:$series7
 	}";
-	$json4_2="{
+	$json7_2="{
 	chart: {
 	renderTo: 'container',
 	type: 'spline'
@@ -712,9 +1157,9 @@ else {
 	}";
 	
 	
-	file_put_contents('../tmp/chart4'.$uniqueId.'.json',$json4_2);
-	exec('phantomjs '.$phantomjsFolder.'highcharts-convert.js -infile '.$baseTempFolder.'chart4'.$uniqueId.'.json -outfile '.$baseTempFolder.'chart4'.$uniqueId.'.png -scale 4 -width 600 -constr Chart', $output1, $return1);
-	unlink('../tmp/chart4'.$uniqueId.'.json');
+	file_put_contents('../tmp/chart7'.$uniqueId.'.json',$json7_2);
+	exec('phantomjs '.$phantomjsFolder.'highcharts-convert.js -infile '.$baseTempFolder.'chart7'.$uniqueId.'.json -outfile '.$baseTempFolder.'chart7'.$uniqueId.'.png -scale 4 -width 600 -constr Chart', $output1, $return1);
+	unlink('../tmp/chart7'.$uniqueId.'.json');
 	
 	$script = '
 				<script>
@@ -747,8 +1192,6 @@ else {
 						x.style.border="none";
 					}
 			</script>
-			
-			
 			';
 	$output1 = '
 			<br>
@@ -761,9 +1204,9 @@ else {
 			<br>
 			<a href="javascript:void(0)"><img id="windRose1" src="tmp/chart'.$uniqueId.'.png" width="160" height="100" onmouseover="bigImg1(this)" onmouseout="normalImg1(this)" onClick="mapController.onChartActivate('.$json.',\'windRose1\');"></a>
 			<a href="javascript:void(0)"><img id="windRose2" src="tmp/chart2'.$uniqueId.'.png" width="160" height="100" onmouseover="bigImg1(this)" onmouseout="normalImg1(this)" onClick="mapController.onChartActivate('.$json2.',\'windRose2\');"></a>
-			<a href="javascript:void(0)"><img id="windRose3" src="tmp/chart2'.$uniqueId.'.png" width="160" height="100" onmouseover="bigImg1(this)" onmouseout="normalImg1(this)" onClick="mapController.onChartActivate('.$json2.',\'windRose3\');"></a>
-			<a href="javascript:void(0)"><img id="windRose4" src="tmp/chart2'.$uniqueId.'.png" width="160" height="100" onmouseover="bigImg1(this)" onmouseout="normalImg1(this)" onClick="mapController.onChartActivate('.$json2.',\'windRose4\');"></a>
-			<a href="javascript:void(0)"><img id="windRose5" src="tmp/chart2'.$uniqueId.'.png" width="160" height="100" onmouseover="bigImg1(this)" onmouseout="normalImg1(this)" onClick="mapController.onChartActivate('.$json2.',\'windRose5\');"></a>';
+			<a href="javascript:void(0)"><img id="windRose3" src="tmp/chart3'.$uniqueId.'.png" width="160" height="100" onmouseover="bigImg1(this)" onmouseout="normalImg1(this)" onClick="mapController.onChartActivate('.$json3.',\'windRose3\');"></a>
+			<a href="javascript:void(0)"><img id="windRose4" src="tmp/chart4'.$uniqueId.'.png" width="160" height="100" onmouseover="bigImg1(this)" onmouseout="normalImg1(this)" onClick="mapController.onChartActivate('.$json4.',\'windRose4\');"></a>
+			<a href="javascript:void(0)"><img id="windRose5" src="tmp/chart5'.$uniqueId.'.png" width="160" height="100" onmouseover="bigImg1(this)" onmouseout="normalImg1(this)" onClick="mapController.onChartActivate('.$json5.',\'windRose5\');"></a>';
 	
 	$output2 = '
 			<br>
@@ -771,8 +1214,8 @@ else {
 			<textatlas style="color:grey;margin-left:50px;"><b> Monthly wind speed average values</b></textatlas>
 			<br>
 			<br>
-			<a href="javascript:void(0)" style="margin-left:90px;"><img id="windChart2" src="tmp/chart3'.$uniqueId.'.png" width="130" height="100" onmouseover="bigImg2(this)" onmouseout="normalImg2(this)" onClick="mapController.onChartActivate('.$json3.',\'windChart2\');"></a>
-			<a href="javascript:void(0)" style="margin-left:150px;"><img id="windChart4" src="tmp/chart4'.$uniqueId.'.png" width="130" height="100" onmouseover="bigImg2(this)" onmouseout="normalImg2(this)" onClick="mapController.onChartActivate('.$json4.',\'windChart4\');"></a>';
+			<a href="javascript:void(0)" style="margin-left:90px;"><img id="windChart2" src="tmp/chart6'.$uniqueId.'.png" width="130" height="100" onmouseover="bigImg2(this)" onmouseout="normalImg2(this)" onClick="mapController.onChartActivate('.$json6.',\'windChart2\');"></a>
+			<a href="javascript:void(0)" style="margin-left:150px;"><img id="windChart4" src="tmp/chart7'.$uniqueId.'.png" width="130" height="100" onmouseover="bigImg2(this)" onmouseout="normalImg2(this)" onClick="mapController.onChartActivate('.$json7.',\'windChart4\');"></a>';
 	
 
 	
@@ -794,7 +1237,7 @@ else {
 		* ****************************************/
 		if ($loop == 1){
 					$dpiFactor=3;
- 					$oMapImage=generateMap($_POST["latitude"],$_POST["longitude"],230,145,$dpiFactor);
+ 					$oMapImage=generateMap(str_replace($notalowedchars, "", $_POST["latitude"]),str_replace($notalowedchars, "", $_POST["longitude"]),230,145,$dpiFactor);
  					sleep(5); # to give time for the pdf to be written in disk
  					$oMapImage->saveImage("../tmp/.$uniqueId.contextMap.png");
  					$pdf->Image("../tmp/.$uniqueId.contextMap.png", 0.95*72, 1.85*72, 230, 145);
@@ -802,16 +1245,16 @@ else {
 					$pdf->Image('../tmp/chart'.$uniqueId.'.png', 0.1*72, 4.5*72, 230, 153);
 					
 					$pdf->Image('../tmp/chart2'.$uniqueId.'.png', 5.3*72, 4.5*72, 230, 153);
-					$pdf->Image('../tmp/chart2'.$uniqueId.'.png', 2.68*72, 4.5*72, 230, 153);
+					$pdf->Image('../tmp/chart3'.$uniqueId.'.png', 2.68*72, 4.5*72, 230, 153);
 					
-					$pdf->Image('../tmp/chart2'.$uniqueId.'.png', 0.2*72, 7.3*72, 230, 153);
-					$pdf->Image('../tmp/chart2'.$uniqueId.'.png', 2.7*72, 7.3*72, 230, 153);
+					$pdf->Image('../tmp/chart4'.$uniqueId.'.png', 0.2*72, 7.3*72, 230, 153);
+					$pdf->Image('../tmp/chart5'.$uniqueId.'.png', 2.7*72, 7.3*72, 230, 153);
 					
 					$pdf->SetTextColor(0,0,0);
 					$pdf->SetFont('Arial', '', 20);
 					
 					$pdf->SetXY(5.5*72,1.88*72);
-					$pdf->Cell(1,10,'Lat: '.$_POST["latitude"].' Long: '.$_POST["longitude"]);
+					$pdf->Cell(1,10,'Lat: '.str_replace($notalowedchars, "", $_POST["latitude"]).' Long: '.str_replace($notalowedchars, "", $_POST["longitude"]));
 					
 					$pdf->SetXY(5.5*72,2.23*72);
 					$pdf->Cell(1,10,$_POST["initial_date"].' to '.$_POST["final_date"]);
@@ -822,8 +1265,8 @@ else {
 		if ($loop == 2){
 				
 				
-			$pdf->Image('../tmp/chart3'.$uniqueId.'.png', 0.8*72, 2.0*72, 230, 153);
-			$pdf->Image('../tmp/chart4'.$uniqueId.'.png', 0.8*72, 5.0*72, 270, 173);
+			$pdf->Image('../tmp/chart6'.$uniqueId.'.png', 0.8*72, 2.0*72, 230, 153);
+			$pdf->Image('../tmp/chart7'.$uniqueId.'.png', 0.8*72, 5.0*72, 270, 173);
 
 		}
 

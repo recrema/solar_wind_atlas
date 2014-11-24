@@ -5,7 +5,7 @@ ini_set('display_errors',1);
   $message['success'] = false;
   $action = 0;
   if(isset($_POST['_action'])){ $action = $_POST['_action']; };
-
+  $notalowedchars = array("'", '"', "--", ";", "/", "%", ">","<","!");
   //Check if there is a user session 
   if($action == 1){
     require_once 'LoginModel.php';
@@ -28,9 +28,10 @@ ini_set('display_errors',1);
   	echo json_encode($message);
   }
   else{
-    $username = $_POST['_user'];
-    $password = $_POST['_password'];
-
+   # $username = $_POST['_user'];
+   # $password = $_POST['_password'];
+  	$username = str_replace($notalowedchars, "", $_POST["_user"]);
+    $password = str_replace($notalowedchars, "", $_POST["_password"]);
     require_once 'DBConn.php';
     $connection = new DBConn();
 

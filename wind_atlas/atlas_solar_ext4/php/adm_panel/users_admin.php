@@ -5,7 +5,7 @@ $loginModel = new LoginModel();
 require_once '../DBConn.php';
 $connection = new DBConn();
 
-$notalowedchars = array("'", '"', "--", ";", "/", "%");
+$notalowedchars = array("'", '"', "--", ";", "/", "%", ">","<","!");
 if (isset($_POST["action"]))
   {
 		if ($_POST["action"]=="del")
