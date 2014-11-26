@@ -1,7 +1,7 @@
 <?php
 error_reporting(E_ALL); // to change here the error reporting E_ALL for all E_ERROR just for errors!
 // set_time_limit (60);
-
+ini_set("display_errors", "Off");
 $notalowedchars = array("'", '"', "--", ";", "/", "%", ">","<","!");
 
 
@@ -50,16 +50,26 @@ function generateMap($pointLatitude,$pointLongitude,$xSize,$ySize,$dpiFactor)
 
 	// Create a data layer and associate it with the map.
 	// This is the raster layer from wms
-	$oLayerClouds = ms_newLayerObj($oMap);
-	$oLayerClouds->set( "name", "clouds");
-	$oLayerClouds->set( "type", MS_LAYER_RASTER);
-	$oLayerClouds->set( "status", MS_DEFAULT);
-	$oLayerClouds->set( "connection", "http://atlas.masdar.ac.ae:8080/geoserver/wind/wms");
-	$oLayerClouds->setConnectionType(MS_WMS);
-	$oLayerClouds->setMetaData("wms_srs","epsg:4326");
-	$oLayerClouds->setMetaData("wms_name","wind:uae_borders_changed");
-	$oLayerClouds->setMetaData("wms_server_version","1.1.1");
-	$oLayerClouds->setMetaData("wms_format","image/png");
+	// 	$oLayerClouds = ms_newLayerObj($oMap);
+	// 	$oLayerClouds->set( "name", "clouds2");
+	// 	$oLayerClouds->set( "type", MS_LAYER_RASTER);
+	// 	$oLayerClouds->set( "status", MS_DEFAULT);
+	// 	$oLayerClouds->set( "connection", "http://atlas.masdar.ac.ae:8080/geoserver/wind/wms");
+	// 	$oLayerClouds->setConnectionType(MS_WMS);
+	// 	$oLayerClouds->setMetaData("wms_srs","epsg:4326");
+	// 	$oLayerClouds->setMetaData("wms_name","wind:uae_borders_changed");
+	// 	$oLayerClouds->setMetaData("wms_server_version","1.1.1");
+	// 	$oLayerClouds->setMetaData("wms_format","image/png");
+		$oLayerBorder = ms_newLayerObj($oMap);
+		$oLayerBorder->set( "name", "border");
+		$oLayerBorder->set( "type", MS_LAYER_POLYGON);
+		$oLayerBorder->set( "status", MS_DEFAULT);
+		$oLayerBorder->set( "data", "shapes/uae_borders.shp");
+		$oMapClassBorder = ms_newClassObj($oLayerBorder);
+		$oBorderStyle = ms_newStyleObj($oMapClassBorder);
+		$oBorderStyle->color->setRGB(255,255,255);
+		$oBorderStyle->outlinecolor->setRGB(0,0,0);
+		$oBorderStyle->set( "width", 1.5);
 
 	// Create another layer to hold point locations
 	$oLayerPoints = ms_newLayerObj($oMap);
@@ -170,10 +180,10 @@ curl_close($ch);
 
 $rawjson=(json_decode($output,true));
 $series1=$rawjson['series1'];
-$series2=$rawjson['series1'];
-$series3=$rawjson['series1'];
-$series4=$rawjson['series1'];
-$series5=$rawjson['series1'];
+$series2=$rawjson['series2'];
+$series3=$rawjson['series3'];
+$series4=$rawjson['series4'];
+$series5=$rawjson['series5'];
 $series6=$rawjson['series6'];
 $series7=str_replace('None','null',$rawjson['series7']);
 
@@ -348,7 +358,7 @@ else {
 	        		        },
 	
 	        		        title: {
-	        		            text: 'Mean wind speed at 10 meters',
+	        		            text: 'Mean wind speed at 50 meters',
 								style: {'color': 'grey', 'fontSize': '16px','font-weight':'bold'},
 								margin: 20,
 								align: 'left',
@@ -486,7 +496,7 @@ else {
 	        		        },
 	
 	        		        title: {
-	        		            text: 'Mean wind speed at 10 meters',
+	        		            text: 'Mean wind speed at 80 meters',
 								style: {'color': 'grey', 'fontSize': '16px','font-weight':'bold'},
 								margin: 20,
 								align: 'left',
@@ -624,7 +634,7 @@ else {
 	        		        },
 	
 	        		        title: {
-	        		            text: 'Mean wind speed at 10 meters',
+	        		            text: 'Mean wind speed at 100 meters',
 								style: {'color': 'grey', 'fontSize': '16px','font-weight':'bold'},
 								margin: 20,
 								align: 'left',
@@ -762,7 +772,7 @@ else {
 	        		        },
 	
 	        		        title: {
-	        		            text: 'Mean wind speed at 10 meters',
+	        		            text: 'Mean wind speed at 120 meters',
 								style: {'color': 'grey', 'fontSize': '16px','font-weight':'bold'},
 								margin: 20,
 								align: 'left',
@@ -1237,16 +1247,14 @@ else {
 		* ****************************************/
 		if ($loop == 1){
 					$dpiFactor=3;
- 					$oMapImage=generateMap(str_replace($notalowedchars, "", $_POST["latitude"]),str_replace($notalowedchars, "", $_POST["longitude"]),230,145,$dpiFactor);
+ 					$oMapImage=generateMap($_POST["latitude"],$_POST["longitude"],230,145,$dpiFactor);
  					sleep(5); # to give time for the pdf to be written in disk
  					$oMapImage->saveImage("../tmp/.$uniqueId.contextMap.png");
  					$pdf->Image("../tmp/.$uniqueId.contextMap.png", 0.95*72, 1.85*72, 230, 145);
 					
 					$pdf->Image('../tmp/chart'.$uniqueId.'.png', 0.1*72, 4.5*72, 230, 153);
-					
-					$pdf->Image('../tmp/chart2'.$uniqueId.'.png', 5.3*72, 4.5*72, 230, 153);
-					$pdf->Image('../tmp/chart3'.$uniqueId.'.png', 2.68*72, 4.5*72, 230, 153);
-					
+					$pdf->Image('../tmp/chart2'.$uniqueId.'.png', 2.68*72, 4.5*72, 230, 153);
+					$pdf->Image('../tmp/chart3'.$uniqueId.'.png', 5.3*72, 4.5*72, 230, 153);
 					$pdf->Image('../tmp/chart4'.$uniqueId.'.png', 0.2*72, 7.3*72, 230, 153);
 					$pdf->Image('../tmp/chart5'.$uniqueId.'.png', 2.7*72, 7.3*72, 230, 153);
 					
