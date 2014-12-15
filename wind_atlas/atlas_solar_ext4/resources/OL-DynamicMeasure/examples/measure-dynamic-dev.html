@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="lang" content="en" />
+    <meta name="author" content="Jorix" />
+    <meta name="description" content="Usage example of DynamicMeasure control for see measurements beside the cursor." />
+    <meta name="keywords" content="OpenLayers, measuring, dynamic, area, length, distance, cursor" />
+    <link rel="stylesheet" href="http://jorix.github.com/OL-Ragbag/examples/github-pages/forkme_banner.css" type="text/css">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+
+    <title>Example of OpenLayers to see measurements beside the cursor</title>
+
+    <script src="http://jorix.github.com/OL-Ragbag/dev/releaseEnvirontment.js"></script>
+    <script>
+        var release = new releaseEnvironment({
+            defaults: {patch: 'draw'},
+            patches: {draw: ["http://jorix.github.com/OL-Ragbag/lib/Ragbag/Handler/Path-patch.js"]}
+        });
+        release.writeScripts();
+    </script>
+    <script src="../lib/OpenLayers/Control/DynamicMeasure.js"></script>
+
+    <style type="text/css">
+        #controlToggle li {
+            list-style: none;
+        }
+        #options {
+            position: relative;
+            width: 512px;
+        }
+    </style>
+  </head>
+  <body>
+    <h1 id="title">??</h1>
+    <a id="forkme_banner" href="https://github.com/jorix/OL-DynamicMeasure">View on GitHub</a>
+    <div id="environmentForm"></div>
+    <script>
+        release.writeSelectionForm("environmentForm", "title");
+    </script>
+
+    <div id="tags">
+        measuring, dynamic, area, length, distance, cursor
+    </div>
+    <p id="shortdesc">
+        Demonstrates the dynamic measure control to measure and see measurements beside the cursor.
+    </p>
+    <div id="map" class="smallmap"></div>
+    <div id="options">
+        <div id="output">
+        </div>
+        <ul id="controlToggle">
+            <li>
+                <input type="radio" name="type" value="none" id="noneToggle"
+                       onclick="toggleControl(this);" checked="checked" />
+                <label for="noneToggle">navigate</label>
+            </li>
+            <li>
+                <input type="radio" name="type" value="line" id="lineToggle" onclick="toggleControl(this);" />
+                <label for="lineToggle">measure distance</label>
+            </li>
+            <li>
+                <input type="radio" name="type" value="polygon" id="polygonToggle" onclick="toggleControl(this);" />
+                <label for="polygonToggle">measure area</label>
+            </li>
+            <li>
+                <label for="maxSegments">Segments to display</label>
+                <input type="text" value="1" size="3" name="maxSegments" id="maxSegments" onchange="changeMaxSegments(this);" />
+                (leave blank for all)
+            </li>
+            <li>
+                <input type="checkbox" checked="checked" name="showSegments" id="showSegments" onclick="toggleShowSegments(this);" />
+                <label for="showSegments">show segments length</label>
+            </li>
+            <li>
+                <input type="checkbox" checked="checked" name="showPerimeter" id="showPerimeter" onclick="toggleShowPerimeter(this);" />
+                <label for="showPerimeter">show the area perimeter length</label>
+            </li>
+            <li>
+                <input type="checkbox" name="showHeading" id="showHeading" onclick="toggleShowHeading(this);" />
+                <label for="showSegments">show segments heading</label>
+            </li>
+        </ul>
+    </div>
+    <div id="docs">
+        <p>
+            View the <a href="measure-dynamic.js" target="_blank">measure-dynamic.js</a> 
+            source to see how this is done.
+        </p>
+    </div>
+    <script src="measure-dynamic.js"></script>
+  </body>
+</html>

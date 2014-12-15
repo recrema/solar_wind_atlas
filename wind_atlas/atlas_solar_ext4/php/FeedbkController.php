@@ -1,7 +1,7 @@
 <?php
 
-require_once ('../../lib/recaptcha-php-1.11/recaptchalib.php');
-require_once '../../lib/htmlpurifier-4.6.0-lite/library/HTMLPurifier.auto.php';
+require_once ('../resources/recaptcha-php-1.11/recaptchalib.php');
+require_once '../resources/htmlpurifier-4.6.0-lite/library/HTMLPurifier.auto.php';
 $purifier = new HTMLPurifier();
 $notalowedchars = array("'", '"', "--", ";", "/", "%", ">","<","!");
 $privatekey = "6Lekj_ISAAAAAGyficFGrtB4BHYg4lAPuOJ9Ij5Y";
@@ -17,7 +17,7 @@ if (!$resp->is_valid)
 	}
   else
 	{
-	require ("../../lib/PHPMailer-master/class.phpmailer.php");
+	require ("../resources/PHPMailer-master/class.phpmailer.php");
 
 	$mail = new PHPMailer();
 	$mail->IsSMTP();

@@ -1,0 +1,53 @@
+{merda: {
+            chart: {
+                type: 'column'
+            },
+            credits: {
+                enabled: false
+            },
+            legend: {
+                enabled: false
+            },
+            title: {
+                text: 'Número de equipamentos por província'
+            },
+            xAxis: {
+                categories: [
+                    'Cabo Delgado',
+                    'Gaza',
+                    'Inhambane',
+                    'Manica',
+                    'Maputo',
+                    'Nampula',
+                    'Niassa',
+                    'Sofala',
+                    'Tete',
+                    'Zambezia'
+                ],
+                labels: {
+                    rotation: -45,
+                    align: 'right',
+                    style: {
+                        fontSize: '13px',
+                        fontFamily: 'Verdana, sans-serif'
+                    }
+                }
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Nº de equipamentos'
+                }
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                }
+            },
+            series: [{
+                name: '',
+                data: [50,66,57,81,373,157,69,63,65,81]
+            }]
+        }
+}

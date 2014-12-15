@@ -1,12 +1,12 @@
 <?php
 error_reporting(E_ALL); // to change here the error reporting E_ALL for all E_ERROR just for errors!
 // set_time_limit (60);
-ini_set("display_errors", "Off");
+ini_set("display_errors", "On");
 $notalowedchars = array("'", '"', "--", ";", "/", "%", ">","<","!");
 
 
 $baseTempFolder='/var/www/recrema_wind_atlas/wind_atlas/atlas_wind_ext4/tmp/'; // full path to temp folder, the same inside the project
-$phantomjsFolder='/var/www/recrema_wind_atlas/wind_atlas/lib/phantomjs/'; // full path to the phantomjs folder, the same inside the project
+$phantomjsFolder='/var/www/recrema_wind_atlas/wind_atlas/atlas_wind_ext4/resources/phantomjs/'; // full path to the phantomjs folder, the same inside the project
 
 function delOldFiles() // delete all the files older that 1 day
 {
@@ -119,8 +119,8 @@ function generateMap($pointLatitude,$pointLongitude,$xSize,$ySize,$dpiFactor)
 	return $oMapImage;
 }
 
-require_once('../../lib/fpdf17/fpdf.php');
-require_once('../../lib/FPDI-1.5.1/fpdi.php');
+require_once('../resources/fpdf17/fpdf.php');
+require_once('../resources/FPDI-1.5.1/fpdi.php');
 
 $uniqueId = 'wps_' . time() . getmypid();
 
@@ -344,7 +344,7 @@ else {
 	series:".$series1."}";
 	
 	
-	
+
 	file_put_contents('../tmp/chart'.$uniqueId.'.json',$json1_2);
 	exec('phantomjs '.$phantomjsFolder.'highcharts-convert.js -infile '.$baseTempFolder.'chart'.$uniqueId.'.json -outfile '.$baseTempFolder.'chart'.$uniqueId.'.png -scale 4 -width 600 -constr Chart', $output1, $return1);
 	unlink('../tmp/chart'.$uniqueId.'.json');

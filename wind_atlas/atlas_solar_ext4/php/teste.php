@@ -1,6 +1,6 @@
 <?php
-require_once('../../lib/fpdf17/fpdf.php');
-require_once('../../lib/FPDI-1.5.1/fpdi.php');
+require_once('../resources/fpdf17/fpdf.php');
+require_once('../resources/FPDI-1.5.1/fpdi.php');
 # Open the PDF Template
 $pdf = new FPDI();
 $pagecount=$pdf->setSourceFile('../tmp/silah.pdf');
