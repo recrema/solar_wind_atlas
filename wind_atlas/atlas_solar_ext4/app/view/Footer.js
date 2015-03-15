@@ -29,7 +29,6 @@ Ext.define('AM.view.Footer', {
         height: 45,
         width: 171,
         cls: "agedi",
-        
         href : "http://www.agedi.ae/"
     },{
         xtype: 'button',

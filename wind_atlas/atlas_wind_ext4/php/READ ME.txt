@@ -1,0 +1,21 @@
+The data is given as follows:
+The files ending with:
+br : Browse file
+th : Thumbnail file.
+R : Red Band
+G : Green Band
+B : Blue Band
+N : Near-Infrared (NIR) Band
+P : Panchromatic Band
+PR : Pansharped Red Band
+PG : Pansharped Green Band
+PB : Pansharped Blue Band
+PN : Pansharped NIR Band
+
+Name Format
+D2_<YYYYMMDDHHMMSS>_<OrbitNumber>_<OutputProductLevel>_<FileType>.tif
+ 
+Spatial resolution of the Panchromatic and the pansharped bands are in 1m.
+(P, PR, PG, PB, PN)
+Spatial resolution of the multispectral bands are in 4m.
+(R, G, B, N)

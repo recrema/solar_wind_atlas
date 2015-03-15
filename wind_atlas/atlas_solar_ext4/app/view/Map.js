@@ -20,6 +20,7 @@ Ext.define('AM.view.Map', {
             ctrl;
     	var map = new OpenLayers.Map('map', {
     	    projection : 'EPSG:3857',
+    	    restrictedExtent: [5697167,2576730,6329311,3096318],
     	    layers: [
 
     	     	    new OpenLayers.Layer.Google(

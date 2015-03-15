@@ -439,7 +439,9 @@ Ext.define('AM.controller.Map', {
                             fieldLabel: 'From',
                             format: 'Y/m/d',
                             name: 'initial_date',
-                            value: '2003/08/01',
+                            value: '2003/01/01',
+            	        	maxValue:'2003/12/31',
+            	        	minValue:'2003/01/01',
                             endDateField: 'f4',
                             listeners: {
                                 'change': function (th, a) {
@@ -483,8 +485,10 @@ Ext.define('AM.controller.Map', {
             	        	labelWidth: 60,
             	        	fieldLabel: 'To',
             	        	format: 'Y/m/d',
-            	        	value: '2003/08/30',
+            	        	value: '2003/06/30',
             	        	name: 'final_date',
+            	        	maxValue:'2003/12/31',
+            	        	minValue:'2003/01/01',
             	        	startDateField: 'f3',
             	        	listeners: {
             	        		'change': function (th, a) {
@@ -502,7 +506,7 @@ Ext.define('AM.controller.Map', {
                             maxValue: '24',
                             increment: 60,
                         	name: 'final_time',
-                            value:'00',
+                            value:'23',
                             allowBlank: false
                             },
                             {

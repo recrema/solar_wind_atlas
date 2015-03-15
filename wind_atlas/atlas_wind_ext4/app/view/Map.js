@@ -21,6 +21,7 @@ Ext.define('AM.view.Map', {
 
     	var map = new OpenLayers.Map('map', {
     	    projection : 'EPSG:3857',
+    	    restrictedExtent: [5494737,2530391,6650416,3187871],
     	    layers: [
 
     	     	    new OpenLayers.Layer.Google(
@@ -170,33 +171,35 @@ Ext.define('AM.view.Map', {
                                             	layer.setVisibility(false);
                                         	}
                                            }
-                                    }, {
-                                        text: 'UAE Transmission Network',
-                                        checked: false,
-                                        checkHandler: function (checked) {
-                                        	if (checked.checked){
-                                            	var layer=map.getLayersByName('UAE transmission network')[0];
-                                            	layer.setVisibility(true);
-                                        	}
-                                        	else{
-                                            	var layer=map.getLayersByName('UAE transmission network')[0];
-                                            	layer.setVisibility(false);
-                                        	}
-                                           }
-                                    }, {
-                                        text: 'UAE Power Plants',
-                                        checked: false,
-                                        checkHandler: function (checked) {
-                                        	if (checked.checked){
-                                            	var layer=map.getLayersByName('UAE power plants')[0];
-                                            	layer.setVisibility(true);
-                                        	}
-                                        	else{
-                                            	var layer=map.getLayersByName('UAE power plants')[0];
-                                            	layer.setVisibility(false);
-                                        	}
-                                           }
-                                    }, {
+                                    },
+//                                     {
+//                                        text: 'UAE Transmission Network',
+//                                        checked: false,
+//                                        checkHandler: function (checked) {
+//                                        	if (checked.checked){
+//                                            	var layer=map.getLayersByName('UAE transmission network')[0];
+//                                            	layer.setVisibility(true);
+//                                        	}
+//                                        	else{
+//                                            	var layer=map.getLayersByName('UAE transmission network')[0];
+//                                            	layer.setVisibility(false);
+//                                        	}
+//                                           }
+//                                    }, {
+//                                        text: 'UAE Power Plants',
+//                                        checked: false,
+//                                        checkHandler: function (checked) {
+//                                        	if (checked.checked){
+//                                            	var layer=map.getLayersByName('UAE power plants')[0];
+//                                            	layer.setVisibility(true);
+//                                        	}
+//                                        	else{
+//                                            	var layer=map.getLayersByName('UAE power plants')[0];
+//                                            	layer.setVisibility(false);
+//                                        	}
+//                                           }
+//                                    },
+                                    {
                                         text: 'UAE OSM Transmission Network',
                                         checked: false,
                                         checkHandler: function (checked) {

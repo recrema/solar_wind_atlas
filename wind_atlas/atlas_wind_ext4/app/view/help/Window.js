@@ -14,7 +14,7 @@ Ext.define('AM.view.help.Window', {
             layout: 'fit',
             resizable:false,
             maxWidth: 600,
-            title: "Help",
+            title: "About",
         	listeners: {
         	    show: function(win) {
         	        if (this.modal) {

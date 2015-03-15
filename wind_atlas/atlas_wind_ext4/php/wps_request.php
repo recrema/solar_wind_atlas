@@ -1,7 +1,7 @@
 <?php
 error_reporting(E_ALL); // to change here the error reporting E_ALL for all E_ERROR just for errors!
 // set_time_limit (60);
-ini_set("display_errors", "On");
+ini_set("display_errors", "Off");
 $notalowedchars = array("'", '"', "--", ";", "/", "%", ">","<","!");
 
 
@@ -179,6 +179,13 @@ curl_close($ch);
 
 
 $rawjson=(json_decode($output,true));
+
+if (array_key_exists('error',$rawjson)) {
+	$arr = array ('success'=>FALSE,'msg1'=>'<br><br><center><b>'.$rawjson['error']['msg'].'</b><center>');
+	print_r(json_encode($arr));
+	exit();
+}
+
 $series1=$rawjson['series1'];
 $series2=$rawjson['series2'];
 $series3=$rawjson['series3'];
