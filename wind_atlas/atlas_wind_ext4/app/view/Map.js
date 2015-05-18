@@ -43,6 +43,14 @@ Ext.define('AM.view.Map', {
     				new OpenLayers.Layer.OSM(
     	                 "Open Street Map"
     	             ),
+     	            new OpenLayers.Layer.WMS("Abu Dhabi SDI BasemapEnglish", 'http://geoportal.abudhabi.ae/arcgis/BaseMapEnglish/MapServer/WMSServer',
+   	            		 {Layers: '9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,26,27,28,30,31,32,33,34,36,37,38,39,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,59,60,61,62,63,64,65,66,67,68,69,70,72,73,74,75,77,78,79,80,81,82,83,84', format: format, transparent: true}, 
+   	            		 {isBaseLayer:true,visibility: false}
+   	             	),
+   	             	new OpenLayers.Layer.WMS("Abu Dhabi SDI Satellite50m", 'http://geoportal.abudhabi.ae/arcgis/BaseMapSatellite50cm/MapServer/WMSServer',
+      	            		 {Layers: '0,1,2,3', format: format, transparent: true}, 
+      	            		 {isBaseLayer:true,visibility: false}
+      	             	),
     	            new OpenLayers.Layer.Vector("imgLayer", {
     	        	    attribution: "<img src='resources/images/windspeed_legend.png' style=' padding-right: 10px;'/>" //  ajustar a imagem em funcao do ecra!
     	        	}),      
@@ -217,6 +225,28 @@ Ext.define('AM.view.Map', {
                             }
                        },
                        '<b class="menu-title">&nbsp;&nbsp;&nbsp;&nbsp;-----------------------</b>',
+                       {
+                    	   text:'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Abu Dhabi SDI',
+                    	   menu:{
+                    		   items:[
+                                      {
+                                          text: 'BasemapEnglish',
+                                          checked: false,
+                                          group: 'baselayer',
+                                          checkHandler: function (checked) {
+                                          	map.setBaseLayer(map.getLayersByName('Abu Dhabi SDI BasemapEnglish')[0]);
+                                          }
+                                      },{
+                                          text: 'Satellite50m',
+                                          checked: false,
+                                          group: 'baselayer',
+                                          checkHandler: function (checked) {
+                                          	map.setBaseLayer(map.getLayersByName('Abu Dhabi SDI Satellite50m')[0]);
+                                          }
+                                      }
+                    		    ]
+                    	   }  
+                       },
                        {
                            text: 'Google Street',
                            checked: true,
