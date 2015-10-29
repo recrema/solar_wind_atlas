@@ -1,5 +1,6 @@
 <?php
-
+error_reporting(E_ALL); // to change here the error reporting E_ALL for all E_ERROR just for errors!
+ini_set("display_errors", "On");
 require_once ('../resources/recaptcha-php-1.11/recaptchalib.php');
 require_once '../resources/htmlpurifier-4.6.0-lite/library/HTMLPurifier.auto.php';
 $purifier = new HTMLPurifier();
@@ -19,7 +20,7 @@ if (!$resp->is_valid)
 	}
   else
 	{
-	require ("../../lib/PHPMailer-master/class.phpmailer.php");
+	require ("../resources/PHPMailer-master/class.phpmailer.php");
 
 	$mail = new PHPMailer();
 	$mail->IsSMTP();
@@ -39,7 +40,6 @@ if (!$resp->is_valid)
 	$mail->From = str_replace($notalowedchars, "", $_POST["email"]);
 	$mail->FromName = str_replace($notalowedchars, "", $_POST["name"]);
 	$mail->AddAddress('lcalisto@masdar.ac.ae');
- 	$mail->AddAddress('jestima@masdar.ac.ae');
 	$mail->IsHTML(true);
 	$mail->Subject = 'Recrema Wind Atlas Request- ';
 	$mail->Subject .= str_replace($notalowedchars, "", $_POST["summary"]);
