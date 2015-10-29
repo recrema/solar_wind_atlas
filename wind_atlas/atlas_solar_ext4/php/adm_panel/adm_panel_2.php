@@ -1,4 +1,5 @@
 <?php
+session_name("atlases");
 session_start();
 
 if (isset($_SESSION['username'])){
@@ -11,7 +12,6 @@ $user_id=$login_sessionid;
 }
 
 ?>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -491,7 +491,8 @@ $user_id=$login_sessionid;
 
 <div id="hidden_form_container" style="display:none;"></div>
  	<div id="header"> 
-
+		<div id="headerText">
+		</div> 
  	</div> 
 
 	<div id="middle">
@@ -524,10 +525,10 @@ $user_id=$login_sessionid;
 
 
 	</div>
-
  	<div id="footer">  
 
  	</div> 
+
 
 
 </body>

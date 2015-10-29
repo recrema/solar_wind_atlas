@@ -1,11 +1,16 @@
 <?php
-
-ini_set('display_errors',1);
+################################################################################################################################################
+#		This loging controler is only for ajax requests just in case of the javascript need to request info 
+#		about the user state. Its possible to check if user is loged in (action 1), Logout (action 2), Login (default, no action)
+#		This code is the same used in the lock.php,login.php and logout.php
+#
+################################################################################################################################################
+error_reporting(E_ALL); // to change here the error reporting E_ALL for all E_ERROR just for errors!
+ini_set("display_errors", "On");
 
   $message['success'] = false;
   $action = 0;
   if(isset($_POST['_action'])){ $action = $_POST['_action']; };
-  $notalowedchars = array("'", '"', "--", ";", "/", "%", ">","<","!");
   //Check if there is a user session 
   if($action == 1){
     require_once 'LoginModel.php';
@@ -18,6 +23,7 @@ ini_set('display_errors',1);
     }
     echo json_encode($message);
   }
+  //Logout
   elseif($action == 2){
   	require_once 'LoginModel.php';
   	$loginModel = new LoginModel();
@@ -27,11 +33,10 @@ ini_set('display_errors',1);
   	}
   	echo json_encode($message);
   }
+  //Login
   else{
-   # $username = $_POST['_user'];
-   # $password = $_POST['_password'];
-  	$username = str_replace($notalowedchars, "", $_POST["_user"]);
-    $password = str_replace($notalowedchars, "", $_POST["_password"]);
+  	$username =  $_POST["_user"];
+    $password =  $_POST["_password"];
     require_once 'DBConn.php';
     $connection = new DBConn();
 

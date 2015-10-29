@@ -1,4 +1,6 @@
 <?php
+error_reporting(E_ALL); // to change here the error reporting E_ALL for all E_ERROR just for errors!
+ini_set("display_errors", "On");
 
 class LoginModel{
 
@@ -16,12 +18,14 @@ class LoginModel{
 	public function LoginModel(){
 		require_once 'Functions.php';
 		$Functions = new Functions();
+		session_name("atlases");
 		session_start();
 	}
 
-	public function Query($sql)
+	public function Query($sql,$parm_array)
 	{
-		$result = pg_query($sql);
+// 		$result = pg_query($sql);
+		$result = pg_query_params($sql,$parm_array);
 		if(!$result){die("Error on execution");}
 		return $result;
 	}	
@@ -48,17 +52,20 @@ class LoginModel{
 	function verify($password, $hashedPassword) {
 	    return crypt($password, $hashedPassword) == $hashedPassword;
 	}
-
+	#login
 	public function CheckLogin($formuser,$formpass){
-		$user = pg_escape_literal($formuser);
-		$pass = pg_escape_literal($formpass);
-		$result = $this->Query('SELECT username,gid,passcode,permissions FROM users WHERE username=\''.$formuser.'\' LIMIT 1');
+		$user = $formuser;
+		$pass = $formpass;
+// 		$result = $this->Query('SELECT username,gid,passcode,permissions FROM users WHERE username=\''.$formuser.'\' LIMIT 1');
+		$result = $this->Query('SELECT username,gid,passcode,permissions FROM users WHERE username=$1 LIMIT 1',array($formuser));
 		$row = pg_fetch_assoc($result);
 		if($this->verify($formpass,$row['passcode']) == 1){
 			$_SESSION['username'] = $row['username'];
 			$_SESSION['gid'] = $row['gid'];
 			$_SESSION['permissions'] = $row['permissions'];
 			$_SESSION['authorized'] = 1;
+			$_SESSION['ip'] = $_SERVER['REMOTE_ADDR'];
+			$_SESSION['project'] = 'atlases';
 			LoginModel::$SUCCESS = true;
 			LoginModel::$GROUP = $_SESSION['permissions'];
 			LoginModel::$USER = $_SESSION['username'];
@@ -67,16 +74,15 @@ class LoginModel{
 			$_SESSION['authorized'] = 0;
 			$this->destroySession('username');
 			$this->destroySession('gid');
+			sleep(3); # if the user is invalid we will wait 3 seconds, to minimize brute force attacks
 			LoginModel::$MESSAGE = "Incorrect Username or Password.";
 		}
+		
 	}
 	#logout
 	public function Logout(){
-		if(isset($_SESSION['username']) && isset($_SESSION['gid'])&& isset($_SESSION['permissions']) && $_SESSION['authorized']==1){
-			$this->destroySession('username');
-			$this->destroySession('gid');
-			$this->destroySession('permissions');
-			$this->destroySession('authorized');
+		if(isset($_SESSION['username']) && isset($_SESSION['gid'])&& isset($_SESSION['permissions'])&&isset($_SESSION['project']) && $_SESSION['authorized']==1 && $_SESSION['project']=='atlases'){
+			session_destroy();
 			LoginModel::$SUCCESS = true;
 		}
 		
@@ -84,7 +90,7 @@ class LoginModel{
 	
 	//Checks if the user is authorized or not
 	public function IsAuth(){
-		if(isset($_SESSION['username']) && isset($_SESSION['gid'])&& isset($_SESSION['permissions']) && $_SESSION['authorized']==1){
+		if(isset($_SESSION['username']) && isset($_SESSION['gid'])&& isset($_SESSION['permissions'])&&isset($_SESSION['project']) && $_SESSION['authorized']==1 && $_SESSION['project']=='atlases'){
 			LoginModel::$SUCCESS = true;
 			LoginModel::$GROUP = $_SESSION['permissions'];
 			LoginModel::$USER = $_SESSION['username'];
