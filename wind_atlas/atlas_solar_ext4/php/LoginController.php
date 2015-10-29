@@ -5,8 +5,8 @@
 #		This code is the same used in the lock.php,login.php and logout.php
 #
 ################################################################################################################################################
-error_reporting(E_ALL); // to change here the error reporting E_ALL for all E_ERROR just for errors!
-ini_set("display_errors", "On");
+error_reporting(E_ERROR); // to change here the error reporting E_ALL for all E_ERROR just for errors!
+ini_set("display_errors", "Off");
 
   $message['success'] = false;
   $action = 0;

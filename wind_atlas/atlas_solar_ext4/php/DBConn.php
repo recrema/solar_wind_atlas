@@ -1,6 +1,6 @@
 <?php
-error_reporting(E_ALL); // to change here the error reporting E_ALL for all E_ERROR just for errors!
-ini_set("display_errors", "On");
+error_reporting(E_ERROR); // to change here the error reporting E_ALL for all E_ERROR just for errors!
+ini_set("display_errors", "Off");
 
 class DBConn
 {
@@ -51,7 +51,7 @@ class credentials
     
     public function get_credentials()
     {
-        $this->Host        = "localhost";
+        $this->Host        = "10.106.0.211";
         $this->SQLUsername = "atlasrecrema";
         $this->SQLPassword = "R3crema";
         $this->Database    = "recrema_atlas";
