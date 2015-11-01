@@ -18,7 +18,6 @@ $user_id=$login_sessionid;
 
 	<title>Administration panel</title>
 
-	<meta name="crawl_key" content="06a9c7a2a53faadc417db597a5e48844"/>
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
 
 	<link rel="stylesheet" href="grey/combo.css">
