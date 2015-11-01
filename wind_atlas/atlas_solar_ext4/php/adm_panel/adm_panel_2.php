@@ -1,4 +1,7 @@
 <?php
+error_reporting(E_ERROR); // to change here the error reporting E_ALL for all E_ERROR just for errors!
+ini_set("display_errors", "Off");
+
 session_name("atlases");
 session_start();
 
