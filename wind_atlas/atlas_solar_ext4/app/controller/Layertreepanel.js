@@ -116,7 +116,7 @@ Ext.define('AM.controller.Layertreepanel',{
 					        });
 					       store.on('load', function(records, operation, success) {
 					    	   var valor=store.findRecord('name', registo.raw.layer.servername);
-						        infowindow.add([{html:'<pre style="white-space: pre-wrap;"><b>Layer Title: </br></br></b>'+valor.raw.metadata.title+'</br></br></br><b>Layer abstract: </b></br></br>'+valor.raw.metadata.abstract+'</br></br></br><b>To access this layers from a desktop GIS as a WMS:</b></br></br>WMS URL: <b>http://atlas.masdar.ac.ae:8080/geoserver/wind/wms</b></br></br>This layer name:<b> '+valor.raw.metadata.name.split(":")[1]+'</pre>'}]);
+						        infowindow.add([{html:'<pre style="white-space: pre-wrap;"><b>Layer Title: </br></br></b>'+valor.raw.metadata.title+'</br></br></br><b>Layer abstract: </b></br></br>'+valor.raw.metadata.abstract+'</br></br></br><b>To access this layers from a desktop GIS as a WMS:</b></br></br>WMS URL: <b>http://atlas.masdar.ac.ae:8080/geoserver/masdar/wms</b></br></br>This layer name:<b> '+valor.raw.metadata.name.split(":")[1]+'</pre>'}]);
 						        infowindow.setLoading(false);
 					    	 });
 						
@@ -124,7 +124,7 @@ Ext.define('AM.controller.Layertreepanel',{
 						// if the store exists, no need to load the data again
 						var store=Ext.data.StoreManager.lookup('layersStore');
 						var valor=store.findRecord('name', registo.raw.layer.servername);
-				        infowindow.add([{html:'<pre style="white-space: pre-wrap;"><b>Layer Title: </br></br></b>'+valor.raw.metadata.title+'</br></br></br><b>Layer abstract: </b></br></br>'+valor.raw.metadata.abstract+'</br></br></br><b>To access this layers from a desktop GIS as a WMS:</b></br></br>WMS URL: <b>http://atlas.masdar.ac.ae:8080/geoserver/wind/wms</b></br></br>This layer name:<b> '+valor.raw.metadata.name.split(":")[1]+'</pre>'}]);
+				        infowindow.add([{html:'<pre style="white-space: pre-wrap;"><b>Layer Title: </br></br></b>'+valor.raw.metadata.title+'</br></br></br><b>Layer abstract: </b></br></br>'+valor.raw.metadata.abstract+'</br></br></br><b>To access this layers from a desktop GIS as a WMS:</b></br></br>WMS URL: <b>http://atlas.masdar.ac.ae:8080/geoserver/masdar/wms</b></br></br>This layer name:<b> '+valor.raw.metadata.name.split(":")[1]+'</pre>'}]);
 				        infowindow.setLoading(false);
 					}
 				}
