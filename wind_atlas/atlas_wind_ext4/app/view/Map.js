@@ -418,6 +418,6 @@ Ext.define('AM.view.Map', {
         a=this;
         mapView.fireEvent('initCheckLogin');
         this.callParent(arguments);
-        map.setBaseLayer(map.getLayersByName('Google Hybrid')[0]);
+        map.setBaseLayer(map.getLayersByName('Open Street Map')[0]);
     }
 });

@@ -254,7 +254,7 @@ Ext.define('AM.view.Map', {
                        },
                       {
                            text: 'Google Hybrid',
-                           checked: true,
+                           checked: false,
                            group: 'baselayer',
                            checkHandler: function (checked) {
                            	map.setBaseLayer(map.getLayersByName('Google Hybrid')[0]);
@@ -275,7 +275,7 @@ Ext.define('AM.view.Map', {
                            }
                        }, {
                            text: 'Open Street Map',
-                           checked: false,
+                           checked: true,
                            group: 'baselayer',
                            checkHandler: function (checked) {
                            	map.setBaseLayer(map.getLayersByName('Open Street Map')[0]);
@@ -417,6 +417,6 @@ Ext.define('AM.view.Map', {
         a=this;
         mapView.fireEvent('initCheckLogin');
         this.callParent(arguments);
-        map.setBaseLayer(map.getLayersByName('Google Hybrid')[0]);
+        map.setBaseLayer(map.getLayersByName('Open Street Map')[0]);
     }
 });
